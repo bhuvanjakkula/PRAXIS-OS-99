@@ -81,3 +81,18 @@ Event-driven state, causal dependencies, simulations and controlled real-world a
 ## Safety boundary
 
 PRAXIS should never silently convert uncertain analysis into consequential autonomous action. Legal conclusions require jurisdiction/current-source provenance; financial models expose assumptions and uncertainty; human/social optimization must preserve explicit values and stakeholder impacts.
+
+## v0.2 — durable intelligence substrate
+
+v0.2 adds a persistent **Evidence Ledger** and executable **Decision Graph**. Claims now preserve epistemic type, confidence, provenance, verification state and status history. Decision relationships are stored as typed directed edges and support bounded impact-path analysis.
+
+```text
+Evidence → Claim → Status history ───────────────┐
+                                                 ▼
+Decision → Nodes → Relationships → Impact paths → Inquiry
+                                                 │
+                                                 ▼
+                                      future simulation/learning
+```
+
+The reference persistence adapter is SQLite (`PRAXIS_DB` selects the database path). See `docs/V0.2.md` for APIs and invariants.
