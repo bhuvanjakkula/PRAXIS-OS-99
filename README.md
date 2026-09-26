@@ -96,3 +96,7 @@ Decision → Nodes → Relationships → Impact paths → Inquiry
 ```
 
 The reference persistence adapter is SQLite (`PRAXIS_DB` selects the database path). See `docs/V0.2.md` for APIs and invariants.
+
+## v0.3 — quantitative runtime + scenario lab
+
+v0.3 adds explicit typed variables, restricted formulas, deterministic dependency evaluation, immutable scenario overrides, one-variable sensitivity analysis and prediction-vs-actual assessment. This implements the architectural law **calculators calculate; language models interpret** and creates the computational bridge from the Decision Graph to simulation and Deweyan outcome learning. See `docs/V0.3.md`.
