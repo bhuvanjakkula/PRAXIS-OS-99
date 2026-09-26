@@ -1,6 +1,6 @@
 [project]
 name = "praxis-os"
-version = "0.3.0"
+version = "0.4.0"
 description = "Adaptive Decision Intelligence: evidence, systems, imagination, inquiry, simulation and human judgment."
 requires-python = ">=3.11"
 dependencies = ["fastapi>=0.115", "uvicorn>=0.30", "pydantic>=2.8"]

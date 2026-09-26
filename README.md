@@ -100,3 +100,8 @@ The reference persistence adapter is SQLite (`PRAXIS_DB` selects the database pa
 ## v0.3 — quantitative runtime + scenario lab
 
 v0.3 adds explicit typed variables, restricted formulas, deterministic dependency evaluation, immutable scenario overrides, one-variable sensitivity analysis and prediction-vs-actual assessment. This implements the architectural law **calculators calculate; language models interpret** and creates the computational bridge from the Decision Graph to simulation and Deweyan outcome learning. See `docs/V0.3.md`.
+
+## v0.4 — Integrated Simulation / Digital-Twin Foundation
+v0.4 connects the previously separate subsystems. Quantitative variables can bind to Decision Graph nodes and Evidence Ledger claims; integrated models, scenarios and immutable run snapshots persist in SQLite; dimensional validation catches incompatible arithmetic; uncertainty distributions feed reproducible Monte Carlo runs; scenario comparison and multi-variable sensitivity expose trade-offs; graph influence paths can generate scenario overrides; and actual observations can calibrate a new successor model without rewriting historical runs.
+
+See `docs/V0.4.md`.

@@ -57,3 +57,56 @@ class SQLiteStore:
     def list_edges(self,decision_id:UUID)->list[GraphEdge]:
         with self.connect() as c: rows=c.execute("SELECT payload FROM graph_edges WHERE decision_id=?",(str(decision_id),)).fetchall()
         return [GraphEdge.model_validate_json(r[0]) for r in rows]
+
+# v0.4 persistent quantitative artifacts
+V04_SCHEMA='''
+CREATE TABLE IF NOT EXISTS quant_models(id TEXT NOT NULL, version INTEGER NOT NULL, decision_id TEXT NOT NULL, payload TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY(id,version));
+CREATE TABLE IF NOT EXISTS scenarios(id TEXT PRIMARY KEY, model_id TEXT NOT NULL, payload TEXT NOT NULL, created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS model_runs(id TEXT PRIMARY KEY, model_id TEXT NOT NULL, model_version INTEGER NOT NULL, scenario_id TEXT, payload TEXT NOT NULL, created_at TEXT NOT NULL);
+'''
+
+def _v04_initialize(self):
+    with self.connect() as c: c.executescript(V04_SCHEMA)
+SQLiteStore.initialize_v04=_v04_initialize
+
+def _save_integrated_model(self,item):
+    self.initialize_v04()
+    with self.connect() as c: c.execute('INSERT OR REPLACE INTO quant_models VALUES(?,?,?,?,?)',(str(item.model.id),item.version,str(item.model.decision_id),item.model_dump_json(),item.created_at.isoformat()))
+    return item
+SQLiteStore.save_integrated_model=_save_integrated_model
+
+def _get_integrated_model(self,model_id,version=None):
+    from praxis.core.v04_models import IntegratedModel
+    self.initialize_v04()
+    q='SELECT payload FROM quant_models WHERE id=? '+('AND version=?' if version is not None else 'ORDER BY version DESC LIMIT 1')
+    args=(str(model_id),version) if version is not None else (str(model_id),)
+    with self.connect() as c: r=c.execute(q,args).fetchone()
+    return IntegratedModel.model_validate_json(r[0]) if r else None
+SQLiteStore.get_integrated_model=_get_integrated_model
+
+def _save_scenario(self,item):
+    from datetime import datetime, timezone
+    self.initialize_v04()
+    with self.connect() as c: c.execute('INSERT OR REPLACE INTO scenarios VALUES(?,?,?,?)',(str(item.id),str(item.model_id),item.model_dump_json(),datetime.now(timezone.utc).isoformat()))
+    return item
+SQLiteStore.save_scenario=_save_scenario
+
+def _list_scenarios(self,model_id):
+    from praxis.core.quant_models import ScenarioSpec
+    self.initialize_v04()
+    with self.connect() as c: rows=c.execute('SELECT payload FROM scenarios WHERE model_id=? ORDER BY created_at',(str(model_id),)).fetchall()
+    return [ScenarioSpec.model_validate_json(r[0]) for r in rows]
+SQLiteStore.list_scenarios=_list_scenarios
+
+def _save_run(self,item):
+    self.initialize_v04()
+    with self.connect() as c: c.execute('INSERT INTO model_runs VALUES(?,?,?,?,?,?)',(str(item.id),str(item.model_id),item.model_version,str(item.scenario_id) if item.scenario_id else None,item.model_dump_json(),item.created_at.isoformat()))
+    return item
+SQLiteStore.save_run=_save_run
+
+def _list_runs(self,model_id):
+    from praxis.core.v04_models import PersistedRun
+    self.initialize_v04()
+    with self.connect() as c: rows=c.execute('SELECT payload FROM model_runs WHERE model_id=? ORDER BY created_at',(str(model_id),)).fetchall()
+    return [PersistedRun.model_validate_json(r[0]) for r in rows]
+SQLiteStore.list_runs=_list_runs
