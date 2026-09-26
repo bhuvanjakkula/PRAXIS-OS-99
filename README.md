@@ -105,3 +105,13 @@ v0.3 adds explicit typed variables, restricted formulas, deterministic dependenc
 v0.4 connects the previously separate subsystems. Quantitative variables can bind to Decision Graph nodes and Evidence Ledger claims; integrated models, scenarios and immutable run snapshots persist in SQLite; dimensional validation catches incompatible arithmetic; uncertainty distributions feed reproducible Monte Carlo runs; scenario comparison and multi-variable sensitivity expose trade-offs; graph influence paths can generate scenario overrides; and actual observations can calibrate a new successor model without rewriting historical runs.
 
 See `docs/V0.4.md`.
+
+## v0.8 — Organizational Digital Twin & Multi-Agent Institution
+
+The repository now contains concrete kernels for the previously described v0.5 intelligence layer (`praxis.intelligence`), v0.6 grounding layer (`praxis.grounding`), v0.7 governed action layer (`praxis.action`), and v0.8 institutional twin (`praxis.institution`).
+
+v0.8 adds stable institutional entities and ownership, objectives, authority-scoped agents, event-driven canonical state, non-mutating organizational simulation, governed multi-agent coordination, and durable SQLite institutional events/snapshots.
+
+Key invariant: **agents are not the source of institutional truth**. They observe scoped state and propose changes. Canonical state changes are represented by events, and real side effects must pass through governance.
+
+See `docs/V0.8.md`.
