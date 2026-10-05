@@ -9,4 +9,8 @@ if str(src_dir) not in sys.path:
 if str(root) not in sys.path:
     sys.path.insert(0, str(root))
 
+import os
+if os.environ.get('VERCEL') and not os.environ.get('PRAXIS_DB'):
+    os.environ['PRAXIS_DB'] = '/tmp/praxis.db'
+
 from praxis.api import app
