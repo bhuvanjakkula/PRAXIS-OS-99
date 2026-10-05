@@ -1,10 +1,11 @@
+from fastapi import FastAPI
 import os
 import sys
 from pathlib import Path
 
 # Resolve paths
 root = Path(__file__).resolve().parent
-if root.name == "src":
+if root.name in ("src", "app", "api"):
     root = root.parent
 src_dir = root / "src"
 if str(src_dir) not in sys.path:
@@ -18,4 +19,4 @@ if os.environ.get("VERCEL") and not os.environ.get("PRAXIS_DB"):
 
 import praxis.api as _praxis_api
 
-app = _praxis_api.app
+app: FastAPI = _praxis_api.app
