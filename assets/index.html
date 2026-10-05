@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PRAXIS OS</title><link rel="stylesheet" href="/assets/studio.css?v=20261004-airsecurity"><script src="/assets/studio.js?v=20261004-airsecurity" defer></script><script src="/assets/labs.js?v=20261004-airsecurity" defer></script><script src="/assets/enterprise.js?v=20261004-airsecurity" defer></script><script src="/assets/decision-lab.js?v=20261004-airsecurity" defer></script><script src="/assets/suggestions.js?v=20261004-airsecurity" defer></script><script src="/assets/research.js?v=20261004-airsecurity" defer></script><script src="/assets/foresight.js?v=20261004-airsecurity" defer></script><script src="/assets/inquiry.js?v=20261004-airsecurity" defer></script><script src="/assets/compute.js?v=20261004-airsecurity" defer></script><script src="/assets/compute-visuals.js?v=20261004-airsecurity" defer></script><script src="/assets/operations.js?v=20261004-airsecurity" defer></script><script src="/assets/cockpit.js?v=20261004-airsecurity" defer></script><script src="/assets/maritime.js?v=20261004-airsecurity" defer></script><script src="/assets/executive.js?v=20261004-airsecurity" defer></script><script src="/assets/executive-sectors.js?v=20261004-airsecurity" defer></script><script src="/assets/country-catalog.js?v=20261004-airsecurity" defer></script><script src="/assets/national.js?v=20261004-airsecurity" defer></script><script src="/assets/policy-appraisal.js?v=20261004-airsecurity" defer></script><script src="/assets/country-data.js?v=20261004-airsecurity" defer></script><script src="/assets/policy-comparison.js?v=20261004-airsecurity" defer></script><script src="/assets/ai-analysis.js?v=20261004-airsecurity" defer></script><script src="/assets/marketing.js?v=20261004-airsecurity" defer></script><script src="/assets/development.js?v=20261004-airsecurity" defer></script><script src="/assets/fiscal-equity.js?v=20261004-airsecurity" defer></script><script src="/assets/country-controls.js?v=20261004-airsecurity" defer></script><script src="/assets/leadership-execution.js?v=20261004-airsecurity" defer></script><script src="/assets/integration-network.js?v=20261004-airsecurity" defer></script><script src="/assets/aviation-evidence.js?v=20261004-airsecurity" defer></script><script src="/assets/maritime-coordination.js?v=20261004-airsecurity" defer></script><script src="/assets/maritime-systems.js?v=20261004-airsecurity" defer></script><script src="/assets/maritime-cyber.js?v=20261004-airsecurity" defer></script><script src="/assets/maritime-ledger.js?v=20261004-airsecurity" defer></script><script src="/assets/maritime-fusion.js?v=20261004-airsecurity" defer></script><script src="/assets/aviation-security.js?v=20261004-airsecurity" defer></script><script src="/assets/world-bank.js?v=20261004-worldbank" defer></script><script src="/assets/imf.js?v=20261004-imf" defer></script><script src="/assets/auth.js?v=20261005-auth" defer></script><script src="/assets/pricing.js?v=20261005-pricing" defer></script></head>
+<body>
+<aside class="sidebar"><a class="brand" href="/" aria-label="PRAXIS OS home"><span class="brand-mark">◇</span><span>PRAXIS OS<small>DECISION STUDIO</small></span></a>
+<div class="workspace-label">YOUR WORKSPACE</div><nav aria-label="Main navigation">
+<button data-page="dashboard" class="active"><span>▦</span> Dashboard</button><button data-page="chat"><span>◌</span> Chat</button><button data-page="canvas"><span>◇</span> Decision Canvas</button><button data-page="simulation"><span>∿</span> Simulation</button><button data-page="reports"><span>▤</span> Reports</button><button data-page="pricing"><span>💎</span> Plans & Pricing</button></nav>
+<div class="sidebar-bottom"><span class="status-dot"></span> <span id="identity-label">Local workspace</span><p>Human judgment at the center.<br>Evidence before assertion.</p><a href="/docs" target="_blank" rel="noopener">Developer API ↗</a><button id="signout" class="quiet" hidden>Sign out</button></div></aside>
+<div class="shell"><header><div class="header-breadcrumbs">
+  <span class="crumb">Workspace / </span><span id="breadcrumb">Dashboard</span>
+  <a href="mailto:bjtmusic12@gmail.com" class="support-contact-chip" title="Send email to Customer Support & Enquiry">
+    <span class="support-icon">✉</span>
+    <span class="support-text">Customer Support &amp; Enquiry: <strong>bjtmusic12@gmail.com</strong></span>
+  </a>
+</div><div class="header-actions">
+<div id="auth-user-chip" class="auth-user-chip" hidden>
+  <div class="user-avatar" id="header-avatar">U</div>
+  <div class="user-details">
+    <span class="user-name" id="header-user-name">User</span>
+    <span class="user-role">Verified Operator</span>
+  </div>
+</div>
+<button type="button" class="secondary" id="open-auth-btn">Sign in / Register</button>
+<span class="pill">RESEARCH PROTOTYPE</span>
+<button class="primary" id="new-decision">+ New decision</button>
+</div></header>
+<main id="main" tabindex="-1"></main><footer>PRAXIS OS <span>Observe → Model → Simulate → Judge → Learn</span></footer></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<dialog id="decision-dialog"><form id="decision-form"><div class="section-head"><div><p class="eyebrow">START WITH A QUESTION</p><h2>Frame a decision</h2></div><button type="button" class="quiet" id="close-dialog" aria-label="Close dialog">✕</button></div>
+<label>Decision title<input name="title" required maxlength="160" placeholder="Should we launch a paid pilot?"></label>
+<label>Problem<textarea name="problem" required rows="2" placeholder="What choice are you facing, and why now?"></textarea></label>
+<label>Objective<input name="objective" required placeholder="What would a good outcome look like?"></label>
+<div class="two-col"><label>Human values <small>one per line</small><textarea name="values" rows="3" placeholder="Privacy&#10;Fair access"></textarea></label><label>Constraints <small>one per line</small><textarea name="constraints" rows="3" placeholder="Budget under 10,000&#10;Reversible pilot"></textarea></label></div>
+<div class="two-col"><label>Options <small>one per line</small><textarea name="options" rows="3" placeholder="Run a small pilot&#10;Gather more evidence"></textarea></label><label>Assumptions <small>one per line</small><textarea name="assumptions" rows="3" placeholder="Customers will pay&#10;The team has enough capacity"></textarea></label></div>
+<p class="muted">Business, finance, technology, law and human engines will structure the inquiry. No LLM or live data is connected.</p>
+<div class="dialog-actions"><button type="button" id="example" class="secondary">Fill example</button><button class="primary" type="submit">Create decision model →</button></div></form></dialog>
+<dialog id="login-dialog"><form id="login-form"><p class="eyebrow">AUTHENTICATED WORKSPACE</p><h2>Connect to your organization</h2><p class="muted">Enter an operator-issued, expiring credential. It stays only in this browser tab’s memory.</p><label>Access credential<input type="password" name="credential" required autocomplete="off"></label><button class="primary">Connect securely</button></form></dialog>
+
+<dialog id="auth-dialog" class="auth-dialog">
+  <div class="auth-modal-card">
+    <div class="auth-header">
+      <div class="auth-brand">
+        <span class="auth-brand-mark">◇</span>
+        <div>
+          <h3>PRAXIS OS</h3>
+          <p class="auth-subtitle">Adaptive Decision Intelligence Workspace</p>
+        </div>
+      </div>
+      <button type="button" class="quiet close-auth" id="close-auth-dialog" aria-label="Close dialog">✕</button>
+    </div>
+
+    <!-- Mode Selector Tabs -->
+    <div class="auth-tabs" role="tablist">
+      <button type="button" class="auth-tab-btn active" id="tab-signin" role="tab" aria-selected="true">Sign In</button>
+      <button type="button" class="auth-tab-btn" id="tab-signup" role="tab" aria-selected="false">Create Account</button>
+    </div>
+
+    <!-- Alert / Message Banner -->
+    <div id="auth-alert" class="auth-alert" hidden></div>
+
+    <!-- Sign In Form -->
+    <form id="signin-form" class="auth-form-panel active">
+      <div class="form-group">
+        <label for="signin-identifier">Email ID or Mobile Number</label>
+        <div class="input-wrapper">
+          <span class="input-icon">✉</span>
+          <input type="text" id="signin-identifier" name="identifier" required placeholder="name@domain.com or +1 234 567 8900" autocomplete="username">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="label-row">
+          <label for="signin-password">Password</label>
+          <a href="javascript:void(0)" class="forgot-link" onclick="alert('Password reset instructions will be sent to your registered email or phone.')">Forgot?</a>
+        </div>
+        <div class="input-wrapper">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="signin-password" name="password" required placeholder="Enter password" autocomplete="current-password">
+          <button type="button" class="pwd-toggle" data-target="signin-password" aria-label="Toggle password">👁</button>
+        </div>
+      </div>
+
+      <div class="form-row-remember">
+        <label class="checkbox-label">
+          <input type="checkbox" id="signin-remember" checked>
+          <span>Keep me signed in on this device</span>
+        </label>
+      </div>
+
+      <button type="submit" class="primary auth-submit-btn" id="signin-submit">
+        <span class="btn-text">Sign In to Studio →</span>
+      </button>
+
+      <div class="auth-switch-prompt">
+        <span>Don't have an account?</span>
+        <button type="button" class="link-btn" id="switch-to-signup">Sign up now</button>
+      </div>
+    </form>
+
+    <!-- Sign Up Form -->
+    <form id="signup-form" class="auth-form-panel">
+      <div class="form-group">
+        <label for="signup-name">Full Name</label>
+        <div class="input-wrapper">
+          <span class="input-icon">👤</span>
+          <input type="text" id="signup-name" name="full_name" required placeholder="e.g. Alex Vance" autocomplete="name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="signup-email">Email ID</label>
+        <div class="input-wrapper">
+          <span class="input-icon">✉</span>
+          <input type="email" id="signup-email" name="email" required placeholder="alex@company.com" autocomplete="email">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="signup-mobile">Mobile Number</label>
+        <div class="input-wrapper">
+          <span class="input-icon">📱</span>
+          <input type="tel" id="signup-mobile" name="mobile" required placeholder="+1 555 019 2834" autocomplete="tel">
+        </div>
+        <small class="field-hint">Include country code (e.g. +1, +44, +91)</small>
+      </div>
+
+      <div class="form-group">
+        <label for="signup-password">Password</label>
+        <div class="input-wrapper">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="signup-password" name="password" required minlength="6" placeholder="At least 6 characters" autocomplete="new-password">
+          <button type="button" class="pwd-toggle" data-target="signup-password" aria-label="Toggle password">👁</button>
+        </div>
+        <!-- Real-time Password Strength Meter -->
+        <div class="pwd-meter-container">
+          <div class="pwd-meter-bar" id="pwd-strength-bar"></div>
+        </div>
+        <div class="pwd-meter-label" id="pwd-strength-text">Password strength: Required</div>
+      </div>
+
+      <div class="form-group">
+        <label for="signup-confirm-password">Confirm Password</label>
+        <div class="input-wrapper">
+          <span class="input-icon">✓</span>
+          <input type="password" id="signup-confirm-password" name="confirm_password" required minlength="6" placeholder="Re-enter password" autocomplete="new-password">
+        </div>
+        <small class="field-hint match-hint" id="pwd-match-hint"></small>
+      </div>
+
+      <div class="form-row-remember">
+        <label class="checkbox-label">
+          <input type="checkbox" id="signup-terms" required checked>
+          <span>I accept Workspace Security & Governance protocol</span>
+        </label>
+      </div>
+
+      <button type="submit" class="primary auth-submit-btn" id="signup-submit">
+        <span class="btn-text">Create Account & Enter →</span>
+      </button>
+
+      <div class="auth-switch-prompt">
+        <span>Already registered?</span>
+        <button type="button" class="link-btn" id="switch-to-signin">Sign in to existing account</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+</body></html>
+

@@ -11,6 +11,14 @@
     {
       "source": "/health",
       "destination": "/api/index.py"
+    },
+    {
+      "source": "/assets/(.*)",
+      "destination": "/assets/"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }

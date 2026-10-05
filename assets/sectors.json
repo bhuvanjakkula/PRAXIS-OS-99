@@ -1,0 +1,2505 @@
+[
+  {
+    "name": "Financial services",
+    "roles": {
+      "ceo": {
+        "focus": "Portfolio quality and customer trust",
+        "metrics": [
+          "Portfolio quality and customer trust"
+        ],
+        "evidence": "Portfolio reports, cash maturities and transaction telemetry",
+        "questions": [
+          "Which measured indicators demonstrate portfolio quality and customer trust?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Liquidity, collections and counterparty exposure",
+        "metrics": [
+          "Liquidity",
+          "Collections and counterparty exposure"
+        ],
+        "evidence": "Portfolio reports, cash maturities and transaction telemetry",
+        "questions": [
+          "Which measured indicators demonstrate liquidity, collections and counterparty exposure?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Transaction resilience and access controls",
+        "metrics": [
+          "Transaction resilience and access controls"
+        ],
+        "evidence": "Portfolio reports, cash maturities and transaction telemetry",
+        "questions": [
+          "Which measured indicators demonstrate transaction resilience and access controls?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Banking",
+        "roles": {
+          "ceo": {
+            "focus": "Customer relationships and credit quality",
+            "metrics": [
+              "Customer relationships and credit quality"
+            ],
+            "evidence": "Supply dated measurements and source records for customer relationships and credit quality.",
+            "questions": [
+              "What measured baseline and target define customer relationships and credit quality?",
+              "Which adverse assumptions would most change this banking plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Deposit timing and credit losses",
+            "metrics": [
+              "Deposit timing and credit losses"
+            ],
+            "evidence": "Supply dated measurements and source records for deposit timing and credit losses.",
+            "questions": [
+              "What measured baseline and target define deposit timing and credit losses?",
+              "Which adverse assumptions would most change this banking plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Core banking continuity and transaction integrity",
+            "metrics": [
+              "Core banking continuity and transaction integrity"
+            ],
+            "evidence": "Supply dated measurements and source records for core banking continuity and transaction integrity.",
+            "questions": [
+              "What measured baseline and target define core banking continuity and transaction integrity?",
+              "Which adverse assumptions would most change this banking plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Insurance",
+        "roles": {
+          "ceo": {
+            "focus": "Retention and responsible underwriting",
+            "metrics": [
+              "Retention and responsible underwriting"
+            ],
+            "evidence": "Supply dated measurements and source records for retention and responsible underwriting.",
+            "questions": [
+              "What measured baseline and target define retention and responsible underwriting?",
+              "Which adverse assumptions would most change this insurance plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Premium collections and claims cash timing",
+            "metrics": [
+              "Premium collections and claims cash timing"
+            ],
+            "evidence": "Supply dated measurements and source records for premium collections and claims cash timing.",
+            "questions": [
+              "What measured baseline and target define premium collections and claims cash timing?",
+              "Which adverse assumptions would most change this insurance plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Policy systems and claims-data access",
+            "metrics": [
+              "Policy systems and claims-data access"
+            ],
+            "evidence": "Supply dated measurements and source records for policy systems and claims-data access.",
+            "questions": [
+              "What measured baseline and target define policy systems and claims-data access?",
+              "Which adverse assumptions would most change this insurance plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Investment management",
+        "roles": {
+          "ceo": {
+            "focus": "Mandate delivery and client retention",
+            "metrics": [
+              "Mandate delivery and client retention"
+            ],
+            "evidence": "Supply dated measurements and source records for mandate delivery and client retention.",
+            "questions": [
+              "What measured baseline and target define mandate delivery and client retention?",
+              "Which adverse assumptions would most change this investment management plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Fees, redemptions and settlement timing",
+            "metrics": [
+              "Fees, redemptions and settlement timing"
+            ],
+            "evidence": "Supply dated measurements and source records for fees, redemptions and settlement timing.",
+            "questions": [
+              "What measured baseline and target define fees, redemptions and settlement timing?",
+              "Which adverse assumptions would most change this investment management plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Portfolio-data integrity and access controls",
+            "metrics": [
+              "Portfolio-data integrity and access controls"
+            ],
+            "evidence": "Supply dated measurements and source records for portfolio-data integrity and access controls.",
+            "questions": [
+              "What measured baseline and target define portfolio-data integrity and access controls?",
+              "Which adverse assumptions would most change this investment management plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Fintech and payments",
+        "roles": {
+          "ceo": {
+            "focus": "Merchant adoption and payment completion",
+            "metrics": [
+              "Merchant adoption and payment completion"
+            ],
+            "evidence": "Supply dated measurements and source records for merchant adoption and payment completion.",
+            "questions": [
+              "What measured baseline and target define merchant adoption and payment completion?",
+              "Which adverse assumptions would most change this fintech and payments plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Settlement exposure and transaction margins",
+            "metrics": [
+              "Settlement exposure and transaction margins"
+            ],
+            "evidence": "Supply dated measurements and source records for settlement exposure and transaction margins.",
+            "questions": [
+              "What measured baseline and target define settlement exposure and transaction margins?",
+              "Which adverse assumptions would most change this fintech and payments plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Payment availability and fraud-control evidence",
+            "metrics": [
+              "Payment availability and fraud-control evidence"
+            ],
+            "evidence": "Supply dated measurements and source records for payment availability and fraud-control evidence.",
+            "questions": [
+              "What measured baseline and target define payment availability and fraud-control evidence?",
+              "Which adverse assumptions would most change this fintech and payments plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Technology",
+    "roles": {
+      "ceo": {
+        "focus": "Retention and product adoption",
+        "metrics": [
+          "Retention and product adoption"
+        ],
+        "evidence": "Cohort reports, contracts, billing and service telemetry",
+        "questions": [
+          "Which measured indicators demonstrate retention and product adoption?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Recurring revenue and customer acquisition costs",
+        "metrics": [
+          "Recurring revenue and customer acquisition costs"
+        ],
+        "evidence": "Cohort reports, contracts, billing and service telemetry",
+        "questions": [
+          "Which measured indicators demonstrate recurring revenue and customer acquisition costs?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Service reliability and release safety",
+        "metrics": [
+          "Service reliability and release safety"
+        ],
+        "evidence": "Cohort reports, contracts, billing and service telemetry",
+        "questions": [
+          "Which measured indicators demonstrate service reliability and release safety?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Software and SaaS",
+        "roles": {
+          "ceo": {
+            "focus": "Adoption, retention and product value",
+            "metrics": [
+              "Adoption, retention and product value"
+            ],
+            "evidence": "Supply dated measurements and source records for adoption, retention and product value.",
+            "questions": [
+              "What measured baseline and target define adoption, retention and product value?",
+              "Which adverse assumptions would most change this software and saas plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Recurring billing and acquisition costs",
+            "metrics": [
+              "Recurring billing and acquisition costs"
+            ],
+            "evidence": "Supply dated measurements and source records for recurring billing and acquisition costs.",
+            "questions": [
+              "What measured baseline and target define recurring billing and acquisition costs?",
+              "Which adverse assumptions would most change this software and saas plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Release reliability and tenant isolation",
+            "metrics": [
+              "Release reliability and tenant isolation"
+            ],
+            "evidence": "Supply dated measurements and source records for release reliability and tenant isolation.",
+            "questions": [
+              "What measured baseline and target define release reliability and tenant isolation?",
+              "Which adverse assumptions would most change this software and saas plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Cybersecurity",
+        "roles": {
+          "ceo": {
+            "focus": "Service coverage and customer trust",
+            "metrics": [
+              "Service coverage and customer trust"
+            ],
+            "evidence": "Supply dated measurements and source records for service coverage and customer trust.",
+            "questions": [
+              "What measured baseline and target define service coverage and customer trust?",
+              "Which adverse assumptions would most change this cybersecurity plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Contract margins and incident-response costs",
+            "metrics": [
+              "Contract margins and incident-response costs"
+            ],
+            "evidence": "Supply dated measurements and source records for contract margins and incident-response costs.",
+            "questions": [
+              "What measured baseline and target define contract margins and incident-response costs?",
+              "Which adverse assumptions would most change this cybersecurity plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Detection coverage and tested recovery",
+            "metrics": [
+              "Detection coverage and tested recovery"
+            ],
+            "evidence": "Supply dated measurements and source records for detection coverage and tested recovery.",
+            "questions": [
+              "What measured baseline and target define detection coverage and tested recovery?",
+              "Which adverse assumptions would most change this cybersecurity plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Cloud and infrastructure",
+        "roles": {
+          "ceo": {
+            "focus": "Capacity demand and service commitments",
+            "metrics": [
+              "Capacity demand and service commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for capacity demand and service commitments.",
+            "questions": [
+              "What measured baseline and target define capacity demand and service commitments?",
+              "Which adverse assumptions would most change this cloud and infrastructure plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Utilization costs and committed spend",
+            "metrics": [
+              "Utilization costs and committed spend"
+            ],
+            "evidence": "Supply dated measurements and source records for utilization costs and committed spend.",
+            "questions": [
+              "What measured baseline and target define utilization costs and committed spend?",
+              "Which adverse assumptions would most change this cloud and infrastructure plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Resilience, access control and dependency failures",
+            "metrics": [
+              "Resilience, access control and dependency failures"
+            ],
+            "evidence": "Supply dated measurements and source records for resilience, access control and dependency failures.",
+            "questions": [
+              "What measured baseline and target define resilience, access control and dependency failures?",
+              "Which adverse assumptions would most change this cloud and infrastructure plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Hardware and electronics",
+        "roles": {
+          "ceo": {
+            "focus": "Demand, quality and product lifecycle",
+            "metrics": [
+              "Demand, quality and product lifecycle"
+            ],
+            "evidence": "Supply dated measurements and source records for demand, quality and product lifecycle.",
+            "questions": [
+              "What measured baseline and target define demand, quality and product lifecycle?",
+              "Which adverse assumptions would most change this hardware and electronics plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Inventory obsolescence and supplier terms",
+            "metrics": [
+              "Inventory obsolescence and supplier terms"
+            ],
+            "evidence": "Supply dated measurements and source records for inventory obsolescence and supplier terms.",
+            "questions": [
+              "What measured baseline and target define inventory obsolescence and supplier terms?",
+              "Which adverse assumptions would most change this hardware and electronics plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Firmware reliability and component traceability",
+            "metrics": [
+              "Firmware reliability and component traceability"
+            ],
+            "evidence": "Supply dated measurements and source records for firmware reliability and component traceability.",
+            "questions": [
+              "What measured baseline and target define firmware reliability and component traceability?",
+              "Which adverse assumptions would most change this hardware and electronics plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Manufacturing",
+    "roles": {
+      "ceo": {
+        "focus": "Throughput, quality and delivery",
+        "metrics": [
+          "Throughput",
+          "Quality and delivery"
+        ],
+        "evidence": "Production logs, defect records, inventory aging and maintenance logs",
+        "questions": [
+          "Which measured indicators demonstrate throughput, quality and delivery?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Inventory, working capital and yield losses",
+        "metrics": [
+          "Inventory",
+          "Working capital and yield losses"
+        ],
+        "evidence": "Production logs, defect records, inventory aging and maintenance logs",
+        "questions": [
+          "Which measured indicators demonstrate inventory, working capital and yield losses?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Equipment reliability and operational technology security",
+        "metrics": [
+          "Equipment reliability and operational technology security"
+        ],
+        "evidence": "Production logs, defect records, inventory aging and maintenance logs",
+        "questions": [
+          "Which measured indicators demonstrate equipment reliability and operational technology security?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Automotive",
+        "roles": {
+          "ceo": {
+            "focus": "Production throughput and defect rates",
+            "metrics": [
+              "Production throughput and defect rates"
+            ],
+            "evidence": "Supply dated measurements and source records for production throughput and defect rates.",
+            "questions": [
+              "What measured baseline and target define production throughput and defect rates?",
+              "Which adverse assumptions would most change this automotive plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Warranty exposure and inventory cash timing",
+            "metrics": [
+              "Warranty exposure and inventory cash timing"
+            ],
+            "evidence": "Supply dated measurements and source records for warranty exposure and inventory cash timing.",
+            "questions": [
+              "What measured baseline and target define warranty exposure and inventory cash timing?",
+              "Which adverse assumptions would most change this automotive plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Equipment availability and quality-data integrity",
+            "metrics": [
+              "Equipment availability and quality-data integrity"
+            ],
+            "evidence": "Supply dated measurements and source records for equipment availability and quality-data integrity.",
+            "questions": [
+              "What measured baseline and target define equipment availability and quality-data integrity?",
+              "Which adverse assumptions would most change this automotive plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Electronics manufacturing",
+        "roles": {
+          "ceo": {
+            "focus": "Yield and delivery commitments",
+            "metrics": [
+              "Yield and delivery commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for yield and delivery commitments.",
+            "questions": [
+              "What measured baseline and target define yield and delivery commitments?",
+              "Which adverse assumptions would most change this electronics manufacturing plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Component inventory and rework costs",
+            "metrics": [
+              "Component inventory and rework costs"
+            ],
+            "evidence": "Supply dated measurements and source records for component inventory and rework costs.",
+            "questions": [
+              "What measured baseline and target define component inventory and rework costs?",
+              "Which adverse assumptions would most change this electronics manufacturing plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Production traceability and test-system reliability",
+            "metrics": [
+              "Production traceability and test-system reliability"
+            ],
+            "evidence": "Supply dated measurements and source records for production traceability and test-system reliability.",
+            "questions": [
+              "What measured baseline and target define production traceability and test-system reliability?",
+              "Which adverse assumptions would most change this electronics manufacturing plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Textiles and apparel",
+        "roles": {
+          "ceo": {
+            "focus": "Order fulfillment and quality consistency",
+            "metrics": [
+              "Order fulfillment and quality consistency"
+            ],
+            "evidence": "Supply dated measurements and source records for order fulfillment and quality consistency.",
+            "questions": [
+              "What measured baseline and target define order fulfillment and quality consistency?",
+              "Which adverse assumptions would most change this textiles and apparel plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Material costs and seasonal working capital",
+            "metrics": [
+              "Material costs and seasonal working capital"
+            ],
+            "evidence": "Supply dated measurements and source records for material costs and seasonal working capital.",
+            "questions": [
+              "What measured baseline and target define material costs and seasonal working capital?",
+              "Which adverse assumptions would most change this textiles and apparel plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Production tracking and supplier-data reliability",
+            "metrics": [
+              "Production tracking and supplier-data reliability"
+            ],
+            "evidence": "Supply dated measurements and source records for production tracking and supplier-data reliability.",
+            "questions": [
+              "What measured baseline and target define production tracking and supplier-data reliability?",
+              "Which adverse assumptions would most change this textiles and apparel plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Food processing",
+        "roles": {
+          "ceo": {
+            "focus": "Yield, spoilage and distribution",
+            "metrics": [
+              "Yield, spoilage and distribution"
+            ],
+            "evidence": "Supply dated measurements and source records for yield, spoilage and distribution.",
+            "questions": [
+              "What measured baseline and target define yield, spoilage and distribution?",
+              "Which adverse assumptions would most change this food processing plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Inventory shelf life and processing margins",
+            "metrics": [
+              "Inventory shelf life and processing margins"
+            ],
+            "evidence": "Supply dated measurements and source records for inventory shelf life and processing margins.",
+            "questions": [
+              "What measured baseline and target define inventory shelf life and processing margins?",
+              "Which adverse assumptions would most change this food processing plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Cold-chain telemetry and batch traceability",
+            "metrics": [
+              "Cold-chain telemetry and batch traceability"
+            ],
+            "evidence": "Supply dated measurements and source records for cold-chain telemetry and batch traceability.",
+            "questions": [
+              "What measured baseline and target define cold-chain telemetry and batch traceability?",
+              "Which adverse assumptions would most change this food processing plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Real estate",
+    "roles": {
+      "ceo": {
+        "focus": "Occupancy, absorption and project delivery",
+        "metrics": [
+          "Occupancy",
+          "Absorption and project delivery"
+        ],
+        "evidence": "Lease schedules, occupancy records, debt schedules and project milestones",
+        "questions": [
+          "Which measured indicators demonstrate occupancy, absorption and project delivery?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Rental collections, debt service and project cash timing",
+        "metrics": [
+          "Rental collections",
+          "Debt service and project cash timing"
+        ],
+        "evidence": "Lease schedules, occupancy records, debt schedules and project milestones",
+        "questions": [
+          "Which measured indicators demonstrate rental collections, debt service and project cash timing?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Property systems, tenant data and building connectivity",
+        "metrics": [
+          "Property systems",
+          "Tenant data and building connectivity"
+        ],
+        "evidence": "Lease schedules, occupancy records, debt schedules and project milestones",
+        "questions": [
+          "Which measured indicators demonstrate property systems, tenant data and building connectivity?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Residential property",
+        "roles": {
+          "ceo": {
+            "focus": "Occupancy, absorption and tenant retention",
+            "metrics": [
+              "Occupancy, absorption and tenant retention"
+            ],
+            "evidence": "Supply dated measurements and source records for occupancy, absorption and tenant retention.",
+            "questions": [
+              "What measured baseline and target define occupancy, absorption and tenant retention?",
+              "Which adverse assumptions would most change this residential property plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Rent collections, vacancies and debt service",
+            "metrics": [
+              "Rent collections, vacancies and debt service"
+            ],
+            "evidence": "Supply dated measurements and source records for rent collections, vacancies and debt service.",
+            "questions": [
+              "What measured baseline and target define rent collections, vacancies and debt service?",
+              "Which adverse assumptions would most change this residential property plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Tenant-data protection and property-system uptime",
+            "metrics": [
+              "Tenant-data protection and property-system uptime"
+            ],
+            "evidence": "Supply dated measurements and source records for tenant-data protection and property-system uptime.",
+            "questions": [
+              "What measured baseline and target define tenant-data protection and property-system uptime?",
+              "Which adverse assumptions would most change this residential property plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Commercial property",
+        "roles": {
+          "ceo": {
+            "focus": "Lease demand and tenant concentration",
+            "metrics": [
+              "Lease demand and tenant concentration"
+            ],
+            "evidence": "Supply dated measurements and source records for lease demand and tenant concentration.",
+            "questions": [
+              "What measured baseline and target define lease demand and tenant concentration?",
+              "Which adverse assumptions would most change this commercial property plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Lease expiries, rent collections and fit-out costs",
+            "metrics": [
+              "Lease expiries, rent collections and fit-out costs"
+            ],
+            "evidence": "Supply dated measurements and source records for lease expiries, rent collections and fit-out costs.",
+            "questions": [
+              "What measured baseline and target define lease expiries, rent collections and fit-out costs?",
+              "Which adverse assumptions would most change this commercial property plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Building connectivity and access-system reliability",
+            "metrics": [
+              "Building connectivity and access-system reliability"
+            ],
+            "evidence": "Supply dated measurements and source records for building connectivity and access-system reliability.",
+            "questions": [
+              "What measured baseline and target define building connectivity and access-system reliability?",
+              "Which adverse assumptions would most change this commercial property plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Industrial and logistics property",
+        "roles": {
+          "ceo": {
+            "focus": "Tenant demand and location suitability",
+            "metrics": [
+              "Tenant demand and location suitability"
+            ],
+            "evidence": "Supply dated measurements and source records for tenant demand and location suitability.",
+            "questions": [
+              "What measured baseline and target define tenant demand and location suitability?",
+              "Which adverse assumptions would most change this industrial and logistics property plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Lease cash flows and maintenance commitments",
+            "metrics": [
+              "Lease cash flows and maintenance commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for lease cash flows and maintenance commitments.",
+            "questions": [
+              "What measured baseline and target define lease cash flows and maintenance commitments?",
+              "Which adverse assumptions would most change this industrial and logistics property plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Facility telemetry and logistics connectivity",
+            "metrics": [
+              "Facility telemetry and logistics connectivity"
+            ],
+            "evidence": "Supply dated measurements and source records for facility telemetry and logistics connectivity.",
+            "questions": [
+              "What measured baseline and target define facility telemetry and logistics connectivity?",
+              "Which adverse assumptions would most change this industrial and logistics property plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Property development",
+        "roles": {
+          "ceo": {
+            "focus": "Sales absorption and construction milestones",
+            "metrics": [
+              "Sales absorption and construction milestones"
+            ],
+            "evidence": "Supply dated measurements and source records for sales absorption and construction milestones.",
+            "questions": [
+              "What measured baseline and target define sales absorption and construction milestones?",
+              "Which adverse assumptions would most change this property development plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Project cash timing, contingencies and financing",
+            "metrics": [
+              "Project cash timing, contingencies and financing"
+            ],
+            "evidence": "Supply dated measurements and source records for project cash timing, contingencies and financing.",
+            "questions": [
+              "What measured baseline and target define project cash timing, contingencies and financing?",
+              "Which adverse assumptions would most change this property development plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Project-information integrity and approved design versions",
+            "metrics": [
+              "Project-information integrity and approved design versions"
+            ],
+            "evidence": "Supply dated measurements and source records for project-information integrity and approved design versions.",
+            "questions": [
+              "What measured baseline and target define project-information integrity and approved design versions?",
+              "Which adverse assumptions would most change this property development plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Retail",
+    "roles": {
+      "ceo": {
+        "focus": "Channel performance and customer retention",
+        "metrics": [
+          "Channel performance and customer retention"
+        ],
+        "evidence": "Sales reports, inventory aging, return records and system incident logs",
+        "questions": [
+          "Which measured indicators demonstrate channel performance and customer retention?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Inventory turnover, margins and returns",
+        "metrics": [
+          "Inventory turnover",
+          "Margins and returns"
+        ],
+        "evidence": "Sales reports, inventory aging, return records and system incident logs",
+        "questions": [
+          "Which measured indicators demonstrate inventory turnover, margins and returns?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Checkout reliability and inventory synchronization",
+        "metrics": [
+          "Checkout reliability and inventory synchronization"
+        ],
+        "evidence": "Sales reports, inventory aging, return records and system incident logs",
+        "questions": [
+          "Which measured indicators demonstrate checkout reliability and inventory synchronization?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "E-commerce",
+        "roles": {
+          "ceo": {
+            "focus": "Conversion, retention and fulfillment",
+            "metrics": [
+              "Conversion, retention and fulfillment"
+            ],
+            "evidence": "Supply dated measurements and source records for conversion, retention and fulfillment.",
+            "questions": [
+              "What measured baseline and target define conversion, retention and fulfillment?",
+              "Which adverse assumptions would most change this e-commerce plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Returns, acquisition costs and channel margins",
+            "metrics": [
+              "Returns, acquisition costs and channel margins"
+            ],
+            "evidence": "Supply dated measurements and source records for returns, acquisition costs and channel margins.",
+            "questions": [
+              "What measured baseline and target define returns, acquisition costs and channel margins?",
+              "Which adverse assumptions would most change this e-commerce plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Checkout reliability and inventory synchronization",
+            "metrics": [
+              "Checkout reliability and inventory synchronization"
+            ],
+            "evidence": "Supply dated measurements and source records for checkout reliability and inventory synchronization.",
+            "questions": [
+              "What measured baseline and target define checkout reliability and inventory synchronization?",
+              "Which adverse assumptions would most change this e-commerce plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Physical stores",
+        "roles": {
+          "ceo": {
+            "focus": "Footfall, conversion and store productivity",
+            "metrics": [
+              "Footfall, conversion and store productivity"
+            ],
+            "evidence": "Supply dated measurements and source records for footfall, conversion and store productivity.",
+            "questions": [
+              "What measured baseline and target define footfall, conversion and store productivity?",
+              "Which adverse assumptions would most change this physical stores plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Inventory turnover and store costs",
+            "metrics": [
+              "Inventory turnover and store costs"
+            ],
+            "evidence": "Supply dated measurements and source records for inventory turnover and store costs.",
+            "questions": [
+              "What measured baseline and target define inventory turnover and store costs?",
+              "Which adverse assumptions would most change this physical stores plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Point-of-sale availability and stock accuracy",
+            "metrics": [
+              "Point-of-sale availability and stock accuracy"
+            ],
+            "evidence": "Supply dated measurements and source records for point-of-sale availability and stock accuracy.",
+            "questions": [
+              "What measured baseline and target define point-of-sale availability and stock accuracy?",
+              "Which adverse assumptions would most change this physical stores plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Wholesale distribution",
+        "roles": {
+          "ceo": {
+            "focus": "Customer concentration and fulfillment",
+            "metrics": [
+              "Customer concentration and fulfillment"
+            ],
+            "evidence": "Supply dated measurements and source records for customer concentration and fulfillment.",
+            "questions": [
+              "What measured baseline and target define customer concentration and fulfillment?",
+              "Which adverse assumptions would most change this wholesale distribution plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Trade credit, receivables and inventory aging",
+            "metrics": [
+              "Trade credit, receivables and inventory aging"
+            ],
+            "evidence": "Supply dated measurements and source records for trade credit, receivables and inventory aging.",
+            "questions": [
+              "What measured baseline and target define trade credit, receivables and inventory aging?",
+              "Which adverse assumptions would most change this wholesale distribution plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Order-processing resilience and catalog integrity",
+            "metrics": [
+              "Order-processing resilience and catalog integrity"
+            ],
+            "evidence": "Supply dated measurements and source records for order-processing resilience and catalog integrity.",
+            "questions": [
+              "What measured baseline and target define order-processing resilience and catalog integrity?",
+              "Which adverse assumptions would most change this wholesale distribution plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Healthcare",
+    "roles": {
+      "ceo": {
+        "focus": "Service access and responsible quality oversight",
+        "metrics": [
+          "Service access and responsible quality oversight"
+        ],
+        "evidence": "Responsible quality reports, receivables, staffing records and access logs",
+        "questions": [
+          "Which measured indicators demonstrate service access and responsible quality oversight?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Collections, payer timing and staffing costs",
+        "metrics": [
+          "Collections",
+          "Payer timing and staffing costs"
+        ],
+        "evidence": "Responsible quality reports, receivables, staffing records and access logs",
+        "questions": [
+          "Which measured indicators demonstrate collections, payer timing and staffing costs?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Clinical system continuity and patient-data access",
+        "metrics": [
+          "Clinical system continuity and patient-data access"
+        ],
+        "evidence": "Responsible quality reports, receivables, staffing records and access logs",
+        "questions": [
+          "Which measured indicators demonstrate clinical system continuity and patient-data access?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Hospitals and clinics",
+        "roles": {
+          "ceo": {
+            "focus": "Service access and responsible quality oversight",
+            "metrics": [
+              "Service access and responsible quality oversight"
+            ],
+            "evidence": "Supply dated measurements and source records for service access and responsible quality oversight.",
+            "questions": [
+              "What measured baseline and target define service access and responsible quality oversight?",
+              "Which adverse assumptions would most change this hospitals and clinics plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Payer timing and staffing commitments",
+            "metrics": [
+              "Payer timing and staffing commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for payer timing and staffing commitments.",
+            "questions": [
+              "What measured baseline and target define payer timing and staffing commitments?",
+              "Which adverse assumptions would most change this hospitals and clinics plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Clinical system continuity and controlled data access",
+            "metrics": [
+              "Clinical system continuity and controlled data access"
+            ],
+            "evidence": "Supply dated measurements and source records for clinical system continuity and controlled data access.",
+            "questions": [
+              "What measured baseline and target define clinical system continuity and controlled data access?",
+              "Which adverse assumptions would most change this hospitals and clinics plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Medical devices",
+        "roles": {
+          "ceo": {
+            "focus": "Product quality and delivery commitments",
+            "metrics": [
+              "Product quality and delivery commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for product quality and delivery commitments.",
+            "questions": [
+              "What measured baseline and target define product quality and delivery commitments?",
+              "Which adverse assumptions would most change this medical devices plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Inventory, warranty and service costs",
+            "metrics": [
+              "Inventory, warranty and service costs"
+            ],
+            "evidence": "Supply dated measurements and source records for inventory, warranty and service costs.",
+            "questions": [
+              "What measured baseline and target define inventory, warranty and service costs?",
+              "Which adverse assumptions would most change this medical devices plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Device traceability and validated software changes",
+            "metrics": [
+              "Device traceability and validated software changes"
+            ],
+            "evidence": "Supply dated measurements and source records for device traceability and validated software changes.",
+            "questions": [
+              "What measured baseline and target define device traceability and validated software changes?",
+              "Which adverse assumptions would most change this medical devices plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Pharmaceutical operations",
+        "roles": {
+          "ceo": {
+            "focus": "Supply continuity and responsible quality review",
+            "metrics": [
+              "Supply continuity and responsible quality review"
+            ],
+            "evidence": "Supply dated measurements and source records for supply continuity and responsible quality review.",
+            "questions": [
+              "What measured baseline and target define supply continuity and responsible quality review?",
+              "Which adverse assumptions would most change this pharmaceutical operations plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Inventory expiry and distribution cash timing",
+            "metrics": [
+              "Inventory expiry and distribution cash timing"
+            ],
+            "evidence": "Supply dated measurements and source records for inventory expiry and distribution cash timing.",
+            "questions": [
+              "What measured baseline and target define inventory expiry and distribution cash timing?",
+              "Which adverse assumptions would most change this pharmaceutical operations plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Batch traceability and controlled production records",
+            "metrics": [
+              "Batch traceability and controlled production records"
+            ],
+            "evidence": "Supply dated measurements and source records for batch traceability and controlled production records.",
+            "questions": [
+              "What measured baseline and target define batch traceability and controlled production records?",
+              "Which adverse assumptions would most change this pharmaceutical operations plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Energy",
+    "roles": {
+      "ceo": {
+        "focus": "Asset performance and demand exposure",
+        "metrics": [
+          "Asset performance and demand exposure"
+        ],
+        "evidence": "Asset reports, contracts, cash schedules and maintenance evidence",
+        "questions": [
+          "Which measured indicators demonstrate asset performance and demand exposure?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Commodity sensitivity and capital commitments",
+        "metrics": [
+          "Commodity sensitivity and capital commitments"
+        ],
+        "evidence": "Asset reports, contracts, cash schedules and maintenance evidence",
+        "questions": [
+          "Which measured indicators demonstrate commodity sensitivity and capital commitments?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Asset telemetry and control-system resilience",
+        "metrics": [
+          "Asset telemetry and control-system resilience"
+        ],
+        "evidence": "Asset reports, contracts, cash schedules and maintenance evidence",
+        "questions": [
+          "Which measured indicators demonstrate asset telemetry and control-system resilience?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Renewable energy",
+        "roles": {
+          "ceo": {
+            "focus": "Asset output and contracted demand",
+            "metrics": [
+              "Asset output and contracted demand"
+            ],
+            "evidence": "Supply dated measurements and source records for asset output and contracted demand.",
+            "questions": [
+              "What measured baseline and target define asset output and contracted demand?",
+              "Which adverse assumptions would most change this renewable energy plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Capital commitments and collection timing",
+            "metrics": [
+              "Capital commitments and collection timing"
+            ],
+            "evidence": "Supply dated measurements and source records for capital commitments and collection timing.",
+            "questions": [
+              "What measured baseline and target define capital commitments and collection timing?",
+              "Which adverse assumptions would most change this renewable energy plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Asset monitoring and maintenance telemetry",
+            "metrics": [
+              "Asset monitoring and maintenance telemetry"
+            ],
+            "evidence": "Supply dated measurements and source records for asset monitoring and maintenance telemetry.",
+            "questions": [
+              "What measured baseline and target define asset monitoring and maintenance telemetry?",
+              "Which adverse assumptions would most change this renewable energy plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Oil and gas operations",
+        "roles": {
+          "ceo": {
+            "focus": "Asset availability and demand exposure",
+            "metrics": [
+              "Asset availability and demand exposure"
+            ],
+            "evidence": "Supply dated measurements and source records for asset availability and demand exposure.",
+            "questions": [
+              "What measured baseline and target define asset availability and demand exposure?",
+              "Which adverse assumptions would most change this oil and gas operations plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Commodity sensitivity and operating commitments",
+            "metrics": [
+              "Commodity sensitivity and operating commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for commodity sensitivity and operating commitments.",
+            "questions": [
+              "What measured baseline and target define commodity sensitivity and operating commitments?",
+              "Which adverse assumptions would most change this oil and gas operations plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Control-system resilience and maintenance records",
+            "metrics": [
+              "Control-system resilience and maintenance records"
+            ],
+            "evidence": "Supply dated measurements and source records for control-system resilience and maintenance records.",
+            "questions": [
+              "What measured baseline and target define control-system resilience and maintenance records?",
+              "Which adverse assumptions would most change this oil and gas operations plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Utilities",
+        "roles": {
+          "ceo": {
+            "focus": "Service coverage and continuity",
+            "metrics": [
+              "Service coverage and continuity"
+            ],
+            "evidence": "Supply dated measurements and source records for service coverage and continuity.",
+            "questions": [
+              "What measured baseline and target define service coverage and continuity?",
+              "Which adverse assumptions would most change this utilities plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Billing collections and maintenance commitments",
+            "metrics": [
+              "Billing collections and maintenance commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for billing collections and maintenance commitments.",
+            "questions": [
+              "What measured baseline and target define billing collections and maintenance commitments?",
+              "Which adverse assumptions would most change this utilities plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Network telemetry and outage-data integrity",
+            "metrics": [
+              "Network telemetry and outage-data integrity"
+            ],
+            "evidence": "Supply dated measurements and source records for network telemetry and outage-data integrity.",
+            "questions": [
+              "What measured baseline and target define network telemetry and outage-data integrity?",
+              "Which adverse assumptions would most change this utilities plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Construction",
+    "roles": {
+      "ceo": {
+        "focus": "Project milestones and delivery quality",
+        "metrics": [
+          "Project milestones and delivery quality"
+        ],
+        "evidence": "Project schedules, change orders, payment records and approved designs",
+        "questions": [
+          "Which measured indicators demonstrate project milestones and delivery quality?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Payment milestones, retention and cost overruns",
+        "metrics": [
+          "Payment milestones",
+          "Retention and cost overruns"
+        ],
+        "evidence": "Project schedules, change orders, payment records and approved designs",
+        "questions": [
+          "Which measured indicators demonstrate payment milestones, retention and cost overruns?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Project data, design versions and field connectivity",
+        "metrics": [
+          "Project data",
+          "Design versions and field connectivity"
+        ],
+        "evidence": "Project schedules, change orders, payment records and approved designs",
+        "questions": [
+          "Which measured indicators demonstrate project data, design versions and field connectivity?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Residential construction",
+        "roles": {
+          "ceo": {
+            "focus": "Delivery milestones and build quality",
+            "metrics": [
+              "Delivery milestones and build quality"
+            ],
+            "evidence": "Supply dated measurements and source records for delivery milestones and build quality.",
+            "questions": [
+              "What measured baseline and target define delivery milestones and build quality?",
+              "Which adverse assumptions would most change this residential construction plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Stage payments and material commitments",
+            "metrics": [
+              "Stage payments and material commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for stage payments and material commitments.",
+            "questions": [
+              "What measured baseline and target define stage payments and material commitments?",
+              "Which adverse assumptions would most change this residential construction plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Design-version integrity and site reporting",
+            "metrics": [
+              "Design-version integrity and site reporting"
+            ],
+            "evidence": "Supply dated measurements and source records for design-version integrity and site reporting.",
+            "questions": [
+              "What measured baseline and target define design-version integrity and site reporting?",
+              "Which adverse assumptions would most change this residential construction plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Infrastructure projects",
+        "roles": {
+          "ceo": {
+            "focus": "Milestone delivery and subcontractor dependencies",
+            "metrics": [
+              "Milestone delivery and subcontractor dependencies"
+            ],
+            "evidence": "Supply dated measurements and source records for milestone delivery and subcontractor dependencies.",
+            "questions": [
+              "What measured baseline and target define milestone delivery and subcontractor dependencies?",
+              "Which adverse assumptions would most change this infrastructure projects plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Retention, overruns and committed spending",
+            "metrics": [
+              "Retention, overruns and committed spending"
+            ],
+            "evidence": "Supply dated measurements and source records for retention, overruns and committed spending.",
+            "questions": [
+              "What measured baseline and target define retention, overruns and committed spending?",
+              "Which adverse assumptions would most change this infrastructure projects plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Project-data continuity and field connectivity",
+            "metrics": [
+              "Project-data continuity and field connectivity"
+            ],
+            "evidence": "Supply dated measurements and source records for project-data continuity and field connectivity.",
+            "questions": [
+              "What measured baseline and target define project-data continuity and field connectivity?",
+              "Which adverse assumptions would most change this infrastructure projects plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Specialist contracting",
+        "roles": {
+          "ceo": {
+            "focus": "Contract delivery and resource allocation",
+            "metrics": [
+              "Contract delivery and resource allocation"
+            ],
+            "evidence": "Supply dated measurements and source records for contract delivery and resource allocation.",
+            "questions": [
+              "What measured baseline and target define contract delivery and resource allocation?",
+              "Which adverse assumptions would most change this specialist contracting plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Project margins and receivable aging",
+            "metrics": [
+              "Project margins and receivable aging"
+            ],
+            "evidence": "Supply dated measurements and source records for project margins and receivable aging.",
+            "questions": [
+              "What measured baseline and target define project margins and receivable aging?",
+              "Which adverse assumptions would most change this specialist contracting plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Scheduling reliability and controlled client records",
+            "metrics": [
+              "Scheduling reliability and controlled client records"
+            ],
+            "evidence": "Supply dated measurements and source records for scheduling reliability and controlled client records.",
+            "questions": [
+              "What measured baseline and target define scheduling reliability and controlled client records?",
+              "Which adverse assumptions would most change this specialist contracting plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Transport and logistics",
+    "roles": {
+      "ceo": {
+        "focus": "Delivery reliability and fleet utilization",
+        "metrics": [
+          "Delivery reliability and fleet utilization"
+        ],
+        "evidence": "Delivery logs, fuel records, receivable aging and dispatch incidents",
+        "questions": [
+          "Which measured indicators demonstrate delivery reliability and fleet utilization?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Fuel exposure, receivables and fleet costs",
+        "metrics": [
+          "Fuel exposure",
+          "Receivables and fleet costs"
+        ],
+        "evidence": "Delivery logs, fuel records, receivable aging and dispatch incidents",
+        "questions": [
+          "Which measured indicators demonstrate fuel exposure, receivables and fleet costs?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Dispatch availability and tracking integrity",
+        "metrics": [
+          "Dispatch availability and tracking integrity"
+        ],
+        "evidence": "Delivery logs, fuel records, receivable aging and dispatch incidents",
+        "questions": [
+          "Which measured indicators demonstrate dispatch availability and tracking integrity?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Freight and trucking",
+        "roles": {
+          "ceo": {
+            "focus": "Delivery reliability and fleet utilization",
+            "metrics": [
+              "Delivery reliability and fleet utilization"
+            ],
+            "evidence": "Supply dated measurements and source records for delivery reliability and fleet utilization.",
+            "questions": [
+              "What measured baseline and target define delivery reliability and fleet utilization?",
+              "Which adverse assumptions would most change this freight and trucking plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Fuel exposure and receivable timing",
+            "metrics": [
+              "Fuel exposure and receivable timing"
+            ],
+            "evidence": "Supply dated measurements and source records for fuel exposure and receivable timing.",
+            "questions": [
+              "What measured baseline and target define fuel exposure and receivable timing?",
+              "Which adverse assumptions would most change this freight and trucking plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Dispatch availability and vehicle-data integrity",
+            "metrics": [
+              "Dispatch availability and vehicle-data integrity"
+            ],
+            "evidence": "Supply dated measurements and source records for dispatch availability and vehicle-data integrity.",
+            "questions": [
+              "What measured baseline and target define dispatch availability and vehicle-data integrity?",
+              "Which adverse assumptions would most change this freight and trucking plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Warehousing",
+        "roles": {
+          "ceo": {
+            "focus": "Fulfillment accuracy and throughput",
+            "metrics": [
+              "Fulfillment accuracy and throughput"
+            ],
+            "evidence": "Supply dated measurements and source records for fulfillment accuracy and throughput.",
+            "questions": [
+              "What measured baseline and target define fulfillment accuracy and throughput?",
+              "Which adverse assumptions would most change this warehousing plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Storage margins and inventory commitments",
+            "metrics": [
+              "Storage margins and inventory commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for storage margins and inventory commitments.",
+            "questions": [
+              "What measured baseline and target define storage margins and inventory commitments?",
+              "Which adverse assumptions would most change this warehousing plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Warehouse-system continuity and stock traceability",
+            "metrics": [
+              "Warehouse-system continuity and stock traceability"
+            ],
+            "evidence": "Supply dated measurements and source records for warehouse-system continuity and stock traceability.",
+            "questions": [
+              "What measured baseline and target define warehouse-system continuity and stock traceability?",
+              "Which adverse assumptions would most change this warehousing plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Shipping and port logistics",
+        "roles": {
+          "ceo": {
+            "focus": "Cargo throughput and service commitments",
+            "metrics": [
+              "Cargo throughput and service commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for cargo throughput and service commitments.",
+            "questions": [
+              "What measured baseline and target define cargo throughput and service commitments?",
+              "Which adverse assumptions would most change this shipping and port logistics plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Voyage cash timing and port costs",
+            "metrics": [
+              "Voyage cash timing and port costs"
+            ],
+            "evidence": "Supply dated measurements and source records for voyage cash timing and port costs.",
+            "questions": [
+              "What measured baseline and target define voyage cash timing and port costs?",
+              "Which adverse assumptions would most change this shipping and port logistics plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Tracking integrity and shore-system continuity",
+            "metrics": [
+              "Tracking integrity and shore-system continuity"
+            ],
+            "evidence": "Supply dated measurements and source records for tracking integrity and shore-system continuity.",
+            "questions": [
+              "What measured baseline and target define tracking integrity and shore-system continuity?",
+              "Which adverse assumptions would most change this shipping and port logistics plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Agriculture",
+    "roles": {
+      "ceo": {
+        "focus": "Yield, seasonal demand and spoilage",
+        "metrics": [
+          "Yield",
+          "Seasonal demand and spoilage"
+        ],
+        "evidence": "Yield observations, seasonal budgets, storage losses and sensor records",
+        "questions": [
+          "Which measured indicators demonstrate yield, seasonal demand and spoilage?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Seasonal cash timing and input costs",
+        "metrics": [
+          "Seasonal cash timing and input costs"
+        ],
+        "evidence": "Yield observations, seasonal budgets, storage losses and sensor records",
+        "questions": [
+          "Which measured indicators demonstrate seasonal cash timing and input costs?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Field telemetry and traceability",
+        "metrics": [
+          "Field telemetry and traceability"
+        ],
+        "evidence": "Yield observations, seasonal budgets, storage losses and sensor records",
+        "questions": [
+          "Which measured indicators demonstrate field telemetry and traceability?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Crop production",
+        "roles": {
+          "ceo": {
+            "focus": "Yield and seasonal demand",
+            "metrics": [
+              "Yield and seasonal demand"
+            ],
+            "evidence": "Supply dated measurements and source records for yield and seasonal demand.",
+            "questions": [
+              "What measured baseline and target define yield and seasonal demand?",
+              "Which adverse assumptions would most change this crop production plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Input costs and seasonal cash requirements",
+            "metrics": [
+              "Input costs and seasonal cash requirements"
+            ],
+            "evidence": "Supply dated measurements and source records for input costs and seasonal cash requirements.",
+            "questions": [
+              "What measured baseline and target define input costs and seasonal cash requirements?",
+              "Which adverse assumptions would most change this crop production plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Field telemetry and harvest-record integrity",
+            "metrics": [
+              "Field telemetry and harvest-record integrity"
+            ],
+            "evidence": "Supply dated measurements and source records for field telemetry and harvest-record integrity.",
+            "questions": [
+              "What measured baseline and target define field telemetry and harvest-record integrity?",
+              "Which adverse assumptions would most change this crop production plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Livestock operations",
+        "roles": {
+          "ceo": {
+            "focus": "Production consistency and responsible welfare review",
+            "metrics": [
+              "Production consistency and responsible welfare review"
+            ],
+            "evidence": "Supply dated measurements and source records for production consistency and responsible welfare review.",
+            "questions": [
+              "What measured baseline and target define production consistency and responsible welfare review?",
+              "Which adverse assumptions would most change this livestock operations plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Feed costs and production cash timing",
+            "metrics": [
+              "Feed costs and production cash timing"
+            ],
+            "evidence": "Supply dated measurements and source records for feed costs and production cash timing.",
+            "questions": [
+              "What measured baseline and target define feed costs and production cash timing?",
+              "Which adverse assumptions would most change this livestock operations plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Traceability and monitoring-system reliability",
+            "metrics": [
+              "Traceability and monitoring-system reliability"
+            ],
+            "evidence": "Supply dated measurements and source records for traceability and monitoring-system reliability.",
+            "questions": [
+              "What measured baseline and target define traceability and monitoring-system reliability?",
+              "Which adverse assumptions would most change this livestock operations plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Agricultural distribution",
+        "roles": {
+          "ceo": {
+            "focus": "Fulfillment, spoilage and supplier concentration",
+            "metrics": [
+              "Fulfillment, spoilage and supplier concentration"
+            ],
+            "evidence": "Supply dated measurements and source records for fulfillment, spoilage and supplier concentration.",
+            "questions": [
+              "What measured baseline and target define fulfillment, spoilage and supplier concentration?",
+              "Which adverse assumptions would most change this agricultural distribution plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Storage losses and seasonal working capital",
+            "metrics": [
+              "Storage losses and seasonal working capital"
+            ],
+            "evidence": "Supply dated measurements and source records for storage losses and seasonal working capital.",
+            "questions": [
+              "What measured baseline and target define storage losses and seasonal working capital?",
+              "Which adverse assumptions would most change this agricultural distribution plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Cold-chain evidence and inventory tracking",
+            "metrics": [
+              "Cold-chain evidence and inventory tracking"
+            ],
+            "evidence": "Supply dated measurements and source records for cold-chain evidence and inventory tracking.",
+            "questions": [
+              "What measured baseline and target define cold-chain evidence and inventory tracking?",
+              "Which adverse assumptions would most change this agricultural distribution plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Education",
+    "roles": {
+      "ceo": {
+        "focus": "Learning access, outcomes and retention",
+        "metrics": [
+          "Learning access",
+          "Outcomes and retention"
+        ],
+        "evidence": "Outcome evidence, enrollment records, budgets and platform telemetry",
+        "questions": [
+          "Which measured indicators demonstrate learning access, outcomes and retention?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Enrollment cash timing and staffing commitments",
+        "metrics": [
+          "Enrollment cash timing and staffing commitments"
+        ],
+        "evidence": "Outcome evidence, enrollment records, budgets and platform telemetry",
+        "questions": [
+          "Which measured indicators demonstrate enrollment cash timing and staffing commitments?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Learning-platform continuity and student-data access",
+        "metrics": [
+          "Learning-platform continuity and student-data access"
+        ],
+        "evidence": "Outcome evidence, enrollment records, budgets and platform telemetry",
+        "questions": [
+          "Which measured indicators demonstrate learning-platform continuity and student-data access?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Schools and colleges",
+        "roles": {
+          "ceo": {
+            "focus": "Access, learning outcomes and retention",
+            "metrics": [
+              "Access, learning outcomes and retention"
+            ],
+            "evidence": "Supply dated measurements and source records for access, learning outcomes and retention.",
+            "questions": [
+              "What measured baseline and target define access, learning outcomes and retention?",
+              "Which adverse assumptions would most change this schools and colleges plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Fee collections and staffing commitments",
+            "metrics": [
+              "Fee collections and staffing commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for fee collections and staffing commitments.",
+            "questions": [
+              "What measured baseline and target define fee collections and staffing commitments?",
+              "Which adverse assumptions would most change this schools and colleges plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Student-system continuity and access controls",
+            "metrics": [
+              "Student-system continuity and access controls"
+            ],
+            "evidence": "Supply dated measurements and source records for student-system continuity and access controls.",
+            "questions": [
+              "What measured baseline and target define student-system continuity and access controls?",
+              "Which adverse assumptions would most change this schools and colleges plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Online education",
+        "roles": {
+          "ceo": {
+            "focus": "Course engagement and completion",
+            "metrics": [
+              "Course engagement and completion"
+            ],
+            "evidence": "Supply dated measurements and source records for course engagement and completion.",
+            "questions": [
+              "What measured baseline and target define course engagement and completion?",
+              "Which adverse assumptions would most change this online education plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Acquisition costs and recurring collections",
+            "metrics": [
+              "Acquisition costs and recurring collections"
+            ],
+            "evidence": "Supply dated measurements and source records for acquisition costs and recurring collections.",
+            "questions": [
+              "What measured baseline and target define acquisition costs and recurring collections?",
+              "Which adverse assumptions would most change this online education plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Learning-platform availability and learner-data access",
+            "metrics": [
+              "Learning-platform availability and learner-data access"
+            ],
+            "evidence": "Supply dated measurements and source records for learning-platform availability and learner-data access.",
+            "questions": [
+              "What measured baseline and target define learning-platform availability and learner-data access?",
+              "Which adverse assumptions would most change this online education plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Professional training",
+        "roles": {
+          "ceo": {
+            "focus": "Contract delivery and skills outcomes",
+            "metrics": [
+              "Contract delivery and skills outcomes"
+            ],
+            "evidence": "Supply dated measurements and source records for contract delivery and skills outcomes.",
+            "questions": [
+              "What measured baseline and target define contract delivery and skills outcomes?",
+              "Which adverse assumptions would most change this professional training plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Trainer utilization and project margins",
+            "metrics": [
+              "Trainer utilization and project margins"
+            ],
+            "evidence": "Supply dated measurements and source records for trainer utilization and project margins.",
+            "questions": [
+              "What measured baseline and target define trainer utilization and project margins?",
+              "Which adverse assumptions would most change this professional training plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Training-record integrity and platform reliability",
+            "metrics": [
+              "Training-record integrity and platform reliability"
+            ],
+            "evidence": "Supply dated measurements and source records for training-record integrity and platform reliability.",
+            "questions": [
+              "What measured baseline and target define training-record integrity and platform reliability?",
+              "Which adverse assumptions would most change this professional training plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Hospitality",
+    "roles": {
+      "ceo": {
+        "focus": "Occupancy, service quality and repeat demand",
+        "metrics": [
+          "Occupancy",
+          "Service quality and repeat demand"
+        ],
+        "evidence": "Occupancy records, booking reports, labor schedules and incidents",
+        "questions": [
+          "Which measured indicators demonstrate occupancy, service quality and repeat demand?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Seasonal cash flow and labor costs",
+        "metrics": [
+          "Seasonal cash flow and labor costs"
+        ],
+        "evidence": "Occupancy records, booking reports, labor schedules and incidents",
+        "questions": [
+          "Which measured indicators demonstrate seasonal cash flow and labor costs?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Booking reliability and guest-data access",
+        "metrics": [
+          "Booking reliability and guest-data access"
+        ],
+        "evidence": "Occupancy records, booking reports, labor schedules and incidents",
+        "questions": [
+          "Which measured indicators demonstrate booking reliability and guest-data access?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Hotels and accommodation",
+        "roles": {
+          "ceo": {
+            "focus": "Occupancy, repeat demand and service quality",
+            "metrics": [
+              "Occupancy, repeat demand and service quality"
+            ],
+            "evidence": "Supply dated measurements and source records for occupancy, repeat demand and service quality.",
+            "questions": [
+              "What measured baseline and target define occupancy, repeat demand and service quality?",
+              "Which adverse assumptions would most change this hotels and accommodation plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Seasonal cash timing and property costs",
+            "metrics": [
+              "Seasonal cash timing and property costs"
+            ],
+            "evidence": "Supply dated measurements and source records for seasonal cash timing and property costs.",
+            "questions": [
+              "What measured baseline and target define seasonal cash timing and property costs?",
+              "Which adverse assumptions would most change this hotels and accommodation plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Booking reliability and guest-data access",
+            "metrics": [
+              "Booking reliability and guest-data access"
+            ],
+            "evidence": "Supply dated measurements and source records for booking reliability and guest-data access.",
+            "questions": [
+              "What measured baseline and target define booking reliability and guest-data access?",
+              "Which adverse assumptions would most change this hotels and accommodation plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Restaurants and food service",
+        "roles": {
+          "ceo": {
+            "focus": "Demand, consistency and waste reduction",
+            "metrics": [
+              "Demand, consistency and waste reduction"
+            ],
+            "evidence": "Supply dated measurements and source records for demand, consistency and waste reduction.",
+            "questions": [
+              "What measured baseline and target define demand, consistency and waste reduction?",
+              "Which adverse assumptions would most change this restaurants and food service plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Food costs, labor and daily collections",
+            "metrics": [
+              "Food costs, labor and daily collections"
+            ],
+            "evidence": "Supply dated measurements and source records for food costs, labor and daily collections.",
+            "questions": [
+              "What measured baseline and target define food costs, labor and daily collections?",
+              "Which adverse assumptions would most change this restaurants and food service plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Order-system reliability and inventory tracking",
+            "metrics": [
+              "Order-system reliability and inventory tracking"
+            ],
+            "evidence": "Supply dated measurements and source records for order-system reliability and inventory tracking.",
+            "questions": [
+              "What measured baseline and target define order-system reliability and inventory tracking?",
+              "Which adverse assumptions would most change this restaurants and food service plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Travel and tourism services",
+        "roles": {
+          "ceo": {
+            "focus": "Bookings, fulfillment and partner dependencies",
+            "metrics": [
+              "Bookings, fulfillment and partner dependencies"
+            ],
+            "evidence": "Supply dated measurements and source records for bookings, fulfillment and partner dependencies.",
+            "questions": [
+              "What measured baseline and target define bookings, fulfillment and partner dependencies?",
+              "Which adverse assumptions would most change this travel and tourism services plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Refund exposure and supplier-payment timing",
+            "metrics": [
+              "Refund exposure and supplier-payment timing"
+            ],
+            "evidence": "Supply dated measurements and source records for refund exposure and supplier-payment timing.",
+            "questions": [
+              "What measured baseline and target define refund exposure and supplier-payment timing?",
+              "Which adverse assumptions would most change this travel and tourism services plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Reservation integrity and customer-data access",
+            "metrics": [
+              "Reservation integrity and customer-data access"
+            ],
+            "evidence": "Supply dated measurements and source records for reservation integrity and customer-data access.",
+            "questions": [
+              "What measured baseline and target define reservation integrity and customer-data access?",
+              "Which adverse assumptions would most change this travel and tourism services plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Professional services",
+    "roles": {
+      "ceo": {
+        "focus": "Client concentration and delivery quality",
+        "metrics": [
+          "Client concentration and delivery quality"
+        ],
+        "evidence": "Timesheets, project margins, receivable aging and access reviews",
+        "questions": [
+          "Which measured indicators demonstrate client concentration and delivery quality?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Utilization, project margins and receivables",
+        "metrics": [
+          "Utilization",
+          "Project margins and receivables"
+        ],
+        "evidence": "Timesheets, project margins, receivable aging and access reviews",
+        "questions": [
+          "Which measured indicators demonstrate utilization, project margins and receivables?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Knowledge access and client-information protection",
+        "metrics": [
+          "Knowledge access and client-information protection"
+        ],
+        "evidence": "Timesheets, project margins, receivable aging and access reviews",
+        "questions": [
+          "Which measured indicators demonstrate knowledge access and client-information protection?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Consulting",
+        "roles": {
+          "ceo": {
+            "focus": "Delivery quality and client concentration",
+            "metrics": [
+              "Delivery quality and client concentration"
+            ],
+            "evidence": "Supply dated measurements and source records for delivery quality and client concentration.",
+            "questions": [
+              "What measured baseline and target define delivery quality and client concentration?",
+              "Which adverse assumptions would most change this consulting plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Utilization, project margins and receivables",
+            "metrics": [
+              "Utilization, project margins and receivables"
+            ],
+            "evidence": "Supply dated measurements and source records for utilization, project margins and receivables.",
+            "questions": [
+              "What measured baseline and target define utilization, project margins and receivables?",
+              "Which adverse assumptions would most change this consulting plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Client-information access and knowledge continuity",
+            "metrics": [
+              "Client-information access and knowledge continuity"
+            ],
+            "evidence": "Supply dated measurements and source records for client-information access and knowledge continuity.",
+            "questions": [
+              "What measured baseline and target define client-information access and knowledge continuity?",
+              "Which adverse assumptions would most change this consulting plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Legal and accounting services",
+        "roles": {
+          "ceo": {
+            "focus": "Client commitments and responsible professional review",
+            "metrics": [
+              "Client commitments and responsible professional review"
+            ],
+            "evidence": "Supply dated measurements and source records for client commitments and responsible professional review.",
+            "questions": [
+              "What measured baseline and target define client commitments and responsible professional review?",
+              "Which adverse assumptions would most change this legal and accounting services plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Engagement margins and collections",
+            "metrics": [
+              "Engagement margins and collections"
+            ],
+            "evidence": "Supply dated measurements and source records for engagement margins and collections.",
+            "questions": [
+              "What measured baseline and target define engagement margins and collections?",
+              "Which adverse assumptions would most change this legal and accounting services plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Controlled document versions and client-data access",
+            "metrics": [
+              "Controlled document versions and client-data access"
+            ],
+            "evidence": "Supply dated measurements and source records for controlled document versions and client-data access.",
+            "questions": [
+              "What measured baseline and target define controlled document versions and client-data access?",
+              "Which adverse assumptions would most change this legal and accounting services plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Engineering and design",
+        "roles": {
+          "ceo": {
+            "focus": "Delivery milestones and design quality",
+            "metrics": [
+              "Delivery milestones and design quality"
+            ],
+            "evidence": "Supply dated measurements and source records for delivery milestones and design quality.",
+            "questions": [
+              "What measured baseline and target define delivery milestones and design quality?",
+              "Which adverse assumptions would most change this engineering and design plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Project margins and change-order timing",
+            "metrics": [
+              "Project margins and change-order timing"
+            ],
+            "evidence": "Supply dated measurements and source records for project margins and change-order timing.",
+            "questions": [
+              "What measured baseline and target define project margins and change-order timing?",
+              "Which adverse assumptions would most change this engineering and design plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Design-data integrity and collaboration reliability",
+            "metrics": [
+              "Design-data integrity and collaboration reliability"
+            ],
+            "evidence": "Supply dated measurements and source records for design-data integrity and collaboration reliability.",
+            "questions": [
+              "What measured baseline and target define design-data integrity and collaboration reliability?",
+              "Which adverse assumptions would most change this engineering and design plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Public sector",
+    "roles": {
+      "ceo": {
+        "focus": "Service coverage and accountable delivery",
+        "metrics": [
+          "Service coverage and accountable delivery"
+        ],
+        "evidence": "Budget approvals, service indicators, procurement records and access logs",
+        "questions": [
+          "Which measured indicators demonstrate service coverage and accountable delivery?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cfo": {
+        "focus": "Authorized budgets and committed spending",
+        "metrics": [
+          "Authorized budgets and committed spending"
+        ],
+        "evidence": "Budget approvals, service indicators, procurement records and access logs",
+        "questions": [
+          "Which measured indicators demonstrate authorized budgets and committed spending?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      },
+      "cto": {
+        "focus": "Public-service continuity and information access",
+        "metrics": [
+          "Public-service continuity and information access"
+        ],
+        "evidence": "Budget approvals, service indicators, procurement records and access logs",
+        "questions": [
+          "Which measured indicators demonstrate public-service continuity and information access?",
+          "Which sector dependencies could invalidate the normal and adverse assumptions?",
+          "Who owns the applicable requirements, review and stop conditions?"
+        ]
+      }
+    },
+    "areas": [
+      {
+        "name": "Local government",
+        "roles": {
+          "ceo": {
+            "focus": "Service access and accountable delivery",
+            "metrics": [
+              "Service access and accountable delivery"
+            ],
+            "evidence": "Supply dated measurements and source records for service access and accountable delivery.",
+            "questions": [
+              "What measured baseline and target define service access and accountable delivery?",
+              "Which adverse assumptions would most change this local government plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Authorized budgets and committed spending",
+            "metrics": [
+              "Authorized budgets and committed spending"
+            ],
+            "evidence": "Supply dated measurements and source records for authorized budgets and committed spending.",
+            "questions": [
+              "What measured baseline and target define authorized budgets and committed spending?",
+              "Which adverse assumptions would most change this local government plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Public-service continuity and controlled information access",
+            "metrics": [
+              "Public-service continuity and controlled information access"
+            ],
+            "evidence": "Supply dated measurements and source records for public-service continuity and controlled information access.",
+            "questions": [
+              "What measured baseline and target define public-service continuity and controlled information access?",
+              "Which adverse assumptions would most change this local government plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Public infrastructure",
+        "roles": {
+          "ceo": {
+            "focus": "Asset coverage and maintenance delivery",
+            "metrics": [
+              "Asset coverage and maintenance delivery"
+            ],
+            "evidence": "Supply dated measurements and source records for asset coverage and maintenance delivery.",
+            "questions": [
+              "What measured baseline and target define asset coverage and maintenance delivery?",
+              "Which adverse assumptions would most change this public infrastructure plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Capital budgets and project commitments",
+            "metrics": [
+              "Capital budgets and project commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for capital budgets and project commitments.",
+            "questions": [
+              "What measured baseline and target define capital budgets and project commitments?",
+              "Which adverse assumptions would most change this public infrastructure plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Asset-record integrity and service telemetry",
+            "metrics": [
+              "Asset-record integrity and service telemetry"
+            ],
+            "evidence": "Supply dated measurements and source records for asset-record integrity and service telemetry.",
+            "questions": [
+              "What measured baseline and target define asset-record integrity and service telemetry?",
+              "Which adverse assumptions would most change this public infrastructure plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      },
+      {
+        "name": "Public service agencies",
+        "roles": {
+          "ceo": {
+            "focus": "Service completion and accessibility",
+            "metrics": [
+              "Service completion and accessibility"
+            ],
+            "evidence": "Supply dated measurements and source records for service completion and accessibility.",
+            "questions": [
+              "What measured baseline and target define service completion and accessibility?",
+              "Which adverse assumptions would most change this public service agencies plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cfo": {
+            "focus": "Approved spending and resource commitments",
+            "metrics": [
+              "Approved spending and resource commitments"
+            ],
+            "evidence": "Supply dated measurements and source records for approved spending and resource commitments.",
+            "questions": [
+              "What measured baseline and target define approved spending and resource commitments?",
+              "Which adverse assumptions would most change this public service agencies plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          },
+          "cto": {
+            "focus": "Case-system availability and information access",
+            "metrics": [
+              "Case-system availability and information access"
+            ],
+            "evidence": "Supply dated measurements and source records for case-system availability and information access.",
+            "questions": [
+              "What measured baseline and target define case-system availability and information access?",
+              "Which adverse assumptions would most change this public service agencies plan?",
+              "Who owns validation, applicable requirements and the decision stop condition?"
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

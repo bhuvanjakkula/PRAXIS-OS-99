@@ -1,0 +1,38 @@
+{
+  "question": "How should the government compare three infrastructure financing approaches?",
+  "context": {
+    "country_code": "IND",
+    "decision_owner_role": "authorized public official",
+    "objectives": ["growth", "fiscal resilience", "implementation quality", "international cooperation"],
+    "constraints": ["legal review required", "protect vulnerable groups"]
+  },
+  "weights": {"economic": 0.25, "fiscal": 0.25, "implementation": 0.20, "diplomatic": 0.10, "social": 0.20},
+  "uncertainty_penalty": 0.2,
+  "scenarios": [
+    {"name": "global_slowdown", "probability": 0.35, "dimension_shocks": {"economic": -15, "fiscal": -10}},
+    {"name": "strong_growth", "probability": 0.25, "dimension_shocks": {"economic": 10}}
+  ],
+  "options": [
+    {"id": "A", "name": "Public financing", "description": "Primarily sovereign/public funding", "criteria": [
+      {"dimension": "economic", "score": 55, "confidence": 0.7, "rationale": "Potential demand and infrastructure effects", "evidence": []},
+      {"dimension": "fiscal", "score": -25, "confidence": 0.8, "rationale": "Higher direct fiscal burden", "evidence": []},
+      {"dimension": "implementation", "score": 30, "confidence": 0.6, "rationale": "Depends on state capacity", "evidence": []},
+      {"dimension": "diplomatic", "score": 5, "confidence": 0.5, "rationale": "Limited external dependency", "evidence": []},
+      {"dimension": "social", "score": 40, "confidence": 0.6, "rationale": "Can target public priorities", "evidence": []}
+    ]},
+    {"id": "B", "name": "PPP", "description": "Public-private partnership", "criteria": [
+      {"dimension": "economic", "score": 50, "confidence": 0.65, "rationale": "Mobilizes private capital", "evidence": []},
+      {"dimension": "fiscal", "score": 15, "confidence": 0.55, "rationale": "May reduce upfront spending but creates contingent liabilities", "evidence": []},
+      {"dimension": "implementation", "score": 45, "confidence": 0.65, "rationale": "Can add delivery capability", "evidence": []},
+      {"dimension": "diplomatic", "score": 10, "confidence": 0.5, "rationale": "May involve international investors", "evidence": []},
+      {"dimension": "social", "score": 15, "confidence": 0.55, "rationale": "Outcomes depend on contract design and affordability safeguards", "evidence": []}
+    ]},
+    {"id": "C", "name": "Multilateral financing", "description": "Financing involving multilateral development institutions", "criteria": [
+      {"dimension": "economic", "score": 45, "confidence": 0.7, "rationale": "Can support long-horizon investment", "evidence": []},
+      {"dimension": "fiscal", "score": 25, "confidence": 0.65, "rationale": "Terms may differ from market finance", "evidence": []},
+      {"dimension": "implementation", "score": 25, "confidence": 0.65, "rationale": "Process requirements can affect speed", "evidence": []},
+      {"dimension": "diplomatic", "score": 35, "confidence": 0.65, "rationale": "Creates institutional cooperation", "evidence": []},
+      {"dimension": "social", "score": 25, "confidence": 0.6, "rationale": "Safeguards and project design shape distributional effects", "evidence": []}
+    ]}
+  ]
+}
