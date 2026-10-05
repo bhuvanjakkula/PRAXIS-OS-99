@@ -29,3 +29,6 @@ testpaths = ["tests"]
 
 [tool.setuptools.package-data]
 praxis = ["web/*.html", "web/*.css", "web/*.js", "web/*.json"]
+
+[tool.vercel]
+entrypoint = "main:app"
