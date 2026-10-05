@@ -7,8 +7,14 @@ class PraxisOrchestrator:
         self.foundation=[NewtonEngine(),GeometerEngine(),BlakeEngine(),DeweyEngine()]
 
     def inquire(self,d:Decision)->InquiryReport:
-        domain_engines=[DOMAIN_ENGINES[x] for x in d.domains if x in DOMAIN_ENGINES]
-        insights=[e.analyze(d) for e in [*self.foundation,*domain_engines]]
+        domains=list(dict.fromkeys(d.domains))
+        domain_inputs=[DOMAIN_ENGINES[x].analyze(d) for x in domains
+                       if x in {"business", "finance", "technology", "law"}]
+        human_inputs=[DOMAIN_ENGINES[x].analyze(d) for x in domains if x in {"human", "society"}]
+        human_inputs.append(BlakeEngine().analyze(d))
+        geometer=GeometerEngine().synthesize(d, [*domain_inputs, *human_inputs])
+        insights=[NewtonEngine().analyze(d), *domain_inputs, *human_inputs,
+                  geometer, DeweyEngine().analyze(d)]
         assumptions=[e.statement for e in d.evidence if e.kind.value=="assumption"]
         hypotheses=[f"Test whether: {x}" for x in assumptions] or ["Form at least one falsifiable causal hypothesis."]
         experiments=["Choose a reversible, bounded experiment targeting the highest-impact uncertainty.",

@@ -1,0 +1,15 @@
+{
+  "title": "Acquire Company X",
+  "problem": "Should the organization acquire Company X?",
+  "objective": "Evaluate distribution expansion, technology acquisition and revenue synergies",
+  "context": "User-supplied acquisition example; no target-company financial records are connected.",
+  "expected_benefits": ["Distribution expansion", "Technology acquisition", "Revenue synergies"],
+  "risks": ["Integration", "Debt", "Customer concentration"],
+  "assumptions": ["Revenue growth: 18%", "Customer retention: 92%", "Integration: 12 months"],
+  "variables": {"revenue_growth": 0.18, "customer_retention": 0.92, "integration_months": 12},
+  "uncertainties": ["Regulatory approval", "Competitor reaction"],
+  "reversibility": "medium",
+  "options": [{"name": "Approve acquisition subject to due diligence", "reversible": false}, {"name": "Reject"}, {"name": "Modify terms"}, {"name": "Investigate"}],
+  "scenarios": [{"name": "Base", "notes": ["INR model inputs required"]}, {"name": "Upside", "notes": ["INR model inputs required"]}, {"name": "Downside", "notes": ["INR model inputs required"]}],
+  "values": ["Explicit human judgment", "Evidence-backed assumptions"]
+}

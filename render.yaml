@@ -1,0 +1,17 @@
+# Render deployment configuration for PRAXIS OS
+# Supports both free/standard Python Web Services and full Docker deployments.
+services:
+  - type: web
+    name: praxis-os-app
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt && pip install -e .
+    startCommand: uvicorn praxis.api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeployTrigger: "commit"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: PRAXIS_DB
+        value: praxis.db

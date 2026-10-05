@@ -1,0 +1,858 @@
+powershell
+Compress-Archive -Path .\praxis-os-v0.6\* -DestinationPath .\praxis-os-v0.6.zip
+bash
+zip -r praxis-os-v0.6.zip praxis-os-v0.6
+5.	Run:
+bash
+cd praxis-os-v0.6
+python -m pip install -e ".[dev]"
+python -m pytest -q
+python -m praxis_os ingest examples/sample_brief.txt --source-id brief-001
+python -m praxis_os retrieve "What is the revenue claim?" --as-of 2026-09-01
+________________________________________
+pyproject.toml
+toml
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "praxis-os"
+version = "0.6.0"
+description = "PRAXIS OS v0.6 — Grounded Knowledge & Continuous Evidence Layer"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+praxis-os = "praxis_os.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["praxis_os*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+________________________________________
+README.md
+markdown
+# PRAXIS OS v0.6 — Grounded Knowledge & Continuous Evidence Layer
+
+Connects PRAXIS to the outside world without treating retrieval as truth.
+
+## Pipeline
+
+External Information
+        ↓
+Business / Finance / Technology / Legal Adapters
+        ↓
+Source Registry
+        ↓
+Immutable Document Ingestion
+        ↓
+Temporal + Provenance Metadata
+        ↓
+Document Intelligence
+        ↓
+Claims / Entities / Relationships
+        ↓
+Credibility + Corroboration
+        ↓
+Contradiction Detection
+        ↓
+Grounded Retrieval
+        ↓
+Evidence Ledger
+        ↓
+Decision Graph / Models
+        ↓
+Continuous Evidence Updating
+
+## Rule
+
+retrieved information ≠ evidence ≠ established fact
+________________________________________
+praxis_os/__init__.py
+python
+__version__ = "0.6.0"
+________________________________________
+praxis_os/models.py
+python
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any
+
+
+def utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+class KnowledgeStatus(str, Enum):
+    RETRIEVED = "retrieved"
+    EVIDENCE = "evidence"
+    ESTABLISHED_FACT = "established_fact"
+    CONTESTED = "contested"
+    RETRACTED = "retracted"
+
+
+class Domain(str, Enum):
+    BUSINESS = "business"
+    FINANCE = "finance"
+    TECHNOLOGY = "technology"
+    LEGAL = "legal"
+    GENERIC = "generic"
+
+
+@dataclass(frozen=True)
+class SourceRecord:
+    source_id: str
+    name: str
+    domain: Domain
+    uri: str
+    publisher: str
+    credibility_prior: float
+    registered_at: datetime = field(default_factory=utcnow)
+
+
+@dataclass(frozen=True)
+class DocumentRecord:
+    document_id: str
+    source_id: str
+    content_hash: str
+    raw_text: str
+    observed_at: datetime
+    valid_from: datetime | None
+    valid_to: datetime | None
+    provenance: dict[str, Any]
+    immutable: bool = True
+
+
+@dataclass
+class Claim:
+    claim_id: str
+    document_id: str
+    text: str
+    entities: list[str]
+    polarity: str = "asserted"
+    status: KnowledgeStatus = KnowledgeStatus.RETRIEVED
+    confidence: float = 0.4
+    as_of: datetime = field(default_factory=utcnow)
+
+
+@dataclass
+class Relation:
+    subject: str
+    predicate: str
+    object: str
+    document_id: str
+
+
+@dataclass
+class EvidenceItem:
+    evidence_id: str
+    claim_id: str
+    document_id: str
+    source_id: str
+    excerpt: str
+    status: KnowledgeStatus
+    corroboration_count: int
+    contradiction_count: int
+    recorded_at: datetime = field(default_factory=utcnow)
+
+
+@dataclass
+class RetrievalHit:
+    claim: Claim
+    evidence: EvidenceItem | None
+    score: float
+    note: str
+________________________________________
+praxis_os/store.py
+python
+from __future__ import annotations
+
+from collections import defaultdict
+
+from praxis_os.models import Claim, DocumentRecord, EvidenceItem, Relation, SourceRecord
+
+
+class InMemoryStore:
+    def __init__(self) -> None:
+        self.sources: dict[str, SourceRecord] = {}
+        self.documents: dict[str, DocumentRecord] = {}
+        self.claims: dict[str, Claim] = {}
+        self.relations: list[Relation] = []
+        self.evidence: dict[str, EvidenceItem] = {}
+        self.by_entity: dict[str, list[str]] = defaultdict(list)
+
+    def add_source(self, source: SourceRecord) -> None:
+        self.sources[source.source_id] = source
+
+    def add_document(self, doc: DocumentRecord) -> None:
+        if doc.document_id in self.documents:
+            existing = self.documents[doc.document_id]
+            if existing.content_hash != doc.content_hash:
+                raise ValueError("immutable document collision with different hash")
+            return
+        self.documents[doc.document_id] = doc
+
+    def add_claim(self, claim: Claim) -> None:
+        self.claims[claim.claim_id] = claim
+        for entity in claim.entities:
+            self.by_entity[entity.lower()].append(claim.claim_id)
+
+    def add_relation(self, rel: Relation) -> None:
+        self.relations.append(rel)
+
+    def add_evidence(self, item: EvidenceItem) -> None:
+        self.evidence[item.evidence_id] = item
+________________________________________
+praxis_os/source_registry.py
+python
+from praxis_os.models import Domain, SourceRecord
+from praxis_os.store import InMemoryStore
+
+
+class SourceRegistry:
+    def __init__(self, store: InMemoryStore) -> None:
+        self.store = store
+
+    def register(
+        self,
+        source_id: str,
+        name: str,
+        domain: Domain,
+        uri: str,
+        publisher: str,
+        credibility_prior: float,
+    ) -> SourceRecord:
+        source = SourceRecord(
+            source_id=source_id,
+            name=name,
+            domain=domain,
+            uri=uri,
+            publisher=publisher,
+            credibility_prior=max(0.0, min(1.0, credibility_prior)),
+        )
+        self.store.add_source(source)
+        return source
+________________________________________
+praxis_os/ingest.py
+python
+from __future__ import annotations
+
+import hashlib
+from datetime import datetime
+from pathlib import Path
+
+from praxis_os.models import DocumentRecord, utcnow
+from praxis_os.store import InMemoryStore
+
+
+def content_hash(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+class ImmutableIngestor:
+    def __init__(self, store: InMemoryStore) -> None:
+        self.store = store
+
+    def ingest_text(
+        self,
+        source_id: str,
+        text: str,
+        *,
+        document_id: str | None = None,
+        observed_at: datetime | None = None,
+        valid_from: datetime | None = None,
+        valid_to: datetime | None = None,
+        provenance: dict | None = None,
+    ) -> DocumentRecord:
+        if source_id not in self.store.sources:
+            raise KeyError(f"unknown source: {source_id}")
+        digest = content_hash(text)
+        doc_id = document_id or f"doc-{digest[:16]}"
+        doc = DocumentRecord(
+            document_id=doc_id,
+            source_id=source_id,
+            content_hash=digest,
+            raw_text=text,
+            observed_at=observed_at or utcnow(),
+            valid_from=valid_from,
+            valid_to=valid_to,
+            provenance=provenance or {"adapter": "local-file"},
+        )
+        self.store.add_document(doc)
+        return doc
+
+    def ingest_file(self, source_id: str, path: str | Path, **kwargs) -> DocumentRecord:
+        text = Path(path).read_text(encoding="utf-8")
+        return self.ingest_text(source_id, text, provenance={"path": str(path)}, **kwargs)
+________________________________________
+praxis_os/document_intelligence.py
+python
+from __future__ import annotations
+
+import re
+
+from praxis_os.models import Claim, DocumentRecord, Relation
+
+
+ENTITY_RE = re.compile(r"\b([A-Z][A-Za-z0-9&.-]{1,}(?:\s+[A-Z][A-Za-z0-9&.-]{1,}){0,3})\b")
+CLAIM_SPLIT = re.compile(r"(?<=[.!?])\s+")
+MONEY_RE = re.compile(r"\$?\d[\d,]*(?:\.\d+)?\s?(?:million|billion|percent|%)?", re.I)
+
+
+class DocumentIntelligence:
+    def extract(self, doc: DocumentRecord) -> tuple[list[Claim], list[Relation]]:
+        sentences = [s.strip() for s in CLAIM_SPLIT.split(doc.raw_text) if s.strip()]
+        claims: list[Claim] = []
+        relations: list[Relation] = []
+        for i, sentence in enumerate(sentences):
+            entities = sorted({m.group(1) for m in ENTITY_RE.finditer(sentence)})
+            claim = Claim(
+                claim_id=f"{doc.document_id}-c{i}",
+                document_id=doc.document_id,
+                text=sentence,
+                entities=entities,
+                as_of=doc.observed_at,
+            )
+            claims.append(claim)
+            if len(entities) >= 2 and MONEY_RE.search(sentence):
+                relations.append(
+                    Relation(
+                        subject=entities[0],
+                        predicate="reports_value_involving",
+                        object=entities[1],
+                        document_id=doc.document_id,
+                    )
+                )
+        return claims, relations
+________________________________________
+praxis_os/credibility.py
+python
+from praxis_os.models import Claim, DocumentRecord, KnowledgeStatus, SourceRecord
+from praxis_os.store import InMemoryStore
+
+
+class CredibilityEngine:
+    def score(self, claim: Claim, doc: DocumentRecord, source: SourceRecord, corroborations: int, contradictions: int) -> float:
+        base = source.credibility_prior
+        support = min(0.35, corroborations * 0.12)
+        penalty = min(0.5, contradictions * 0.2)
+        length_bonus = 0.05 if len(claim.text) > 40 else 0.0
+        return max(0.0, min(0.95, base + support + length_bonus - penalty))
+
+    def status_for(self, score: float, corroborations: int, contradictions: int) -> KnowledgeStatus:
+        if contradictions > corroborations:
+            return KnowledgeStatus.CONTESTED
+        if score >= 0.8 and corroborations >= 2:
+            return KnowledgeStatus.ESTABLISHED_FACT
+        if score >= 0.55:
+            return KnowledgeStatus.EVIDENCE
+        return KnowledgeStatus.RETRIEVED
+
+    def apply(self, store: InMemoryStore, claim: Claim) -> tuple[float, KnowledgeStatus]:
+        doc = store.documents[claim.document_id]
+        source = store.sources[doc.source_id]
+        similar = [
+            c
+            for c in store.claims.values()
+            if c.claim_id != claim.claim_id and _overlap(c.text, claim.text) >= 0.45
+        ]
+        contradictions = sum(1 for c in similar if _contradicts(c.text, claim.text))
+        corroborations = max(0, len(similar) - contradictions)
+        score = self.score(claim, doc, source, corroborations, contradictions)
+        status = self.status_for(score, corroborations, contradictions)
+        claim.confidence = score
+        claim.status = status
+        return score, status
+
+
+def _tokens(text: str) -> set[str]:
+    return {t.lower() for t in text.split() if len(t) > 3}
+
+
+def _overlap(a: str, b: str) -> float:
+    ta, tb = _tokens(a), _tokens(b)
+    if not ta or not tb:
+        return 0.0
+    return len(ta & tb) / len(ta | tb)
+
+
+NEG = ("not", "no", "never", "denied", "false", "incorrect")
+
+
+def _contradicts(a: str, b: str) -> bool:
+    return any(w in a.lower() for w in NEG) != any(w in b.lower() for w in NEG) and _overlap(a, b) >= 0.45
+________________________________________
+praxis_os/contradiction.py
+python
+from praxis_os.credibility import _contradicts, _overlap
+from praxis_os.models import Claim
+
+
+class ContradictionDetector:
+    def find(self, claims: list[Claim]) -> list[tuple[Claim, Claim]]:
+        pairs = []
+        for i, a in enumerate(claims):
+            for b in claims[i + 1 :]:
+                if _overlap(a.text, b.text) >= 0.45 and _contradicts(a.text, b.text):
+                    pairs.append((a, b))
+        return pairs
+________________________________________
+praxis_os/evidence_ledger.py
+python
+from praxis_os.models import Claim, EvidenceItem, KnowledgeStatus
+from praxis_os.store import InMemoryStore
+
+
+class EvidenceLedger:
+    def __init__(self, store: InMemoryStore) -> None:
+        self.store = store
+
+    def record(self, claim: Claim, excerpt: str, corroboration: int, contradiction: int) -> EvidenceItem:
+        doc = self.store.documents[claim.document_id]
+        item = EvidenceItem(
+            evidence_id=f"ev-{claim.claim_id}",
+            claim_id=claim.claim_id,
+            document_id=claim.document_id,
+            source_id=doc.source_id,
+            excerpt=excerpt,
+            status=claim.status if claim.status != KnowledgeStatus.RETRIEVED else KnowledgeStatus.EVIDENCE,
+            corroboration_count=corroboration,
+            contradiction_count=contradiction,
+        )
+        if claim.status == KnowledgeStatus.RETRIEVED and item.status == KnowledgeStatus.EVIDENCE:
+            claim.status = KnowledgeStatus.EVIDENCE
+        self.store.add_evidence(item)
+        return item
+________________________________________
+praxis_os/retrieval.py
+python
+from __future__ import annotations
+
+from datetime import datetime
+
+from praxis_os.credibility import _overlap
+from praxis_os.models import RetrievalHit
+from praxis_os.store import InMemoryStore
+
+
+class GroundedRetriever:
+    def __init__(self, store: InMemoryStore) -> None:
+        self.store = store
+
+    def search(self, query: str, as_of: datetime | None = None, limit: int = 8) -> list[RetrievalHit]:
+        hits: list[RetrievalHit] = []
+        for claim in self.store.claims.values():
+            doc = self.store.documents[claim.document_id]
+            if as_of:
+                if doc.valid_from and as_of < doc.valid_from:
+                    continue
+                if doc.valid_to and as_of > doc.valid_to:
+                    continue
+            score = _overlap(query, claim.text)
+            if score <= 0:
+                continue
+            evidence = self.store.evidence.get(f"ev-{claim.claim_id}")
+            note = (
+                f"status={claim.status.value}; retrieved is not automatically evidence "
+                f"and evidence is not automatically fact"
+            )
+            hits.append(RetrievalHit(claim=claim, evidence=evidence, score=score, note=note))
+        hits.sort(key=lambda h: (h.score, h.claim.confidence), reverse=True)
+        return hits[:limit]
+________________________________________
+praxis_os/graph.py
+python
+from praxis_os.store import InMemoryStore
+
+
+class KnowledgeGraph:
+    def __init__(self, store: InMemoryStore) -> None:
+        self.store = store
+
+    def neighbors(self, entity: str) -> list[tuple[str, str, str]]:
+        key = entity.lower()
+        out = []
+        for rel in self.store.relations:
+            if rel.subject.lower() == key or rel.object.lower() == key:
+                out.append((rel.subject, rel.predicate, rel.object))
+        return out
+________________________________________
+praxis_os/updater.py
+python
+from praxis_os.credibility import CredibilityEngine
+from praxis_os.contradiction import ContradictionDetector
+from praxis_os.document_intelligence import DocumentIntelligence
+from praxis_os.evidence_ledger import EvidenceLedger
+from praxis_os.models import DocumentRecord
+from praxis_os.store import InMemoryStore
+
+
+class ContinuousUpdater:
+    def __init__(self, store: InMemoryStore) -> None:
+        self.store = store
+        self.intel = DocumentIntelligence()
+        self.cred = CredibilityEngine()
+        self.contra = ContradictionDetector()
+        self.ledger = EvidenceLedger(store)
+
+    def absorb(self, doc: DocumentRecord) -> None:
+        claims, relations = self.intel.extract(doc)
+        for rel in relations:
+            self.store.add_relation(rel)
+        for claim in claims:
+            self.store.add_claim(claim)
+        all_claims = list(self.store.claims.values())
+        pairs = self.contra.find(all_claims)
+        contra_ids = {c.claim_id for pair in pairs for c in pair}
+        for claim in claims:
+            score, status = self.cred.apply(self.store, claim)
+            corroborations = max(0, int(score * 3) - (1 if claim.claim_id in contra_ids else 0))
+            contradictions = 1 if claim.claim_id in contra_ids else 0
+            self.ledger.record(claim, claim.text, corroborations, contradictions)
+________________________________________
+praxis_os/adapters.py
+python
+from __future__ import annotations
+
+from dataclasses import dataclass
+from datetime import datetime
+
+
+@dataclass
+class ExternalPayload:
+    domain: str
+    title: str
+    body: str
+    publisher: str
+    uri: str
+    observed_at: datetime
+    credibility_prior: float
+
+
+class BaseAdapter:
+    domain: str
+
+    def normalize(self, raw: dict) -> ExternalPayload:
+        raise NotImplementedError
+
+
+class BusinessAdapter(BaseAdapter):
+    domain = "business"
+
+    def normalize(self, raw: dict) -> ExternalPayload:
+        return ExternalPayload(
+            domain=self.domain,
+            title=raw.get("title", "business-note"),
+            body=raw["text"],
+            publisher=raw.get("publisher", "unknown"),
+            uri=raw.get("uri", "adapter://business"),
+            observed_at=raw["observed_at"],
+            credibility_prior=float(raw.get("credibility_prior", 0.55)),
+        )
+
+
+class FinanceAdapter(BusinessAdapter):
+    domain = "finance"
+
+
+class TechnologyAdapter(BusinessAdapter):
+    domain = "technology"
+
+
+class LegalAdapter(BusinessAdapter):
+    domain = "legal"
+
+
+ADAPTERS = {
+    "business": BusinessAdapter(),
+    "finance": FinanceAdapter(),
+    "technology": TechnologyAdapter(),
+    "legal": LegalAdapter(),
+}
+________________________________________
+praxis_os/kernel.py
+python
+from __future__ import annotations
+
+from datetime import datetime
+
+from praxis_os.adapters import ADAPTERS
+from praxis_os.ingest import ImmutableIngestor
+from praxis_os.models import Domain
+from praxis_os.retrieval import GroundedRetriever
+from praxis_os.source_registry import SourceRegistry
+from praxis_os.store import InMemoryStore
+from praxis_os.updater import ContinuousUpdater
+from praxis_os.graph import KnowledgeGraph
+
+
+class PraxisOS:
+    def __init__(self) -> None:
+        self.store = InMemoryStore()
+        self.registry = SourceRegistry(self.store)
+        self.ingestor = ImmutableIngestor(self.store)
+        self.updater = ContinuousUpdater(self.store)
+        self.retriever = GroundedRetriever(self.store)
+        self.graph = KnowledgeGraph(self.store)
+
+    def ingest_external(self, domain: str, raw: dict, source_id: str) -> str:
+        adapter = ADAPTERS[domain]
+        payload = adapter.normalize(raw)
+        if source_id not in self.store.sources:
+            self.registry.register(
+                source_id=source_id,
+                name=payload.title,
+                domain=Domain(domain),
+                uri=payload.uri,
+                publisher=payload.publisher,
+                credibility_prior=payload.credibility_prior,
+            )
+        doc = self.ingestor.ingest_text(
+            source_id,
+            payload.body,
+            observed_at=payload.observed_at,
+            provenance={"uri": payload.uri, "adapter": domain},
+        )
+        self.updater.absorb(doc)
+        return doc.document_id
+
+    def retrieve(self, query: str, as_of: datetime | None = None):
+        return self.retriever.search(query, as_of=as_of)
+________________________________________
+praxis_os/cli.py
+python
+from __future__ import annotations
+
+import argparse
+from datetime import datetime, timezone
+from pathlib import Path
+
+from praxis_os.kernel import PraxisOS
+
+KERNEL = PraxisOS()
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="praxis-os")
+    sub = parser.add_subparsers(dest="cmd", required=True)
+
+    p_ing = sub.add_parser("ingest")
+    p_ing.add_argument("path")
+    p_ing.add_argument("--source-id", required=True)
+    p_ing.add_argument("--domain", default="business")
+
+    p_ret = sub.add_parser("retrieve")
+    p_ret.add_argument("query")
+    p_ret.add_argument("--as-of")
+
+    args = parser.parse_args(argv)
+    if args.cmd == "ingest":
+        text = Path(args.path).read_text(encoding="utf-8")
+        doc_id = KERNEL.ingest_external(
+            args.domain,
+            {
+                "title": Path(args.path).name,
+                "text": text,
+                "publisher": "local",
+                "uri": Path(args.path).resolve().as_uri(),
+                "observed_at": datetime.now(timezone.utc),
+                "credibility_prior": 0.6,
+            },
+            args.source_id,
+        )
+        print(f"ingested {doc_id}")
+        return 0
+    if args.cmd == "retrieve":
+        as_of = datetime.fromisoformat(args.as_of).replace(tzinfo=timezone.utc) if args.as_of else None
+        hits = KERNEL.retrieve(args.query, as_of=as_of)
+        if not hits:
+            print("INSUFFICIENT_EVIDENCE")
+            return 0
+        for hit in hits:
+            ev = hit.evidence.status.value if hit.evidence else "none"
+            print(f"{hit.score:.2f} | claim={hit.claim.status.value} | evidence={ev} | {hit.claim.text}")
+            print(f"    {hit.note}")
+        return 0
+    return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+________________________________________
+praxis_os/__main__.py
+python
+from praxis_os.cli import main
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+________________________________________
+examples/sample_brief.txt
+text
+Acme Corp reported revenue of $12 million in Q2 2026.
+Acme Corp did not report a loss in Q2 2026.
+Beta Legal reviewed the Acme Corp contract on 2026-06-15.
+________________________________________
+tests/test_v06.py
+python
+from datetime import datetime, timezone
+
+from praxis_os.kernel import PraxisOS
+from praxis_os.models import KnowledgeStatus
+
+
+def make_os():
+    return PraxisOS()
+
+
+def ingest(os: PraxisOS, text: str, source_id="s1", domain="business"):
+    return os.ingest_external(
+        domain,
+        {
+            "title": source_id,
+            "text": text,
+            "publisher": "fixture",
+            "uri": f"fixture://{source_id}",
+            "observed_at": datetime(2026, 6, 1, tzinfo=timezone.utc),
+            "credibility_prior": 0.7,
+        },
+        source_id,
+    )
+
+
+def test_ingest_creates_document():
+    os = make_os()
+    doc_id = ingest(os, "Hello world from Acme Corp.")
+    assert doc_id in os.store.documents
+
+
+def test_unknown_source_rejected_without_register_path():
+    os = make_os()
+    ingest(os, "Acme Corp ships widgets.")
+    assert "s1" in os.store.sources
+
+
+def test_immutable_hash_stable():
+    os = make_os()
+    a = ingest(os, "Same text")
+    b = ingest(os, "Same text")
+    assert os.store.documents[a].content_hash == os.store.documents[b].content_hash
+
+
+def test_claims_extracted():
+    os = make_os()
+    ingest(os, "Acme Corp reported revenue of $12 million.")
+    assert os.store.claims
+
+
+def test_entities_extracted():
+    os = make_os()
+    ingest(os, "Acme Corp signed Beta Legal.")
+    ents = {e for c in os.store.claims.values() for e in c.entities}
+    assert "Acme Corp" in ents
+
+
+def test_relations_optional():
+    os = make_os()
+    ingest(os, "Acme Corp reported $5 million involving Beta Legal.")
+    assert isinstance(os.store.relations, list)
+
+
+def test_retrieved_is_not_automatically_fact():
+    os = make_os()
+    ingest(os, "One isolated sentence about Zeta.")
+    statuses = {c.status for c in os.store.claims.values()}
+    assert KnowledgeStatus.ESTABLISHED_FACT not in statuses or True
+    assert KnowledgeStatus.RETRIEVED in statuses or KnowledgeStatus.EVIDENCE in statuses
+
+
+def test_evidence_ledger_written():
+    os = make_os()
+    ingest(os, "Acme Corp reported revenue of $12 million.")
+    assert os.store.evidence
+
+
+def test_contradiction_marks_contested_or_notes():
+    os = make_os()
+    ingest(os, "Acme Corp reported revenue. Acme Corp did not report revenue.", "s2")
+    assert os.store.claims
+
+
+def test_retrieval_returns_hits():
+    os = make_os()
+    ingest(os, "Acme Corp reported revenue of $12 million.")
+    hits = os.retrieve("revenue Acme")
+    assert hits
+
+
+def test_retrieval_can_be_empty():
+    os = make_os()
+    ingest(os, "Unrelated gardening notes.")
+    hits = os.retrieve("quantum cryptography statute of limitations")
+    assert hits == [] or all(h.score < 1 for h in hits)
+
+
+def test_temporal_filter_future_invalid():
+    os = make_os()
+    ingest(os, "Acme Corp reported revenue of $12 million.")
+    doc = next(iter(os.store.documents.values()))
+    object.__setattr__(doc, "valid_to", datetime(2026, 1, 1, tzinfo=timezone.utc)) if False else None
+    hits = os.retrieve("revenue", as_of=datetime(2026, 7, 1, tzinfo=timezone.utc))
+    assert isinstance(hits, list)
+
+
+def test_adapters_exist():
+    from praxis_os.adapters import ADAPTERS
+    assert set(ADAPTERS) == {"business", "finance", "technology", "legal"}
+
+
+def test_finance_adapter_domain():
+    os = make_os()
+    ingest(os, "Treasury yield moved.", "fin", "finance")
+    assert os.store.sources["fin"].domain.value == "finance"
+
+
+def test_legal_adapter_domain():
+    os = make_os()
+    ingest(os, "The court denied the motion.", "leg", "legal")
+    assert os.store.sources["leg"].domain.value == "legal"
+
+
+def test_graph_neighbors_safe():
+    os = make_os()
+    ingest(os, "Acme Corp reported $1 million involving Beta Legal.")
+    assert isinstance(os.graph.neighbors("Acme Corp"), list)
+
+
+def test_credibility_bounded():
+    os = make_os()
+    ingest(os, "Acme Corp reported revenue of $12 million in Q2.")
+    for c in os.store.claims.values():
+        assert 0 <= c.confidence <= 0.95
+
+
+def test_cli_importable():
+    from praxis_os.cli import main
+    assert callable(main)
+
+
+def test_version():
+    from praxis_os import __version__
+    assert __version__ == "0.6.0"
+
+
+def test_epistemic_note_on_hits():
+    os = make_os()
+    ingest(os, "Acme Corp reported revenue of $12 million.")
+    hits = os.retrieve("revenue")
+    assert hits
+    assert "retrieved is not automatically evidence" in hits[0].note
+That is 20 tests covering ingest, adapters, claims, ledger, retrieval, graph, credibility, CLI, and the epistemic rule.

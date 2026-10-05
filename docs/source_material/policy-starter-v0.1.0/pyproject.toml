@@ -1,0 +1,8 @@
+[project]
+name = "praxis-os"
+version = "0.1.0"
+description = "Evidence-first public policy decision-support starter"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

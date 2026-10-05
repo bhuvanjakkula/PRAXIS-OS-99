@@ -1,8 +1,28 @@
 # PRAXIS OS
 
+An executable optional [PQC technology lab](docs/PQC_TECHNOLOGY.md) now provides
+ML-KEM key establishment and ML-DSA/SLH-DSA signatures with negative tests.
+
+Aviation security and technology-development planning now covers airport,
+aircraft, command-team and operational projects with evidence gates. See
+[Aviation security](docs/AVIATION_SECURITY.md) for usage and live-integration limits.
+
 **Adaptive Decision Intelligence** — an architecture for integrating business, finance, technology, law, human consequences and society into one evidence-driven learning loop.
 
 ## Central idea
+
+Recommended managed-host configuration is in `render.yaml`, with optional OpenAI
+analysis in the authenticated **AI analysis** page. See [hosting and provider setup](docs/HOSTING_SETUP.md).
+Hosting accounts, a private API key and host-side verification are still required.
+
+The **Policy scorecard** integrates the supplied government-policy starter with
+signed impact scores across nine national priorities, probability-weighted stress
+scenarios, confidence penalties, evidence gaps, regret and saved comparison history.
+See [Policy scorecard](docs/POLICY_SCORECARD.md). Its example values are assumptions.
+
+The human-directed Geometer flow now has a persistent API: domain inputs feed
+a decision model containing scenarios, risks and proposed actions; sourced
+outcomes and feedback create new model revisions. See [Decision loop](docs/DECISION_LOOP.md).
 
 PRAXIS does not treat AI output as an answer. It treats a decision as a living model:
 
@@ -18,26 +38,79 @@ Domain engines apply this loop to **business, finance, technology, law, human sy
 
 ## Repository
 
+Start with the [ordered project guide](docs/PROJECT_INDEX.md) for the consolidated
+architecture, data locations and execution register recovered from the supplied material.
+
 ```text
 apps/api/                  FastAPI interface
 src/praxis/core/           canonical decision/evidence models + protocols
 src/praxis/engines/        Newton / Geometer / Blake / Dewey engines
 src/praxis/domains/        business / finance / technology / law / human / society
 src/praxis/services/       inquiry orchestration
-src/praxis/infra/          future persistence/connectors
-specs/                     future formal schemas
-simulations/               future deterministic/probabilistic models
+src/praxis/infra/          SQLite persistence
+src/praxis/graph/          decision graph and impact traversal
+src/praxis/evidence/       evidence ledger
+src/praxis/quant/          executable models and simulations
+src/praxis/product/        authenticated API, storage, worker and resource models
+src/praxis/web/            Geometer Studio
+examples/                 labeled example inputs
 tests/                     executable architecture tests
 docs/                      architecture and roadmap
 ```
 
 ## Run
 
+### Windows
+
+Requires Python 3.11 or newer. Double-click `Setup-PRAXIS.cmd` once, then
+`Start-PRAXIS.cmd`. Open http://127.0.0.1:8765/ to use Geometer Studio.
+The developer API remains at http://127.0.0.1:8765/docs.
+Keep the launcher running; Ctrl+C stops it. The Windows source launcher uses
+`praxis.db` beside the launcher so the same workspace reopens each time.
+The installed `praxis-os` command defaults to `%LOCALAPPDATA%\PRAXIS-OS\praxis.db`.
+Use `Start-PRAXIS.cmd --port 8766 --db C:\PRAXIS-Data\praxis.db` to override it.
+
+Geometer Studio is a local research prototype with Chat (structured inquiry),
+Dashboard, Decision Canvas, Simulation and Reports. It saves decision revisions,
+simulation snapshots and human judgment records. See [Studio architecture](docs/GEOMETER_STUDIO.md).
+Live external connectors, authentication, an LLM provider and automatic continuous
+updates are not implemented. Grounding uses in-memory
+records and simple text matching; the domain adapters normalize supplied records
+and do not fetch live data. v0.5–v0.8 kernels are available as Python modules,
+while the HTTP API covers inquiry, evidence, graphs, and quantitative simulation.
+
+See `docs/LOCAL_BUILD.md` for examples and build instructions.
+
+Sources now supports [grounded document search](docs/GROUNDED_DOCUMENTS.md), with
+persistent CLI ingestion/retrieval, exact excerpt provenance and temporal filters.
+Extracted sentences remain unverified candidates; matching text never establishes fact.
+
+The **Enterprise** page is also available locally: inspect the SQL database, create
+a verified backup, import source updates and review decision impacts. See
+[SQL database operations](docs/SQL_DATABASE.md). SQLite is active locally;
+PostgreSQL remains the configured enterprise deployment path.
+
+## v0.9 product foundation
+
+The authenticated service now includes an **Enterprise** screen for source
+bindings, transactional imports and impact review. It also adds token revocation,
+signing-key rotation and a tested provider-neutral reasoning coordinator.
+See [connected enterprise](docs/CONNECTED_ENTERPRISE.md) for setup and live-integration gaps.
+
+The separate authenticated API adds expiring signed credentials, tenant-scoped
+records, role-checked judgments, PostgreSQL storage, transactional outbox workers,
+source ingestion, hypothesis/experiment records and institutional resources.
+Docker/Compose, CI, OpenAPI, schema, threat model and recovery runbook are supplied.
+See [deployment instructions](docs/PRODUCTION.md) and the
+[implemented/pending scope](docs/REQUIREMENTS_STATUS.md).
+
+### macOS / Linux
+
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -e '.[dev]'
-uvicorn apps.api.main:app --reload
+praxis-os
 ```
 
 POST a decision to `/v1/inquiry`.
@@ -115,3 +188,12 @@ v0.8 adds stable institutional entities and ownership, objectives, authority-sco
 Key invariant: **agents are not the source of institutional truth**. They observe scoped state and propose changes. Canonical state changes are represented by events, and real side effects must pass through governance.
 
 See `docs/V0.8.md`.
+
+## Local PostgreSQL launcher
+
+Use **Start-PRAXIS-PostgreSQL.cmd** for the authenticated PostgreSQL workspace on
+port **8766**. Installation, sign-in and storage details are in
+[docs/LOCAL_POSTGRESQL.md](docs/LOCAL_POSTGRESQL.md). The original SQLite workspace
+on port 8765 remains separate; records are not automatically migrated.
+
+CMO marketing and intelligence-product sales planning is available for any company size. See [CMO support](docs/CMO_SUPPORT.md).

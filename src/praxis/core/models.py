@@ -5,7 +5,7 @@ from typing import Any
 from uuid import UUID, uuid4
 
 class EpistemicType(str, Enum):
-    FACT="fact"; ASSUMPTION="assumption"; HYPOTHESIS="hypothesis"; VALUE="value"; PREDICTION="prediction"
+    FACT="fact"; ASSUMPTION="assumption"; HYPOTHESIS="hypothesis"; VALUE="value"; PREDICTION="prediction"; INFERENCE="inference"; HUMAN_JUDGMENT="human_judgment"
 
 class Evidence(BaseModel):
     statement: str
@@ -17,6 +17,16 @@ class Stakeholder(BaseModel):
     name: str
     interests: list[str] = []
     possible_impacts: list[str] = []
+    motivations: list[str] = Field(default_factory=list)
+    incentives: list[str] = Field(default_factory=list)
+    values: list[str] = Field(default_factory=list)
+    conflicts: list[str] = Field(default_factory=list)
+    ethical_considerations: list[str] = Field(default_factory=list)
+    second_order_effects: list[str] = Field(default_factory=list)
+    trust: str = "not_assessed"
+    culture: str = "not_assessed"
+    preferences: list[str] = Field(default_factory=list)
+    behavior: str = "not_assessed"
 
 class Option(BaseModel):
     name: str
@@ -42,6 +52,14 @@ class Decision(BaseModel):
     values: list[str] = []
     scenarios: list[Scenario] = []
     metadata: dict[str, Any] = {}
+    context: str = ""
+    assumptions: list[str] = Field(default_factory=list)
+    variables: dict[str, float] = Field(default_factory=dict)
+    dependencies: list[str] = Field(default_factory=list)
+    risks: list[str] = Field(default_factory=list)
+    expected_benefits: list[str] = Field(default_factory=list)
+    uncertainties: list[str] = Field(default_factory=list)
+    reversibility: str = "not_assessed"
 
 class Insight(BaseModel):
     engine: str

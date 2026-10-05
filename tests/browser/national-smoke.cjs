@@ -1,0 +1,23 @@
+const {chromium}=require('playwright');const assert=require('node:assert/strict');
+(async()=>{const b=await chromium.launch({channel:'msedge',headless:true});try{
+ const p=await b.newPage({viewport:{width:1440,height:1000}}),errors=[];p.on('pageerror',e=>errors.push(e.message));
+ await p.goto('http://127.0.0.1:8895/');await p.getByRole('button',{name:'+ New decision',exact:true}).click();await p.getByRole('button',{name:'Fill example',exact:true}).click();await p.getByRole('button',{name:'Create decision model →',exact:true}).click();await p.getByText('Orchestrator response',{exact:true}).waitFor();
+ await p.locator('nav [data-page=nationalpage]').click();const f=p.locator('#national-form');await f.locator('#national-country').selectOption('India');
+ await p.locator('#country-data-table [data-country-profile]').first().waitFor();assert.ok(await p.locator('#country-data-table [data-country-profile]').count()>=190);await p.locator('#country-data-search').fill('India');assert.equal(await p.locator('#country-data-table [data-country-profile]').count(),1);await p.locator('[data-country-profile="India"]').click();await p.locator('[data-use-country-gdp="India"]').click();assert.equal(await f.locator('[name=unit]').inputValue(),'billion USD');assert.ok(Number(await f.locator('[name=gdp]').inputValue())>0);
+ await f.locator('[name=area]').selectOption('economic_policy');
+ await f.locator('#policy-appraisal-enabled').check();for(const [key,value]of Object.entries({policy_years:'2',policy_discount:'5',policy_benefit_drop:'20',policy_cost_rise:'10'}))await f.locator(`[name=${key}]`).fill(value);
+ for(const field of await f.locator('[data-policy-option]').all()){
+  await field.locator('[name=policy_upfront]').fill('10');for(const range of await field.locator('[data-policy-range]').all()){const kind=(await range.getAttribute('data-policy-range')).split(':')[0];await range.fill(kind==='benefit'?'30':'10');}
+  for(const gate of await field.locator('[data-policy-gate],[data-check]').all())await gate.selectOption('pass');await field.locator('[name=policy_reference]').fill('Illustrative economic and legal review');await field.locator('[name=policy_distributions]').fill('Service users | benefit | Illustrative estimate');
+ }
+ for(const [key,value]of Object.entries({as_of:'2026-10-01',period:'One-year example',unit:'Illustrative units',source:'Illustrative test data, not country measurements',mandate_reference:'Example review owner',partners:'Partner country',affected_groups:'Service users',assumptions:'Validate projected revenues'}))await f.locator(`[name=${key}]`).fill(value);
+ await f.locator('[name=economics]').check();for(const [key,value]of Object.entries({gdp:'1000',revenue:'100',primary_spending:'90',debt:'500',growth:'5',effective_interest_rate:'4',adverse_growth:'-10',adverse_revenue_drop:'20',adverse_spending_rise:'10'}))await f.locator(`[name=${key}]`).fill(value);
+ await f.getByRole('button',{name:'Add agreement',exact:true}).click();const agreement=f.locator('[data-national-agreement]');for(const [key,value]of Object.entries({title:'Example agreement',partner:'Example partner',reviewed_on:'2026-09-30',obligation:'Review clause 3',reference:'Illustrative text'}))await agreement.locator(`[name=${key}]`).fill(value);
+ const saved=p.waitForResponse(r=>r.url().endsWith('/national-support'));await f.getByRole('button',{name:'Analyze & save national plan'}).click();assert.equal((await saved).status(),201);await p.getByRole('heading',{name:'Policy and diplomatic questions',exact:true}).waitFor();
+ await p.reload();await p.locator('nav [data-page=nationalpage]').click();await p.getByRole('heading',{name:'Policy and diplomatic questions',exact:true}).waitFor();await p.locator('#national-country-filter').selectOption('India');
+ await p.getByText('Country statistics used',{exact:false}).waitFor();
+ await p.getByRole('heading',{name:'Policy computation results',exact:true}).waitFor();
+ await p.getByRole('button',{name:'Compare policy alternatives',exact:true}).click();assert.match(await p.locator('#compute-criteria').inputValue(),/Fiscal affordability/);
+ await p.locator('nav [data-page=nationalpage]').click();await p.locator('#national-country').selectOption('other');await p.locator('#national-form [name=country]').fill('Custom country');assert.equal(await p.locator('#national-form [name=country]').isVisible(),true);
+ await p.setViewportSize({width:390,height:844});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);assert.deepEqual(errors,[]);console.log('Country catalog, fiscal scenarios, agreement records, persistence, custom country, decision handoff and mobile passed');
+}finally{await b.close();}})().catch(e=>{console.error(e);process.exit(1)});

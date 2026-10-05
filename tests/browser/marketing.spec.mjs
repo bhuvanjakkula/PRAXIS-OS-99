@@ -1,0 +1,28 @@
+import {test,expect} from '@playwright/test';
+test('CMO strategy, saved economics, export, comparison and mobile',async({page})=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('/');
+  await page.getByRole('button',{name:'+ New decision',exact:true}).click();
+  await page.getByRole('button',{name:'Fill example',exact:true}).click();
+  await page.getByRole('button',{name:'Create decision model →',exact:true}).click();
+  await expect(page.getByText('Orchestrator response',{exact:true})).toBeVisible();
+  await page.locator('nav [data-page=cmopage]').click();
+  await page.getByRole('button',{name:'Fill illustrative example',exact:true}).click();
+  await page.getByRole('button',{name:'Add channel',exact:true}).click();
+  await expect(page.locator('.marketing-channel')).toHaveCount(2);
+  await page.locator('.marketing-channel').last().getByRole('button',{name:'Remove channel'}).click();
+  const response=page.waitForResponse(r=>r.url().endsWith('/marketing-support'));
+  await page.getByRole('button',{name:'Analyze & save CMO plan',exact:true}).click();
+  const r=await (await response).json();expect(r.analysis.metrics.blended_acquisition_cost).toBe(500);
+  await expect(page.locator('.record')).toContainText('Small-company execution');
+  await expect(page.locator('.record')).toContainText('Selling intelligence products');
+  await page.goto('/#cmo');await expect(page.locator('.record').first()).toContainText('Illustrative intelligence studio');
+  const download=page.waitForEvent('download');
+  await page.getByRole('button',{name:'Export CMO plan'}).first().click();
+  expect((await download).suggestedFilename()).toBe('praxis-cmo-plan.json');
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.getByRole('button',{name:'Compare marketing options'}).first().click();
+  await expect(page.locator('#compute-form')).toContainText('Acquisition economics');
+  expect(errors).toEqual([]);
+});

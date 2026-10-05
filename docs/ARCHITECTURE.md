@@ -34,7 +34,12 @@ flowchart TB
  MEM --> KG
 ```
 
-## Next production components
+## Component boundaries
+
+See [the ordered project guide](PROJECT_INDEX.md) for current implementation paths
+and status. The following are architecture boundaries, not a claim that every
+component is production-ready. Evidence, graph, simulation, experiment, governance
+and outcome kernels already exist; the LLM gateway remains pending.
 
 - `EvidenceStore`: immutable provenance and effective dates.
 - `DecisionGraph`: typed nodes/edges with temporal history.

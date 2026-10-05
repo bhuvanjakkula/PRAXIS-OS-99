@@ -1,0 +1,18 @@
+{
+  "kem": "ML-KEM-768",
+  "signature": "ML-DSA-65",
+  "key_agreement_passed": true,
+  "altered_ciphertext_secret_differs": true,
+  "signature_verified": true,
+  "altered_message_rejected": true,
+  "wrong_context_rejected": true,
+  "kem_public_key_bytes": 1184,
+  "kem_ciphertext_bytes": 1088,
+  "signature_public_key_bytes": 1952,
+  "signature_bytes": 3309,
+  "kem_lab_ms": 7.217199978185818,
+  "signature_lab_ms": 15.570899995509535,
+  "certified": false,
+  "live_links_connected": false,
+  "limitations": "Single local ephemeral trial; timings include multiple operations. Not conformance vectors, transport authentication, production readiness or target-device performance. Secrets are not exported; Python memory erasure is not guaranteed."
+}

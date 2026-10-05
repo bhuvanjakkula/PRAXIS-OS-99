@@ -1,0 +1,12 @@
+{
+  "note": "Structural hypotheses supplied by the user; relationships require supporting evidence before causal interpretation.",
+  "entities": ["Company", "Product", "Customers", "Capital", "Technology", "Revenue", "Debt", "Data", "Profit", "Cash Flow", "Regulation", "Compliance", "Cost", "Risk", "Interest Rate", "Valuation"],
+  "relationships": [
+    ["Company", "includes", "Product"], ["Company", "serves", "Customers"], ["Company", "uses", "Capital"],
+    ["Product", "depends_on", "Technology"], ["Customers", "influences", "Revenue"], ["Capital", "includes", "Debt"],
+    ["Technology", "uses", "Data"], ["Revenue", "influences", "Profit"], ["Debt", "affects", "Cash Flow"],
+    ["Regulation", "constrains", "Product"], ["Regulation", "requires", "Compliance"], ["Compliance", "influences", "Cost"],
+    ["Interest Rate", "influences", "Debt"], ["Interest Rate", "influences", "Customers"], ["Interest Rate", "influences", "Valuation"]
+  ],
+  "europe_launch_dependencies": ["Launch Europe", "New customers", "Data requirements", "Infrastructure changes", "Engineering work", "Cost", "Timeline"]
+}

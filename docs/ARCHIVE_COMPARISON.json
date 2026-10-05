@@ -1,0 +1,62 @@
+[
+  {
+    "archive": "C:\\Users\\bhuva\\Downloads\\praxis-os-v0.1.tar.gz",
+    "files": 14,
+    "missing_from_current": [],
+    "different_from_current": [
+      ".gitignore",
+      "apps\\api\\main.py",
+      "src\\praxis\\services\\orchestrator.py",
+      "src\\praxis\\engines\\foundational.py",
+      "src\\praxis\\__init__.py",
+      "pyproject.toml",
+      "README.md"
+    ]
+  },
+  {
+    "archive": "C:\\Users\\bhuva\\Downloads\\praxis-os-v0.2.tar.gz",
+    "files": 24,
+    "missing_from_current": [],
+    "different_from_current": [
+      ".gitignore",
+      "apps\\api\\main.py",
+      "src\\praxis\\services\\orchestrator.py",
+      "src\\praxis\\infra\\sqlite.py",
+      "src\\praxis\\engines\\foundational.py",
+      "src\\praxis\\__init__.py",
+      "pyproject.toml",
+      "README.md"
+    ]
+  },
+  {
+    "archive": "C:\\Users\\bhuva\\Downloads\\praxis-os-v0.3.tar.gz",
+    "files": 30,
+    "missing_from_current": [],
+    "different_from_current": [
+      ".gitignore",
+      "apps\\api\\main.py",
+      "src\\praxis\\services\\orchestrator.py",
+      "src\\praxis\\infra\\sqlite.py",
+      "src\\praxis\\quant\\__init__.py",
+      "src\\praxis\\engines\\foundational.py",
+      "src\\praxis\\__init__.py",
+      "pyproject.toml",
+      "README.md"
+    ]
+  },
+  {
+    "archive": "C:\\Users\\bhuva\\Downloads\\praxis-os-v0.4.tar.gz",
+    "files": 34,
+    "missing_from_current": [],
+    "different_from_current": [
+      ".gitignore",
+      "apps\\api\\main.py",
+      "src\\praxis\\services\\orchestrator.py",
+      "src\\praxis\\engines\\foundational.py",
+      "src\\praxis\\__init__.py",
+      "pyproject.toml",
+      "README.md",
+      "tests\\test_v04_integrated.py"
+    ]
+  }
+]

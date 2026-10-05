@@ -1,0 +1,32 @@
+// A shared catalog supplies role-specific sector context in the editor and reports.
+const baseBindExecutive=bindExecutive,baseExecutiveRecord=executiveRecord;
+let sectorCatalogPromise;
+const sectorSelections={};
+const areaSelections={};
+function loadSectorCatalog(){return sectorCatalogPromise??=api('/assets/sectors.json').catch(e=>{sectorCatalogPromise=null;throw e;});}
+function sectorContext(profile){return `<h3>${esc(profile.name)} · professional focus</h3><p><strong>${esc(profile.focus)}</strong></p><h4>Metrics to define and measure</h4>${list(profile.metrics||[])}<h4>Evidence to collect</h4><p>${esc(profile.evidence)}</p><h4>Planning questions</h4>${list(profile.questions)}<p class="note">These are planning prompts. Sector selection does not invent measurements, change formulas or establish compliance.</p>`;}
+executiveRecord=function(run){let html=baseExecutiveRecord(run);const profile=run.analysis.sector_profile,area=run.analysis.area_profile;html=html.replace('<article class="record">',`<article class="record" data-executive-sector="${esc(profile?.name||run.inputs.industry)}" data-executive-area="${esc(run.inputs.professional_area||'Not specified')}">`);return html.replace('<h4>Suggested next steps</h4>',(profile?sectorContext(profile):'')+(area?'<h4>Specific professional area</h4>'+sectorContext(area):'')+'<h4>Suggested next steps</h4>');};
+function updateSectorAreas(form,sector,role){
+ let container=form.querySelector('#executive-area-controls');if(!container){$('#executive-sector-context').insertAdjacentHTML('afterend','<div id="executive-area-controls" class="sector-context"></div>');container=$('#executive-area-controls');}
+ const key=role+'|'+(sector?.name||'custom'),saved=areaSelections[key]||{},areas=sector?.areas||[];
+ container.innerHTML=`<label>Specific professional area<select id="executive-area"><option value="">General sector planning</option>${areas.map(a=>`<option value="${esc(a.name)}">${esc(a.name)}</option>`).join('')}<option value="other">Other / custom area</option></select></label><label id="executive-custom-area" hidden>Custom area name<input name="professional_area" maxlength="200" value="${esc(saved.custom||'')}"></label><input type="hidden" name="custom_area" value="false"><div id="executive-area-context" aria-live="polite"></div>`;
+ const select=container.querySelector('#executive-area'),field=form.elements.professional_area;
+ const update=()=>{const area=areas.find(a=>a.name===select.value),custom=select.value==='other';container.querySelector('#executive-custom-area').hidden=!custom;field.required=custom;form.elements.custom_area.value=String(custom);field.value=custom?(areaSelections[key]?.custom||''):(area?.name||'');container.querySelector('#executive-area-context').innerHTML=area?sectorContext({name:area.name,...area.roles[role]}):custom?'<p>Define custom indicators, evidence and requirements in the plan.</p>':'<p>Select a specific area for more focused planning questions.</p>';areaSelections[key]={selection:select.value,custom:custom?field.value:''};};
+ select.addEventListener('change',update);field.addEventListener('input',()=>{if(select.value==='other')areaSelections[key].custom=field.value;});select.value=saved.selection||'';update();
+}
+bindExecutive=function(){
+ baseBindExecutive();const form=$('#executive-form');if(!form)return;const role=form.dataset.role,industry=form.elements.industry,industryLabel=industry.closest('label');
+ industryLabel.insertAdjacentHTML('beforebegin',`<label>Professional sector<select id="executive-sector"><option value="">Loading sectors…</option></select></label>`);
+ industryLabel.insertAdjacentHTML('afterend','<div id="executive-sector-context" class="sector-context" aria-live="polite"></div>');
+ industryLabel.childNodes[0].textContent='Other sector name';industry.removeAttribute('list');$('#executive-industries')?.remove();
+ const history=form.closest('section').nextElementSibling;
+ history.querySelector('h2').insertAdjacentHTML('afterend','<label>Filter saved plans by sector<select id="executive-sector-filter"><option value="">All sectors</option></select></label><p id="executive-sector-count" role="status"></p>');
+ const records=Array.from(history.querySelectorAll('[data-executive-sector]')),filter=$('#executive-sector-filter');
+ for(const name of [...new Set(records.map(r=>r.dataset.executiveSector))].sort()){const option=document.createElement('option');option.value=name;option.textContent=name;filter.appendChild(option);}
+ const filterRecords=()=>{let visible=0;for(const r of records){r.hidden=!!filter.value&&r.dataset.executiveSector!==filter.value;if(!r.hidden)visible++;}$('#executive-sector-count').textContent=visible+' saved plans shown';};filter.addEventListener('change',filterRecords);filterRecords();
+ loadSectorCatalog().then(catalog=>{
+  if(!form.isConnected)return;const selector=$('#executive-sector');selector.innerHTML='<option value="">Choose your sector…</option>'+catalog.map(s=>`<option value="${esc(s.name)}">${esc(s.name==='Financial services'?'Finance / financial services':s.name)}</option>`).join('')+'<option value="other">Other / custom sector</option>';selector.required=true;
+  const update=()=>{const selected=selector.value,sector=catalog.find(s=>s.name===selected);industryLabel.hidden=selected!=='other';industry.required=selected==='other';if(sector){industry.value=sector.name;$('#executive-sector-context').innerHTML=sectorContext({name:sector.name,...sector.roles[role]});}else{industry.value=selected==='other'?(sectorSelections[role]?.custom||''):'';$('#executive-sector-context').innerHTML=selected==='other'?'<h3>Custom sector</h3><p>Enter your sector name, measured indicators, evidence sources and applicable requirements below.</p>':'<p>Select a sector to see professional planning topics.</p>';}sectorSelections[role]={selection:selected,custom:selected==='other'?industry.value:''};updateSectorAreas(form,sector,role);};
+  selector.addEventListener('change',update);industry.addEventListener('input',()=>{if(selector.value==='other')sectorSelections[role].custom=industry.value;});selector.value=sectorSelections[role]?.selection||'';update();
+ }).catch(e=>{if(form.isConnected){$('#executive-sector').innerHTML='<option value="other">Other / custom sector</option>';industryLabel.hidden=false;industry.required=true;$('#executive-sector-context').textContent='Sector catalog unavailable. You can enter a custom sector.';toast(e.message,true);}});
+};

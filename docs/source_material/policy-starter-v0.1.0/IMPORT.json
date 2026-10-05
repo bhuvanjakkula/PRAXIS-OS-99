@@ -1,0 +1,19 @@
+{
+  "archive": "praxis-os-v0.1.0.zip",
+  "sha256": "b32f0a50350fb279b1c6938aeb57304740d7763a374dc79acdb58b05e3e8f06e",
+  "imported_files": [
+    "praxis-os/praxis_os/core/engine.py",
+    "praxis-os/praxis_os/core/models.py",
+    "praxis-os/praxis_os/__init__.py",
+    "praxis-os/praxis_os/connectors/world_bank.py",
+    "praxis-os/praxis_os/api/main.py",
+    "praxis-os/examples.json",
+    "praxis-os/requirements.txt",
+    "praxis-os/tests/test_engine.py",
+    "praxis-os/README.md",
+    "praxis-os/pyproject.toml",
+    "praxis-os/LICENSE",
+    "praxis-os/Dockerfile"
+  ],
+  "purpose": "Reference source, not runtime instructions"
+}

@@ -1,0 +1,9 @@
+# DLQ isolation and auditability review
+
+Praxis OS records optional evidence for failure classification, diagnostic preservation and quarantine monitoring in the IMF pilot. Starting this review checks all three notes plus linked replay, audit trail and exception-resolution evidence. Notes are saved and exported with the existing pilot record. Blank optional groups preserve previous behavior.
+
+Classification evidence should distinguish expected business denials from operational faults, document malformed-event handling and bounded transient retries, and name the routing owner. Diagnostic evidence should cover correlation and business intent identifiers, source position where applicable, timestamps, failure codes and retry history, with access controls and sensitive-data redaction. Monitoring evidence should cover depth, oldest-event age, retention, expiry alerts, ownership, escalation and reconciliation of terminal outcomes.
+
+This is an evidence-review interface, not a queue consumer or payment integration. It does not route events, persist broker payloads, run alerts or authorize replay. A complete set of notes cannot prove message preservation, immutable records, regulatory compliance, exactly-once effects or settlement correctness. `audit_compliance_determined` and `dlq_replay_authorized` remain false. No quantitative improvement estimates from the supplied research are adopted.
+
+Provider-specific retention and ordering rules must be verified when designing an actual integration. AWS documents DLQ isolation, retention behavior and ordering cautions in its [SQS DLQ guidance](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html), and controlled redrive in its [redrive guidance](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-dead-letter-queue-redrive.html). These mechanisms alone do not establish application-level audit compliance.

@@ -1,0 +1,11 @@
+.git
+.venv
+.test-tmp
+__pycache__
+*.db*
+*.log
+.env*
+*.token
+build
+dist
+*.egg-info

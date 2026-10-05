@@ -1,0 +1,36 @@
+import {test,expect} from '@playwright/test';
+test('decision → simulation → inline response → observation → report',async({page})=>{
+  await page.goto('/');
+  await page.getByRole('button',{name:'+ New decision',exact:true}).click();
+  await page.getByRole('button',{name:'Fill example',exact:true}).click();
+  await page.getByRole('textbox',{name:'Decision title',exact:true}).fill('E2E bounded pilot');
+  await page.getByRole('button',{name:'Create decision model →',exact:true}).click();
+  await expect(page.getByText('Orchestrator response',{exact:true})).toBeVisible();
+  await page.getByRole('button',{name:/Simulation$/}).click();
+  await page.getByRole('button',{name:'Run scenario →',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Conditional profit outcomes'})).toBeVisible();
+  const suggestion=page.locator('[data-suggestion]').first();
+  await suggestion.locator('[data-reject]').click();
+  await suggestion.locator('textarea').fill('Investigate uncertain adoption');
+  await suggestion.getByRole('button',{name:'Generate updated suggestion',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Updated suggestion',exact:true})).toBeVisible();
+  await page.locator('[data-suggestion] button[value=accept]').first().click();
+  await expect(page.getByText('accept',{exact:true})).toBeVisible();
+  await page.getByRole('button',{name:/Chat$/}).click();
+  await page.getByRole('textbox',{name:'Observed outcome',exact:true}).fill('Demo revenue increased 20%');
+  await page.getByRole('textbox',{name:'Source',exact:true}).fill('E2E demo record');
+  await page.getByRole('textbox',{name:'Learning',exact:true}).fill('Sales cycle underestimated');
+  await page.getByRole('button',{name:'Save feedback & update model →',exact:true}).click();
+  await expect(page.getByText('REVISION 2',{exact:true})).toBeVisible();
+  await page.getByRole('button',{name:/Reports$/}).click();
+  await expect(page.getByText('Demo revenue increased 20%',{exact:true})).toBeVisible();
+  const download=page.waitForEvent('download');
+  await page.getByRole('button',{name:'Export JSON',exact:true}).click();
+  expect((await download).suggestedFilename()).toMatch(/praxis-decision-.*\.json/);
+});
+test('mobile shell remains usable',async({page})=>{
+  await page.setViewportSize({width:390,height:844});await page.goto('/');
+  await expect(page.getByRole('button',{name:'+ New decision',exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'+ New decision',exact:true}).click();
+  await expect(page.getByRole('textbox',{name:'Decision title',exact:true})).toBeVisible();
+});

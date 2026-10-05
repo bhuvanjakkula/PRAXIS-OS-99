@@ -1,0 +1,21 @@
+services:
+  api:
+    environment:
+      PRAXIS_PRIVATE_BETA: "true"
+      PRAXIS_ALLOWED_HOSTS: "${PRAXIS_BETA_DOMAIN:?Set the beta domain},localhost,127.0.0.1"
+    command: [python, -m, uvicorn, "praxis.product.api:application", --factory, --host, "0.0.0.0", --port, "8000", --limit-concurrency, "32", --timeout-keep-alive, "5", --no-proxy-headers]
+  ingress:
+    image: caddy:2
+    ports: ["80:80", "443:443"]
+    environment:
+      PRAXIS_BETA_DOMAIN: ${PRAXIS_BETA_DOMAIN:?Set the beta domain}
+    volumes:
+      - ./Caddyfile.beta:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [api]
+    restart: unless-stopped
+    security_opt: ["no-new-privileges:true"]
+volumes:
+  caddy-data:
+  caddy-config:
