@@ -1,7 +1,6 @@
 import os
 import sys
 from pathlib import Path
-from fastapi import FastAPI
 
 # Resolve paths
 root = Path(__file__).resolve().parent
@@ -19,10 +18,4 @@ if os.environ.get("VERCEL") and not os.environ.get("PRAXIS_DB"):
 
 import praxis.api as _praxis_api
 
-# Vercel AST scanner looks for app = FastAPI(
-app = FastAPI(
-    title="PRAXIS OS",
-    routes=_praxis_api.app.routes,
-    middleware=_praxis_api.app.user_middleware,
-    exception_handlers=_praxis_api.app.exception_handlers,
-)
+app = _praxis_api.app
