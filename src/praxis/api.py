@@ -45,6 +45,8 @@ class VercelPathNormalizer:
 
             if scope.get('path', '').startswith('/api/v1/'):
                 scope['path'] = scope['path'][4:]
+            elif scope.get('path', '').startswith('/api/v2/'):
+                scope['path'] = scope['path'][4:]
             elif scope.get('path', '') == '/api/health':
                 scope['path'] = '/health'
             elif scope.get('path', '') == '/api/docs':

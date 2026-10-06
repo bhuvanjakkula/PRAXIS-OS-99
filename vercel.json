@@ -9,6 +9,14 @@
       "destination": "/api/index.py?__path=/v1/$1"
     },
     {
+      "source": "/v2/(.*)",
+      "destination": "/api/index.py?__path=/v2/$1"
+    },
+    {
+      "source": "/api/v2/(.*)",
+      "destination": "/api/index.py?__path=/v2/$1"
+    },
+    {
       "source": "/health",
       "destination": "/api/index.py?__path=/health"
     },
