@@ -5,7 +5,33 @@ const lines = s => String(s).split('\n').map(x => x.trim()).filter(Boolean);
 const list = items => `<ul class="list">${items.map(s => `<li>${esc(s)}</li>`).join('')}</ul>`;
 const num = x => Number(x).toLocaleString(undefined, {maximumFractionDigits:2});
 const date = x => new Date(x).toLocaleString();
-const names = {dashboard:'Dashboard',chat:'Chat',canvas:'Decision Canvas',simulation:'Simulation',reports:'Reports',labs:'Labs',sources:'Sources'};
+const names = {
+  dashboard: 'Dashboard',
+  chat: 'Structured Inquiry',
+  canvas: 'Decision Canvas',
+  simulation: 'Quantitative Simulation',
+  reports: 'Decision Reports',
+  pricing: 'Plans & Pricing',
+  decisionlab: 'Decision Lab',
+  inquirypage: 'Practical Inquiry',
+  computepage: 'Decision Compute',
+  aipage: 'AI Solutions & Analysis',
+  researchpage: 'Grounded Research',
+  foresightpage: 'Foresight & Prediction',
+  enterprise: 'Enterprise Operations',
+  sources: 'Document Sources',
+  labs: 'Labs Registry',
+  imfpage: 'IMF Macro Solutions',
+  worldbankpage: 'World Bank Development',
+  nationalpage: 'National Strategy',
+  policypage: 'Policy Comparison & Scorecard',
+  cmopage: 'CMO Marketing & Growth',
+  ceopage: 'Executive CEO Cockpit',
+  cfopage: 'Executive CFO Capital',
+  ctopage: 'Executive CTO Architecture',
+  aircrewpage: 'Aviation Security Operations',
+  shipcaptainpage: 'Maritime Fusion Coordination'
+};
 const state = {page:location.hash==='#maritime'?'shipcaptainpage':location.hash==='#aircrew'?'aircrewpage':location.hash==='#cto'?'ctopage':location.hash==='#country'?'nationalpage':location.hash==='#cmo'?'cmopage':location.hash==='#policy'?'policypage':location.hash==='#foresight'?'foresightpage':location.hash==='#research'?'researchpage':'dashboard', decisions:[], selected:null, workspace:null, mode:'scenario', simulation:null};
 let toastTimer;
 let accessToken=null;
@@ -153,6 +179,17 @@ async function startStudio(){try{const health=await api('/health');if(health.aut
 $('#login-dialog').addEventListener('cancel',e=>e.preventDefault());
 $('#login-form').addEventListener('submit',e=>{e.preventDefault();accessToken=new FormData(e.target).get('credential');busy(e.submitter,async()=>{const me=await api('/v1/me');await load();if(state.page==='labs'||state.page==='sources')await loadLabs();$('#identity-label').textContent=me.tenant+' / '+me.subject;$('#signout').hidden=false;$('#login-dialog').close();e.target.reset();render();});});
 $('#signout').onclick=()=>{accessToken=null;state.decisions=[];state.workspace=null;state.selected=null;state.page='dashboard';for(const key of Object.keys(labState))labState[key]=[];$('#main').innerHTML='';$('#login-dialog').showModal();};
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-page]');
+  if (btn && btn.dataset.page) {
+    e.preventDefault();
+    state.page = btn.dataset.page;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
+
 document.addEventListener('DOMContentLoaded',startStudio);
 
 

@@ -740,3 +740,18 @@ dialog.auth-dialog::backdrop {
   letter-spacing: 0.02em;
   text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
 }
+
+
+.nav-section-title {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #64748b;
+  margin: 14px 0 4px 6px;
+  text-transform: uppercase;
+}
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
