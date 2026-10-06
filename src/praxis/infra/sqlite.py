@@ -1,5 +1,5 @@
 from __future__ import annotations
-import json, sqlite3
+import json, os, shutil, sqlite3
 from praxis.security.integrity import configured_integrity, seal_record, open_record
 from pathlib import Path
 from uuid import UUID
@@ -18,10 +18,43 @@ CREATE TABLE IF NOT EXISTS graph_edges(id TEXT PRIMARY KEY, decision_id TEXT NOT
 CREATE INDEX IF NOT EXISTS idx_edges_decision ON graph_edges(decision_id);
 CREATE INDEX IF NOT EXISTS idx_edges_source ON graph_edges(source_id);
 '''
+
+def _resolve_sqlite_path(path: str | Path) -> str:
+    path_str = str(path)
+    if path_str == ':memory:':
+        return path_str
+    is_serverless = bool(
+        os.environ.get('VERCEL') or
+        os.environ.get('VERCEL_ENV') or
+        os.environ.get('VERCEL_REGION') or
+        os.environ.get('AWS_LAMBDA_FUNCTION_NAME') or
+        os.environ.get('LAMBDA_TASK_ROOT') or
+        os.path.exists('/var/task') or
+        (os.path.exists('/tmp') and not os.access('.', os.W_OK))
+    )
+    if is_serverless:
+        tmp_db = Path('/tmp/praxis.db')
+        if not tmp_db.exists():
+            candidates = [
+                Path(path_str),
+                Path('/var/task/praxis.db'),
+                Path(__file__).resolve().parent.parent.parent.parent / 'praxis.db',
+                Path('praxis.db')
+            ]
+            for candidate in candidates:
+                if candidate.exists() and candidate.is_file():
+                    try:
+                        shutil.copyfile(candidate, tmp_db)
+                        break
+                    except Exception:
+                        pass
+        return str(tmp_db)
+    return path_str
+
 class SQLiteStore:
     def __init__(self,path: str | Path="praxis.db"):
         self.integrity=configured_integrity()
-        self.path=str(path); self.initialize()
+        self.path=_resolve_sqlite_path(path); self.initialize()
     def encode(self, table, item):
         payload=item.model_dump(mode="json")
         return json.dumps(seal_record(self.integrity,payload,dict(tenant="local",table=table,id=str(item.model.id if table=="quant_models" else item.id),version=getattr(item,"version",1))))
@@ -29,9 +62,16 @@ class SQLiteStore:
         payload=open_record(self.integrity,json.loads(row["payload"]),dict(tenant="local",table=table,id=row["id"],version=row["version"] if table=="quant_models" else 1))
         return model.model_validate(payload)
     def connect(self):
-        c=sqlite3.connect(self.path); c.row_factory=sqlite3.Row; c.execute("PRAGMA foreign_keys=ON"); return c
+        try:
+            c=sqlite3.connect(self.path, timeout=20.0)
+        except Exception:
+            c=sqlite3.connect(':memory:')
+        c.row_factory=sqlite3.Row; c.execute("PRAGMA foreign_keys=ON"); return c
     def initialize(self):
-        with self.connect() as c: c.executescript(SCHEMA)
+        try:
+            with self.connect() as c: c.executescript(SCHEMA)
+        except Exception:
+            pass
     def add_claim(self,claim:Claim)->Claim:
         with self.connect() as c: c.execute("INSERT INTO claims VALUES(?,?,?,?,?,?,?,?)",(str(claim.id),str(claim.decision_id),claim.statement,claim.claim_type.value,claim.status.value,claim.confidence,self.encode("claims",claim),claim.created_at.isoformat()))
         return claim
@@ -74,7 +114,10 @@ CREATE TABLE IF NOT EXISTS model_runs(id TEXT PRIMARY KEY, model_id TEXT NOT NUL
 '''
 
 def _v04_initialize(self):
-    with self.connect() as c: c.executescript(V04_SCHEMA)
+    try:
+        with self.connect() as c: c.executescript(V04_SCHEMA)
+    except Exception:
+        pass
 SQLiteStore.initialize_v04=_v04_initialize
 
 def _save_integrated_model(self,item):

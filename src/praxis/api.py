@@ -40,7 +40,8 @@ def valuation(inputs:ValuationInputs): return inputs.calculate()
 @app.post('/v1/finance/capital-allocation')
 def capital_allocation(inputs:CapitalAllocation): return inputs.summary()
 web_root = Path(__file__).parent / "web"
-app.mount("/assets", StaticFiles(directory=web_root), name="assets")
+if web_root.exists():
+    app.mount("/assets", StaticFiles(directory=web_root), name="assets")
 
 @app.get("/v1/decision-models", response_model=list[DecisionRevision])
 def list_decision_models(): return studio.list_decisions()

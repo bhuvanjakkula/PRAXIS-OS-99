@@ -27,7 +27,7 @@ class LocalBrowserSecurity:
         # Check for cloud deployments (Render, Vercel, or custom domains)
         is_cloud = bool(
             os.environ.get('RENDER') or 
-            os.environ.get('VERCEL') or 
+            os.environ.get('VERCEL') or os.environ.get('VERCEL_ENV') or os.environ.get('VERCEL_REGION') or os.environ.get('AWS_LAMBDA_FUNCTION_NAME') or os.environ.get('LAMBDA_TASK_ROOT') or 
             os.environ.get('PRAXIS_HOSTED') or 
             os.environ.get('PRAXIS_ALLOW_REMOTE') or
             (hostname and (hostname.endswith('.onrender.com') or hostname.endswith('.vercel.app')))
@@ -49,7 +49,7 @@ class LocalBrowserSecurity:
                 message = {**message, 'headers': list(message.get('headers', [])) + extra}
             await send(message)
             
-        if not is_cloud and hostname not in allowed:
+        if not is_cloud and hostname and hostname not in allowed:
             return await JSONResponse({'detail': 'Local workspace requires a loopback host'}, status_code=400)(scope, receive, secure_send)
             
         origin = headers.get(b'origin')
