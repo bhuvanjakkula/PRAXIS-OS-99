@@ -63,6 +63,30 @@ from praxis.services.decision_loop import DecisionLoop, RevisionConflict
 decision_loop = DecisionLoop(store)
 from praxis.services.studio import Studio, SimulationRequest, JudgmentRequest
 studio = Studio(store, decision_loop, graph)
+
+def ensure_seed_decisions():
+    try:
+        existing = studio.list_decisions()
+        if not existing:
+            demo = Decision(
+                title="DEMO — Paid Pilot",
+                problem="Should we test a paid subscription with a small customer group?",
+                objective="Measure willingness to pay before a full launch",
+                values=["Customer privacy", "Transparent pricing"],
+                constraints=["Pilot budget under 10,000", "No irreversible commitments"],
+                domains=["human", "business", "technology", "finance", "law"],
+                options=[{"name": "Run a small paid pilot"}, {"name": "Interview more customers first"}],
+                evidence=[
+                    {"statement": "Customers will pay for the service", "kind": "assumption", "confidence": 0.5},
+                    {"statement": "The team can support a small pilot", "kind": "assumption", "confidence": 0.5}
+                ]
+            )
+            decision_loop.create(demo)
+    except Exception:
+        pass
+
+ensure_seed_decisions()
+
 from praxis.services.local_labs import labs_router
 app.include_router(labs_router(store, decision_loop))
 from praxis.services.policy_comparison import PolicyRequest, analyze_policy
