@@ -24,22 +24,26 @@ class VercelPathNormalizer:
     async def __call__(self, scope, receive, send):
         if scope['type'] in ('http', 'websocket'):
             path = scope.get('path', '')
-            if path in ('/api/index.py', '/api/index', '/api/app.py', '/api/app', '/api/main.py', '/api/server.py', '/api', '/api/'):
-                headers = dict(scope.get('headers', []))
-                matched = headers.get(b'x-matched-path', b'').decode('latin1')
-                forwarded = headers.get(b'x-forwarded-uri', b'').decode('latin1')
-                real_origin = headers.get(b'x-real-origin-url', b'').decode('latin1')
-                orig_url = headers.get(b'x-original-url', b'').decode('latin1')
-                resolved_path = matched or forwarded or real_origin or orig_url
-                if resolved_path:
-                    scope['path'] = resolved_path.split('?')[0]
-            if scope.get('path', '').startswith('/api/v1/'):
-                scope['path'] = scope['path'][4:]
-            elif scope.get('path', '') == '/api/health':
+            raw_headers = scope.get('headers', [])
+            headers = {}
+            for k, v in raw_headers:
+                try:
+                    headers[k.decode('latin1').lower()] = v.decode('latin1')
+                except Exception:
+                    pass
+                    
+            matched = headers.get('x-matched-path') or headers.get('x-forwarded-uri') or headers.get('x-real-origin-url') or headers.get('x-original-url') or ''
+            matched = matched.split('?')[0]
+            
+            if matched and matched not in ('/api/index.py', '/api/app.py', '/api/server.py', '/api/main.py', '/api/index', '/api/app'):
+                scope['path'] = matched
+            elif path.startswith('/api/v1/'):
+                scope['path'] = path[4:]
+            elif path == '/api/health':
                 scope['path'] = '/health'
-            elif scope.get('path', '') == '/api/docs':
+            elif path == '/api/docs':
                 scope['path'] = '/docs'
-            elif scope.get('path', '') == '/api/openapi.json':
+            elif path == '/api/openapi.json':
                 scope['path'] = '/openapi.json'
         await self.app(scope, receive, send)
 
