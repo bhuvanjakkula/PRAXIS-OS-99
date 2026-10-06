@@ -16,6 +16,34 @@ from praxis.graph.decision_graph import DecisionGraph
 app=FastAPI(title="PRAXIS OS",version=__version__,description="Local research prototype: decision inquiry, evidence provenance, graphs and simulation. The v0.5–v0.8 kernels are Python modules; live connectors are not configured.")
 from praxis.product.http_limits import RequestSizeLimit
 from praxis.product.browser_security import LocalBrowserSecurity
+
+class VercelPathNormalizer:
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope['type'] in ('http', 'websocket'):
+            path = scope.get('path', '')
+            if path in ('/api/index.py', '/api/index', '/api/app.py', '/api/app', '/api/main.py', '/api/server.py', '/api', '/api/'):
+                headers = dict(scope.get('headers', []))
+                matched = headers.get(b'x-matched-path', b'').decode('latin1')
+                forwarded = headers.get(b'x-forwarded-uri', b'').decode('latin1')
+                real_origin = headers.get(b'x-real-origin-url', b'').decode('latin1')
+                orig_url = headers.get(b'x-original-url', b'').decode('latin1')
+                resolved_path = matched or forwarded or real_origin or orig_url
+                if resolved_path:
+                    scope['path'] = resolved_path.split('?')[0]
+            if scope.get('path', '').startswith('/api/v1/'):
+                scope['path'] = scope['path'][4:]
+            elif scope.get('path', '') == '/api/health':
+                scope['path'] = '/health'
+            elif scope.get('path', '') == '/api/docs':
+                scope['path'] = '/docs'
+            elif scope.get('path', '') == '/api/openapi.json':
+                scope['path'] = '/openapi.json'
+        await self.app(scope, receive, send)
+
+app.add_middleware(VercelPathNormalizer)
 app.add_middleware(RequestSizeLimit,max_bytes=3_000_000)
 app.add_middleware(LocalBrowserSecurity)
 orchestrator=PraxisOrchestrator()
