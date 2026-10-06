@@ -71,7 +71,7 @@ async function api(path, body) {
 }
 async function busy(button, work) { button.disabled=true; try { await work(); } catch(e) { toast(e.message,true); } finally { button.disabled=false; } }
 async function load() { state.decisions=await api('/v1/decision-models'); if(!state.selected && state.decisions.length) state.selected=state.decisions[0].decision_id; if(state.selected) state.workspace=await api(`/v1/decision-models/${state.selected}/workspace`); }
-async function select(id) { state.selected=id; state.simulation=null; state.workspace=await api(`/v1/decision-models/${id}/workspace`); if(state.page==='aipage')await loadAI(); render(); }
+async function select(id) { state.selected=id; state.simulation=null; state.workspace=await api(`/v1/decision-models/${id}/workspace`); if(typeof loadAI==='function')await loadAI(); render(); }
 function selector() { return `<label class="decision-selector"><span class="muted">Active decision</span><select id="active-decision" aria-label="Active decision">${state.decisions.map(d=>`<option value="${esc(d.decision_id)}" ${d.decision_id===state.selected?'selected':''}>${esc(d.decision.title)} · v${d.version}</option>`).join('')}</select></label>`; }
 function intro(eyebrow,title,description,choose=true) {return `<div class="intro"><div><p class="eyebrow">${esc(eyebrow)}</p><h1>${esc(title)}</h1><p>${esc(description)}</p></div>${choose&&state.decisions.length?selector():''}</div>`;}
 function noDecision() {return `<div class="panel empty"><div class="orb">◇</div><h2>Every decision starts with a question.</h2><p>Frame the problem, name your values, and explore the consequences before committing.</p><button class="primary" data-new>Create your first decision →</button></div>`;}
@@ -185,6 +185,9 @@ document.addEventListener('click', e => {
   if (btn && btn.dataset.page) {
     e.preventDefault();
     state.page = btn.dataset.page;
+    if (state.page === 'aipage' && typeof loadAI === 'function') {
+      loadAI().then(() => { if (state.page === 'aipage') render(); });
+    }
     render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
