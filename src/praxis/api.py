@@ -17,33 +17,39 @@ app=FastAPI(title="PRAXIS OS",version=__version__,description="Local research pr
 from praxis.product.http_limits import RequestSizeLimit
 from praxis.product.browser_security import LocalBrowserSecurity
 
+from urllib.parse import parse_qs
+
 class VercelPathNormalizer:
     def __init__(self, app):
         self.app = app
 
     async def __call__(self, scope, receive, send):
         if scope['type'] in ('http', 'websocket'):
-            path = scope.get('path', '')
-            raw_headers = scope.get('headers', [])
-            headers = {}
-            for k, v in raw_headers:
-                try:
-                    headers[k.decode('latin1').lower()] = v.decode('latin1')
-                except Exception:
-                    pass
-                    
-            matched = headers.get('x-matched-path') or headers.get('x-forwarded-uri') or headers.get('x-real-origin-url') or headers.get('x-original-url') or ''
-            matched = matched.split('?')[0]
-            
-            if matched and matched not in ('/api/index.py', '/api/app.py', '/api/server.py', '/api/main.py', '/api/index', '/api/app'):
-                scope['path'] = matched
-            elif path.startswith('/api/v1/'):
-                scope['path'] = path[4:]
-            elif path == '/api/health':
+            qs = scope.get('query_string', b'').decode('latin1')
+            if '__path=' in qs:
+                params = parse_qs(qs)
+                if '__path' in params and params['__path']:
+                    scope['path'] = params['__path'][0]
+            else:
+                raw_headers = scope.get('headers', [])
+                headers = {}
+                for k, v in raw_headers:
+                    try:
+                        headers[k.decode('latin1').lower()] = v.decode('latin1')
+                    except Exception:
+                        pass
+                matched = headers.get('x-matched-path') or headers.get('x-forwarded-uri') or headers.get('x-real-origin-url') or headers.get('x-original-url') or ''
+                matched = matched.split('?')[0]
+                if matched and matched not in ('/api/index.py', '/api/app.py', '/api/server.py', '/api/main.py', '/api/index', '/api/app'):
+                    scope['path'] = matched
+
+            if scope.get('path', '').startswith('/api/v1/'):
+                scope['path'] = scope['path'][4:]
+            elif scope.get('path', '') == '/api/health':
                 scope['path'] = '/health'
-            elif path == '/api/docs':
+            elif scope.get('path', '') == '/api/docs':
                 scope['path'] = '/docs'
-            elif path == '/api/openapi.json':
+            elif scope.get('path', '') == '/api/openapi.json':
                 scope['path'] = '/openapi.json'
         await self.app(scope, receive, send)
 
@@ -315,46 +321,4 @@ def get_billing_status(authorization: str | None = Header(None)):
         "subscription_plan": user.get("subscription_plan"),
         "days_remaining": user.get("days_remaining", 30),
         "trial_ends_at": user.get("trial_ends_at")
-    }
-
-
-@app.api_route("/api/index.py", methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"])
-@app.api_route("/api/index", methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"])
-@app.api_route("/api/app.py", methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"])
-@app.api_route("/api/server.py", methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"])
-@app.api_route("/api/main.py", methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"])
-async def vercel_dispatcher(request: Request):
-    headers = dict(request.headers)
-    matched = headers.get('x-matched-path') or headers.get('x-forwarded-uri') or headers.get('x-real-origin-url') or headers.get('x-original-url') or ''
-    matched = matched.split('?')[0]
-    
-    if matched in ('/health', ''):
-        return {"status": "ok", "system": "PRAXIS OS", "version": __version__}
-    if matched == '/v1/decision-models':
-        return studio.list_decisions()
-    if matched.startswith('/v1/decision-models/') and matched.endswith('/workspace'):
-        from uuid import UUID
-        parts = matched.strip('/').split('/')
-        if len(parts) >= 3:
-            try:
-                return studio.workspace(UUID(parts[2]))
-            except Exception as e:
-                raise HTTPException(404, str(e))
-    if matched.startswith('/v1/decision-models/'):
-        from uuid import UUID
-        parts = matched.strip('/').split('/')
-        if len(parts) >= 3:
-            try:
-                return decision_loop.latest(UUID(parts[2]))
-            except Exception as e:
-                raise HTTPException(404, str(e))
-                
-    # Fallback debug info
-    return {
-        "status": "ok",
-        "system": "PRAXIS OS",
-        "version": __version__,
-        "path": request.url.path,
-        "matched": matched,
-        "headers": {k: str(v) for k, v in headers.items()}
     }
