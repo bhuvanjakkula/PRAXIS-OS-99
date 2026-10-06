@@ -1,6 +1,6 @@
 import os
 from uuid import UUID
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -311,4 +311,46 @@ def get_billing_status(authorization: str | None = Header(None)):
         "subscription_plan": user.get("subscription_plan"),
         "days_remaining": user.get("days_remaining", 30),
         "trial_ends_at": user.get("trial_ends_at")
+    }
+
+
+@app.api_route("/api/index.py", methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"])
+@app.api_route("/api/index", methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"])
+@app.api_route("/api/app.py", methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"])
+@app.api_route("/api/server.py", methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"])
+@app.api_route("/api/main.py", methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"])
+async def vercel_dispatcher(request: Request):
+    headers = dict(request.headers)
+    matched = headers.get('x-matched-path') or headers.get('x-forwarded-uri') or headers.get('x-real-origin-url') or headers.get('x-original-url') or ''
+    matched = matched.split('?')[0]
+    
+    if matched in ('/health', ''):
+        return {"status": "ok", "system": "PRAXIS OS", "version": __version__}
+    if matched == '/v1/decision-models':
+        return studio.list_decisions()
+    if matched.startswith('/v1/decision-models/') and matched.endswith('/workspace'):
+        from uuid import UUID
+        parts = matched.strip('/').split('/')
+        if len(parts) >= 3:
+            try:
+                return studio.workspace(UUID(parts[2]))
+            except Exception as e:
+                raise HTTPException(404, str(e))
+    if matched.startswith('/v1/decision-models/'):
+        from uuid import UUID
+        parts = matched.strip('/').split('/')
+        if len(parts) >= 3:
+            try:
+                return decision_loop.latest(UUID(parts[2]))
+            except Exception as e:
+                raise HTTPException(404, str(e))
+                
+    # Fallback debug info
+    return {
+        "status": "ok",
+        "system": "PRAXIS OS",
+        "version": __version__,
+        "path": request.url.path,
+        "matched": matched,
+        "headers": {k: str(v) for k, v in headers.items()}
     }
