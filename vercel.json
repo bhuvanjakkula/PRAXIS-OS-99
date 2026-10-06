@@ -1,28 +1,36 @@
-{
-  "rewrites": [
+﻿{
+  rewrites: [
     {
-      "source": "/v1/(.*)",
-      "destination": "/api/index.py"
+      source: /v1/(.*),
+      destination: /api/index.py
     },
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.py"
+      source: /api/(.*),
+      destination: /api/index.py
     },
     {
-      "source": "/health",
-      "destination": "/api/index.py"
+      source: /health,
+      destination: /api/index.py
     },
     {
-      "source": "/assets/(.*)",
-      "destination": "/assets/$1"
+      source: /docs,
+      destination: /api/index.py
     },
     {
-      "source": "/",
-      "destination": "/index.html"
+      source: /openapi.json,
+      destination: /api/index.py
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      source: /assets/(.*),
+      destination: /assets/
+    },
+    {
+      source: /,
+      destination: /index.html
+    },
+    {
+      source: /(.*),
+      destination: /index.html
     }
   ]
 }
