@@ -11,10 +11,36 @@ let toastTimer;
 let accessToken=null;
 function toast(message, error=false) { const t=$('#toast'); t.textContent=message; t.hidden=false; t.classList.toggle('error',error); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.hidden=true,7000); }
 async function api(path, body) {
-  const headers=accessToken?{Authorization:'Bearer '+accessToken}:{};
-  const response = await fetch(path, body === undefined ? {headers} : {method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify(body)});
-  if(response.status===401){accessToken=null;$('#login-dialog').showModal();throw new Error('Sign in with a valid, unexpired credential.');}
-  if(!response.ok) { let data; try { data=await response.json(); } catch { throw new Error(`Server error (${response.status})`); } throw new Error(typeof data.detail==='string'?data.detail:JSON.stringify(data.detail)); }
+  const headers = accessToken ? { Authorization: 'Bearer ' + accessToken } : {};
+  const response = await fetch(path, {
+    method: body === undefined ? 'GET' : 'POST',
+    headers: body === undefined ? headers : { ...headers, 'Content-Type': 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
+    credentials: 'same-origin'
+  });
+  if (response.status === 401) {
+    accessToken = null;
+    $('#login-dialog').showModal();
+    throw new Error('Sign in with a valid, unexpired credential.');
+  }
+  const contentType = response.headers.get('content-type') || '';
+  if (!response.ok) {
+    let detail = `Server error (${response.status})`;
+    if (contentType.includes('application/json')) {
+      try {
+        const data = await response.json();
+        detail = typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail);
+      } catch (_) {}
+    }
+    throw new Error(detail);
+  }
+  if (!contentType.includes('application/json')) {
+    const text = await response.text();
+    if (text.includes('Vercel Authentication') || text.includes('sso-api')) {
+      throw new Error('Vercel Deployment Protection (SSO) is active on this URL. Please disable Vercel Authentication in Project Settings -> Deployment Protection.');
+    }
+    throw new Error(`Unexpected non-JSON response from server (${response.status})`);
+  }
   return response.json();
 }
 async function busy(button, work) { button.disabled=true; try { await work(); } catch(e) { toast(e.message,true); } finally { button.disabled=false; } }
