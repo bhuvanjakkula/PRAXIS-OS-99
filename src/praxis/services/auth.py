@@ -51,6 +51,7 @@ PRICING_PLANS = {
         "price_usd": 99,
         "annual_price_usd": 79,
         "period": "month",
+        "payment_url": "https://buy.stripe.com/fZu00b41gfWtbTh58a2oE0z",
         "badge": "Individual Strategist",
         "tagline": "For solo founders, strategic analysts, and quantitative researchers.",
         "features": [
@@ -68,6 +69,7 @@ PRICING_PLANS = {
         "price_usd": 349,
         "annual_price_usd": 279,
         "period": "month",
+        "payment_url": "https://buy.stripe.com/bJefZ99lA25Df5t58a2oE0y",
         "badge": "Most Popular · APEX Engine",
         "popular": True,
         "tagline": "Unlocks the PRAXIS APEX Kernel: Game Theory, Bayesian VOI & Fat-Tail CVaR.",
@@ -87,6 +89,7 @@ PRICING_PLANS = {
         "price_usd": 1250,
         "annual_price_usd": 999,
         "period": "month",
+        "payment_url": "https://buy.stripe.com/8x24gr41geSp6yX1VY2oE0x",
         "badge": "Institutional & Macro",
         "tagline": "For investment funds, policy ministries, aviation/maritime ops, and enterprise risk teams.",
         "features": [
@@ -104,6 +107,7 @@ PRICING_PLANS = {
         "price_usd": 3900,
         "annual_price_usd": 3120,
         "period": "month",
+        "payment_url": "https://buy.stripe.com/dRmeV50P4h0x1eD1VY2oE0w",
         "badge": "Dedicated · Airgap Ready",
         "tagline": "For central banks, defense agencies, and regulated global financial institutions.",
         "features": [

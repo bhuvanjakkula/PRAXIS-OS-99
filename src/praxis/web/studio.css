@@ -633,6 +633,11 @@ dialog.auth-dialog::backdrop {
 }
 
 .plan-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
   width: 100%;
   padding: 0.85rem 1rem;
   font-size: 0.95rem;

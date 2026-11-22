@@ -14,6 +14,7 @@
       name: 'Core Studio',
       monthly_price: 99,
       annual_price: 79,
+      stripe_url: 'https://buy.stripe.com/fZu00b41gfWtbTh58a2oE0z',
       badge: 'Individual Strategist',
       popular: false,
       tagline: 'For solo founders, strategic analysts, and quantitative researchers.',
@@ -31,6 +32,7 @@
       name: 'APEX Intelligence',
       monthly_price: 349,
       annual_price: 279,
+      stripe_url: 'https://buy.stripe.com/bJefZ99lA25Df5t58a2oE0y',
       badge: 'Most Popular · APEX Engine',
       popular: true,
       tagline: 'Unlocks the PRAXIS APEX Kernel: Game Theory, Bayesian VOI & Fat-Tail CVaR.',
@@ -49,6 +51,7 @@
       name: 'Command & Sovereign',
       monthly_price: 1250,
       annual_price: 999,
+      stripe_url: 'https://buy.stripe.com/8x24gr41geSp6yX1VY2oE0x',
       badge: 'Institutional & Macro',
       popular: false,
       tagline: 'For investment funds, policy ministries, aviation/maritime ops, and enterprise risk teams.',
@@ -66,6 +69,7 @@
       name: 'Quantum Sovereign Dedicated',
       monthly_price: 3900,
       annual_price: 3120,
+      stripe_url: 'https://buy.stripe.com/dRmeV50P4h0x1eD1VY2oE0w',
       badge: 'Dedicated · Airgap Ready',
       popular: false,
       tagline: 'For central banks, defense agencies, and regulated global financial institutions.',
@@ -159,7 +163,12 @@
       const cardClass = `pricing-card ${plan.popular ? 'popular' : ''} ${isCurrent ? 'current' : ''}`;
       const buttonText = isCurrent
         ? '✓ Active Plan'
-        : `Activate ${plan.name} ($${displayPrice.toLocaleString()}/mo) →`;
+        : `Subscribe with Stripe ($${displayPrice.toLocaleString()}/mo) →`;
+
+      let checkoutUrl = plan.stripe_url;
+      if (user && user.email) {
+        checkoutUrl += `?prefilled_email=${encodeURIComponent(user.email)}&client_reference_id=${encodeURIComponent(user.id || '')}`;
+      }
 
       return `
         <div class="${cardClass}" data-plan="${plan.id}">
@@ -182,11 +191,11 @@
               ✓ Currently Active
             </button>
           ` : `
-            <button type="button"
-               class="plan-action-btn ${plan.popular ? 'primary' : 'secondary'} plan-activate-btn"
+            <a href="${checkoutUrl}" target="_blank" rel="noopener noreferrer"
+               class="plan-action-btn ${plan.popular ? 'primary' : 'secondary'} stripe-checkout-link"
                data-plan-id="${plan.id}">
               ${buttonText}
-            </button>
+            </a>
           `}
 
           <div class="plan-features">
@@ -290,50 +299,24 @@
       });
     });
 
-    // Plan activation buttons
-    container.querySelectorAll('.plan-activate-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const planId = btn.getAttribute('data-plan-id');
-        const planObj = PLANS.find(p => p.id === planId);
+    // Stripe checkout links: record subscription intent if signed in while opening live Stripe Checkout
+    container.querySelectorAll('.stripe-checkout-link').forEach(link => {
+      link.addEventListener('click', async () => {
+        const planId = link.getAttribute('data-plan-id');
         const activeUser = getActiveUser();
         const token = getAuthToken();
 
-        if (!activeUser || !token) {
-          if (typeof window.toast === 'function') {
-            window.toast('Please sign in or create an account to activate a plan.');
-          }
-          document.getElementById('auth-dialog')?.showModal();
-          return;
-        }
-
-        btn.disabled = true;
-        try {
-          const res = await fetch('/v1/billing/subscribe', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ plan_id: planId, user_id: activeUser.id })
-          });
-          if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            throw new Error(err.detail || 'Could not activate subscription');
-          }
-          activeUser.subscription_status = 'active';
-          activeUser.subscription_plan = planId;
-          localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(activeUser));
-          updateTrialHeaderBadge();
-          renderPricingView(container);
-          if (typeof window.toast === 'function') {
-            window.toast(`${planObj ? planObj.name : planId} plan activated!`);
-          }
-        } catch (err) {
-          if (typeof window.toast === 'function') {
-            window.toast(err.message || 'Activation failed', true);
-          }
-        } finally {
-          btn.disabled = false;
+        if (activeUser && token) {
+          try {
+            await fetch('/v1/billing/subscribe', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({ plan_id: planId, user_id: activeUser.id })
+            });
+          } catch (_) {}
         }
       });
     });
