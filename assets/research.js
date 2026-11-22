@@ -33,6 +33,8 @@ function bindResearch(){
 }
 document.addEventListener('DOMContentLoaded',()=>{
   $('#signout').addEventListener('click',()=>{researchDraft={query:'',scope:'local',provider:'wikipedia',result:null};});
-  const button=document.createElement('button');button.dataset.page='researchpage';button.textContent='⌕ Search & decide';
-  button.onclick=()=>busy(button,async()=>{await load();state.page='researchpage';render();});$('nav').appendChild(button);
+  if(!$('nav button[data-page="researchpage"]')){
+    const button=document.createElement('button');button.dataset.page='researchpage';button.textContent='⌕ Search & decide';
+    button.onclick=()=>busy(button,async()=>{await load();state.page='researchpage';render();});$('nav').appendChild(button);
+  }
 });

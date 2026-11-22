@@ -1,5 +1,5 @@
 names.inquirypage='Practical inquiry';
-const inquiryButton=document.createElement('button');inquiryButton.dataset.page='inquirypage';inquiryButton.textContent='Practical inquiry';inquiryButton.onclick=()=>busy(inquiryButton,async()=>{await load();state.page='inquirypage';render();});$('nav').appendChild(inquiryButton);
+if(!$('nav button[data-page="inquirypage"]')){const inquiryButton=document.createElement('button');inquiryButton.dataset.page='inquirypage';inquiryButton.textContent='Practical inquiry';inquiryButton.onclick=()=>busy(inquiryButton,async()=>{await load();state.page='inquirypage';render();});$('nav').appendChild(inquiryButton);}
 function constraintFields(constraints){return constraints.map((c,i)=>`<label>${esc(c)}<select data-check="${i}"><option value="unknown">Unknown</option><option value="pass">Pass</option><option value="fail">Fail</option></select></label>`).join('');}
 function inquirypage(){
   const heading=intro('PRAXIS OS / ACTION & LEARNING','Turn an idea into a test.','Define the friction, compare practical actions, observe consequences and revise.');

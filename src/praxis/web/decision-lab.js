@@ -59,7 +59,9 @@ function bindDecisionLab(){
 }
 document.addEventListener('DOMContentLoaded',()=>{
   $('#signout').addEventListener('click',()=>{comparisonDraft=null;radarState={decisions:[],total:0,needs_review:0,with_gaps:0,note:''};});
-  const button=document.createElement('button');button.dataset.page='decisionlab';button.textContent='◎ Decision lab';
-  button.onclick=()=>busy(button,async()=>{await load();await loadDecisionLab();state.page='decisionlab';render();});
-  $('nav').appendChild(button);
+  if(!$('nav button[data-page="decisionlab"]')){
+    const button=document.createElement('button');button.dataset.page='decisionlab';button.textContent='◎ Decision lab';
+    button.onclick=()=>busy(button,async()=>{await load();await loadDecisionLab();state.page='decisionlab';render();});
+    $('nav').appendChild(button);
+  }
 });

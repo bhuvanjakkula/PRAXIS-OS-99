@@ -1,6 +1,6 @@
 const executiveRoles={ceo:{title:'CEO support',tag:'STRATEGY & EXECUTION',description:'Test growth economics, strategic trade-offs and the exposure of a proposed investment.'},cfo:{title:'CFO support',tag:'CASH & CAPITAL',description:'Project monthly liquidity, stress cash flows and identify funding gaps.'},cto:{title:'CTO support',tag:'TECHNOLOGY & RELIABILITY',description:'Assess availability budgets, failure rates, cost efficiency and capacity exposure.'}};
 for(const [role,config] of Object.entries(executiveRoles)){
- const page=role+'page';names[page]=config.title;const button=document.createElement('button');button.dataset.page=page;button.textContent=config.title;button.onclick=()=>busy(button,async()=>{await load();state.page=page;render();});$('nav').appendChild(button);
+ const page=role+'page';names[page]=config.title;if(!$('nav button[data-page="'+page+'"]')){const button=document.createElement('button');button.dataset.page=page;button.textContent=config.title;button.onclick=()=>busy(button,async()=>{await load();state.page=page;render();});$('nav').appendChild(button);}
 }
 function ceopage(){return executivePage('ceo');}
 function cfopage(){return executivePage('cfo');}

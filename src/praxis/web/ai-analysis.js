@@ -17,7 +17,7 @@ aiButton.onclick = () => busy(aiButton, async () => {
   state.page = 'aipage';
   render();
 });
-if ($('nav')) $('nav').appendChild(aiButton);
+if ($('nav') && !$('nav button[data-page="aipage"]')) $('nav').appendChild(aiButton);
 
 async function loadAI() {
   try {

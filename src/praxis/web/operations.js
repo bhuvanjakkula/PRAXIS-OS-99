@@ -1,5 +1,5 @@
 names.aircrewpage='Aircrew support';names.shipcaptainpage='Ship captain support';
-for(const [page,label] of [['aircrewpage','Aircrew support'],['shipcaptainpage','Ship captain support']]){const b=document.createElement('button');b.dataset.page=page;b.textContent=label;b.onclick=()=>busy(b,async()=>{await load();state.page=page;render();});$('nav').appendChild(b);}
+for(const [page,label] of [['aircrewpage','Aircrew support'],['shipcaptainpage','Ship captain support']]){if(!$('nav button[data-page="'+page+'"]')){const b=document.createElement('button');b.dataset.page=page;b.textContent=label;b.onclick=()=>busy(b,async()=>{await load();state.page=page;render();});$('nav').appendChild(b);}}
 function aircrewpage(){return operationsPage('aviation');}
 function shipcaptainpage(){return operationsPage('maritime');}
 function operationsPage(domain){

@@ -42,9 +42,9 @@ class LocalBrowserSecurity:
                     (b'cache-control', b'no-store'),
                     (b'permissions-policy', b'camera=(), microphone=(), geolocation=()'),
                     (b'cross-origin-opener-policy', b'same-origin'),
-                    (b'cross-origin-resource-policy', b'same-origin')
                 ]
                 if scope['path'] not in {'/docs', '/redoc'}:
+                    extra.append((b'cross-origin-resource-policy', b'same-origin'))
                     extra.append((b'content-security-policy', CSP.encode()))
                 message = {**message, 'headers': list(message.get('headers', [])) + extra}
             await send(message)

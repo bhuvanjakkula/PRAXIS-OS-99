@@ -1,5 +1,5 @@
 names.nationalpage='Country leadership';
-const nationalButton=document.createElement('button');nationalButton.dataset.page='nationalpage';nationalButton.textContent='Country leadership';nationalButton.onclick=()=>busy(nationalButton,async()=>{await load();state.page='nationalpage';render();});$('nav').appendChild(nationalButton);
+if(!$('nav button[data-page="nationalpage"]')){const nationalButton=document.createElement('button');nationalButton.dataset.page='nationalpage';nationalButton.textContent='Country leadership';nationalButton.onclick=()=>busy(nationalButton,async()=>{await load();state.page='nationalpage';render();});$('nav').appendChild(nationalButton);}
 const nationalAreas={public_policy:'Public policy',economic_policy:'Economic policy',international_relations:'International relations',agreements:'Agreements and obligations'};
 function nationalNumber(name,label,min=0,max=1e15){return `<label>${esc(label)}<input name="${name}" type="number" step="any" min="${min}" max="${max}"></label>`;}
 function nationalpage(){

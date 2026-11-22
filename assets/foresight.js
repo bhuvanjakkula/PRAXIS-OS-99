@@ -57,4 +57,4 @@ function bindForesight(){
    if(state.selected!==id||state.page!=='foresightpage')return;await load();render();toast('Observation and forecast error saved.');
  });});
 }
-document.addEventListener('DOMContentLoaded',()=>{const button=document.createElement('button');button.dataset.page='foresightpage';button.textContent='◈ Foresight';button.onclick=()=>busy(button,async()=>{await load();state.page='foresightpage';render();});$('nav').appendChild(button);});
+document.addEventListener('DOMContentLoaded',()=>{if(!$('nav button[data-page="foresightpage"]')){const button=document.createElement('button');button.dataset.page='foresightpage';button.textContent='◈ Foresight';button.onclick=()=>busy(button,async()=>{await load();state.page='foresightpage';render();});$('nav').appendChild(button);}});

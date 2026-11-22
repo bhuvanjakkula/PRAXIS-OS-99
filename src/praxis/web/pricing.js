@@ -303,6 +303,7 @@
   }
 
   function navigateToPricing() {
+    if (typeof state !== 'undefined') state.page = 'pricing';
     document.querySelectorAll('.sidebar nav button').forEach(b => b.classList.remove('active'));
     const pricingBtn = document.querySelector('.sidebar nav button[data-page="pricing"]');
     if (pricingBtn) pricingBtn.classList.add('active');

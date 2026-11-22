@@ -1,5 +1,5 @@
 names.policypage='Policy scorecard';
-const policyButton=document.createElement('button');policyButton.dataset.page='policypage';policyButton.textContent='Policy scorecard';policyButton.onclick=()=>{state.page='policypage';render();};$('nav').appendChild(policyButton);
+if(!$('nav button[data-page="policypage"]')){const policyButton=document.createElement('button');policyButton.dataset.page='policypage';policyButton.textContent='Policy scorecard';policyButton.onclick=()=>{state.page='policypage';render();};$('nav').appendChild(policyButton);}
 const policyDimensions=['economic','institutional','diplomatic','international_relations','social','fiscal','environmental','security','implementation'];
 let policyDraft=null,policyResult=null;
 const policyLabel=d=>d.replaceAll('_',' ').replace(/^./,c=>c.toUpperCase());

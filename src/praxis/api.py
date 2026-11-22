@@ -55,9 +55,9 @@ class VercelPathNormalizer:
                 scope['path'] = '/openapi.json'
         await self.app(scope, receive, send)
 
-app.add_middleware(VercelPathNormalizer)
-app.add_middleware(RequestSizeLimit,max_bytes=3_000_000)
 app.add_middleware(LocalBrowserSecurity)
+app.add_middleware(RequestSizeLimit,max_bytes=3_000_000)
+app.add_middleware(VercelPathNormalizer)
 orchestrator=PraxisOrchestrator()
 store=SQLiteStore(os.getenv("PRAXIS_DB","praxis.db")); ledger=EvidenceLedger(store); graph=DecisionGraph(store)
 from praxis.core.decision_loop import DecisionRevision, Feedback
@@ -66,24 +66,30 @@ decision_loop = DecisionLoop(store)
 from praxis.services.studio import Studio, SimulationRequest, JudgmentRequest
 studio = Studio(store, decision_loop, graph)
 
+DEMO_DECISION_ID = UUID("00000000-0000-4000-8000-000000000001")
+
 def ensure_seed_decisions():
     try:
-        existing = studio.list_decisions()
-        if not existing:
-            demo = Decision(
-                title="DEMO — Paid Pilot",
-                problem="Should we test a paid subscription with a small customer group?",
-                objective="Measure willingness to pay before a full launch",
-                values=["Customer privacy", "Transparent pricing"],
-                constraints=["Pilot budget under 10,000", "No irreversible commitments"],
-                domains=["human", "business", "technology", "finance", "law"],
-                options=[{"name": "Run a small paid pilot"}, {"name": "Interview more customers first"}],
-                evidence=[
-                    {"statement": "Customers will pay for the service", "kind": "assumption", "confidence": 0.5},
-                    {"statement": "The team can support a small pilot", "kind": "assumption", "confidence": 0.5}
-                ]
-            )
-            decision_loop.create(demo)
+        try:
+            decision_loop.latest(DEMO_DECISION_ID)
+            return
+        except KeyError:
+            pass
+        demo = Decision(
+            id=DEMO_DECISION_ID,
+            title="DEMO — Paid Pilot",
+            problem="Should we test a paid subscription with a small customer group?",
+            objective="Measure willingness to pay before a full launch",
+            values=["Customer privacy", "Transparent pricing"],
+            constraints=["Pilot budget under 10,000", "No irreversible commitments"],
+            domains=["human", "business", "technology", "finance", "law"],
+            options=[{"name": "Run a small paid pilot"}, {"name": "Interview more customers first"}],
+            evidence=[
+                {"statement": "Customers will pay for the service", "kind": "assumption", "confidence": 0.5},
+                {"statement": "The team can support a small pilot", "kind": "assumption", "confidence": 0.5}
+            ]
+        )
+        decision_loop.create(demo)
     except Exception:
         pass
 
@@ -133,6 +139,16 @@ def studio_judgment(decision_id: UUID, request: JudgmentRequest):
 def create_decision_model(decision: Decision):
     try: return decision_loop.create(decision)
     except RevisionConflict as error: raise HTTPException(409, str(error))
+
+@app.post("/v1/decision-models/ensure", response_model=DecisionRevision)
+def ensure_decision_model(decision: Decision):
+    try:
+        return decision_loop.latest(decision.id)
+    except KeyError:
+        try:
+            return decision_loop.create(decision)
+        except RevisionConflict:
+            return decision_loop.latest(decision.id)
 
 @app.get("/v1/decision-models/{decision_id}", response_model=DecisionRevision)
 def latest_decision_model(decision_id: UUID):

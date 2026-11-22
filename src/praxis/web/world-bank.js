@@ -1,8 +1,9 @@
 'use strict';
 names.worldbankpage='World Bank Solutions';
 if(location.hash==='#world-bank')state.page='worldbankpage';
-document.querySelector('nav').insertAdjacentHTML('beforeend','<button data-page="worldbankpage"><span>◎</span> World Bank Solutions</button>');
-document.querySelector('[data-page="worldbankpage"]').onclick=()=>busy(document.querySelector('[data-page="worldbankpage"]'),async()=>{await load();state.page='worldbankpage';render();});
+if(!document.querySelector('nav button[data-page="worldbankpage"]')){
+  document.querySelector('nav').insertAdjacentHTML('beforeend','<button data-page="worldbankpage"><span>◎</span> World Bank Solutions</button>');
+}
 const wbAreas={governance:['Governance and accountability','Explore transparent review workflows, procurement traceability and grievance resolution.'],debt_transparency:['Debt transparency','Explore contract registries, debt-data reconciliation and disclosure tools.'],development_finance:['Development finance','Explore project pipelines, financing comparisons and monitoring tools.'],public_goods:['Cross-border public goods','Explore regional climate, health and infrastructure coordination.'],knowledge_delivery:['Knowledge and service delivery','Explore evidence libraries, local-language access and reusable implementation lessons.']};
 const wbFields={title:'Project title',geography:'Countries / regional scope',problem:'Problem and institutional constraints',beneficiaries:'Beneficiaries and affected groups',technology:'Proposed technology and dependencies',alternative:'Non-technology or existing-system alternative',owner:'Responsible owner',evidence:'Dated sources and evidence gaps',safeguards:'Privacy, equity, procurement and environmental safeguards',pilot:'Pilot scope, cost assumptions and stop criteria',baseline:'Baseline and measurement method',target:'Target outcome and evaluation plan',review_date:'Review date / schedule',prototype_evidence:'Prototype evidence (optional)',validation_evidence:'Independent validation evidence (optional)',handover_evidence:'Handover and maintenance evidence (optional)'};
 function worldbankpage(){let html=intro('DEVELOPMENT SOLUTIONS','World Bank Solutions','Develop technology proposals and institutional solutions through owned, measurable pilots.');
