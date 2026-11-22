@@ -123,7 +123,18 @@ async function load() {
     }
   }
 }
-async function select(id) { state.selected=id; state.simulation=null; state.workspace=await api(`/v1/decision-models/${id}/workspace`); if(typeof loadAI==='function')await loadAI(); render(); }
+async function select(id) {
+  state.selected = id;
+  state.simulation = null;
+  if (state.workspace && state.workspace.revision && state.workspace.revision.decision_id === id) {
+    render();
+  }
+  state.workspace = await api(`/v1/decision-models/${id}/workspace`);
+  render();
+  if (typeof loadAI === 'function') {
+    loadAI().then(() => { if (state.page === 'aipage') render(); }).catch(() => {});
+  }
+}
 function selector() { return `<label class="decision-selector"><span class="muted">Active decision</span><select id="active-decision" aria-label="Active decision">${state.decisions.map(d=>`<option value="${esc(d.decision_id)}" ${d.decision_id===state.selected?'selected':''}>${esc(d.decision.title)} · v${d.version}</option>`).join('')}</select></label>`; }
 function intro(eyebrow,title,description,choose=true) {return `<div class="intro"><div><p class="eyebrow">${esc(eyebrow)}</p><h1>${esc(title)}</h1><p>${esc(description)}</p></div>${choose&&state.decisions.length?selector():''}</div>`;}
 function noDecision() {return `<div class="panel empty"><div class="orb">◇</div><h2>Every decision starts with a question.</h2><p>Frame the problem, name your values, and explore the consequences before committing.</p><button class="primary" data-new>Create your first decision →</button></div>`;}
