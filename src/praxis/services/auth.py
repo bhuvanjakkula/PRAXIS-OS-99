@@ -7,6 +7,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import hmac
+import json
 import os
 import re
 import secrets
@@ -268,8 +269,23 @@ class AuthService:
         finally:
             conn.close()
 
+        account_proof = self._sign_account_proof({
+            "id": user_id,
+            "full_name": full_name,
+            "email": email_norm,
+            "mobile": mobile_norm,
+            "password_hash": pwd_hash,
+            "salt": salt,
+            "created_at": now,
+            "trial_ends_at": trial_ends,
+            "subscription_status": sub_status,
+            "subscription_plan": sub_plan,
+            "updated_at": now,
+        })
+
         return {
             "token": token,
+            "account_proof": account_proof,
             "user": {
                 "id": user_id,
                 "full_name": full_name,
@@ -284,7 +300,7 @@ class AuthService:
             "message": "User registered successfully."
         }
 
-    def login(self, identifier: str, password: str = "", bypass_expiry: bool = False) -> Dict[str, Any]:
+    def login(self, identifier: str, password: str = "", bypass_expiry: bool = False, account_proof: Optional[str] = None) -> Dict[str, Any]:
         ident = identifier.strip()
         if not ident:
             raise ValueError("Please provide your Email ID or Mobile number.")
@@ -299,6 +315,7 @@ class AuthService:
 
         conn = self._get_connection()
         try:
+            self._rehydrate_from_proof(conn, account_proof)
             cur = conn.cursor()
             cur.execute(
                 "SELECT id, full_name, email, mobile, password_hash, salt, created_at, trial_ends_at, subscription_status, subscription_plan "
@@ -537,13 +554,63 @@ class AuthService:
         except Exception:
             return False
 
-    def request_password_reset(self, email: str, base_url: str = "") -> Dict[str, Any]:
+    def _sign_account_proof(self, data: Dict[str, Any]) -> str:
+        raw = json.dumps(data, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        b64 = base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+        sig = hmac.new(RESET_SECRET, b64.encode("ascii"), hashlib.sha256).hexdigest()[:32]
+        return f"{b64}.{sig}"
+
+    def _rehydrate_from_proof(self, conn: sqlite3.Connection, account_proof: Optional[str]) -> None:
+        if not account_proof or "." not in account_proof:
+            return
+        try:
+            b64, sig = account_proof.strip().split(".", 1)
+            expected = hmac.new(RESET_SECRET, b64.encode("ascii"), hashlib.sha256).hexdigest()[:32]
+            if not hmac.compare_digest(sig, expected):
+                return
+            padded = b64 + "=" * (-len(b64) % 4)
+            data = json.loads(base64.urlsafe_b64decode(padded.encode("ascii")).decode("utf-8"))
+            email = normalize_email(str(data.get("email", "")))
+            if not email or not data.get("id") or not data.get("password_hash") or not data.get("salt"):
+                return
+            cur = conn.cursor()
+            cur.execute("SELECT id, password_hash, salt FROM users WHERE email = ?", (email,))
+            existing = cur.fetchone()
+            if not existing:
+                cur.execute(
+                    "INSERT OR IGNORE INTO users (id, full_name, email, mobile, password_hash, salt, created_at, trial_ends_at, subscription_status, subscription_plan) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    (
+                        data["id"],
+                        data.get("full_name", "User"),
+                        email,
+                        data.get("mobile", ""),
+                        data["password_hash"],
+                        data["salt"],
+                        data.get("created_at", datetime.now(timezone.utc).isoformat()),
+                        data.get("trial_ends_at"),
+                        data.get("subscription_status", "trial"),
+                        data.get("subscription_plan"),
+                    ),
+                )
+            elif existing["password_hash"] != data["password_hash"]:
+                # Keep password hash in sync across cold serverless containers after password reset
+                cur.execute(
+                    "UPDATE users SET password_hash = ?, salt = ? WHERE email = ?",
+                    (data["password_hash"], data["salt"], email),
+                )
+            conn.commit()
+        except Exception:
+            return
+
+    def request_password_reset(self, email: str, base_url: str = "", account_proof: Optional[str] = None) -> Dict[str, Any]:
         email_norm = normalize_email(email)
         if not EMAIL_REGEX.match(email_norm):
             raise ValueError("Please enter a valid registered email ID.")
 
         conn = self._get_connection()
         try:
+            self._rehydrate_from_proof(conn, account_proof)
             cur = conn.cursor()
             cur.execute("SELECT id, full_name, email FROM users WHERE email = ?", (email_norm,))
             user = cur.fetchone()
@@ -584,7 +651,7 @@ class AuthService:
             ),
         }
 
-    def reset_password(self, email: str, token: str, new_password: str, confirm_password: str) -> Dict[str, Any]:
+    def reset_password(self, email: str, token: str, new_password: str, confirm_password: str, account_proof: Optional[str] = None) -> Dict[str, Any]:
         email_norm = normalize_email(email)
         if not EMAIL_REGEX.match(email_norm):
             raise ValueError("Please enter a valid registered email ID.")
@@ -598,8 +665,13 @@ class AuthService:
         token_clean = token.strip()
         conn = self._get_connection()
         try:
+            self._rehydrate_from_proof(conn, account_proof)
             cur = conn.cursor()
-            cur.execute("SELECT id, email FROM users WHERE email = ?", (email_norm,))
+            cur.execute(
+                "SELECT id, full_name, email, mobile, created_at, trial_ends_at, subscription_status, subscription_plan "
+                "FROM users WHERE email = ?",
+                (email_norm,),
+            )
             user = cur.fetchone()
             if not user:
                 raise ValueError("No account found with this registered email ID.")
@@ -637,11 +709,26 @@ class AuthService:
             if row:
                 cur.execute("UPDATE password_resets SET used = 1 WHERE token = ?", (token_clean,))
             conn.commit()
+
+            new_proof = self._sign_account_proof({
+                "id": user["id"],
+                "full_name": user["full_name"],
+                "email": email_norm,
+                "mobile": user["mobile"],
+                "password_hash": pwd_hash,
+                "salt": salt,
+                "created_at": user["created_at"],
+                "trial_ends_at": user["trial_ends_at"],
+                "subscription_status": user["subscription_status"],
+                "subscription_plan": user["subscription_plan"],
+                "updated_at": now_dt.isoformat(),
+            })
         finally:
             conn.close()
 
         return {
             "success": True,
             "email": email_norm,
+            "account_proof": new_proof,
             "message": "Password updated successfully. You can now sign in with your new password.",
         }

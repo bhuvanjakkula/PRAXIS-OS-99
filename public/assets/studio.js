@@ -248,7 +248,7 @@ $('#decision-form').addEventListener('submit',e=>{e.preventDefault();const data=
 async function startStudio(){try{const health=await api('/health');if(health.authentication){$('#login-dialog').showModal();return;}await load();render();}catch(e){$('#main').innerHTML=`<div class="panel error-panel"><h2>Workspace could not load</h2><p>${esc(e.message)}</p><button class="secondary" id="retry">Retry</button></div>`;$('#retry').onclick=()=>location.reload();}}
 $('#login-dialog').addEventListener('cancel',e=>e.preventDefault());
 $('#login-form').addEventListener('submit',e=>{e.preventDefault();accessToken=new FormData(e.target).get('credential');busy(e.submitter,async()=>{const me=await api('/v1/me');await load();if(state.page==='labs'||state.page==='sources')await loadLabs();$('#identity-label').textContent=me.tenant+' / '+me.subject;$('#signout').hidden=false;$('#login-dialog').close();e.target.reset();render();});});
-$('#signout').onclick=()=>{accessToken=null;state.decisions=[];state.workspace=null;state.selected=null;state.page='dashboard';for(const key of Object.keys(labState))labState[key]=[];$('#main').innerHTML='';$('#login-dialog').showModal();};
+$('#signout').onclick=()=>{if(!accessToken)return;accessToken=null;state.decisions=[];state.workspace=null;state.selected=null;state.page='dashboard';for(const key of Object.keys(labState))labState[key]=[];$('#main').innerHTML='';$('#login-dialog').showModal();};
 
 document.addEventListener('click', e => {
   const btn = e.target.closest('[data-page]');

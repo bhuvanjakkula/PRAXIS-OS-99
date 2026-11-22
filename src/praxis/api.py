@@ -269,6 +269,7 @@ class SignUpRequest(BaseModel):
 class SignInRequest(BaseModel):
     identifier: str = Field(..., description="Email ID or Mobile Number")
     password: str = Field("", description="Account password")
+    account_proof: str | None = Field(default=None, description="Optional signed account proof for stateless rehydration")
 
 @app.post("/v1/auth/signup", status_code=201)
 def auth_signup(payload: SignUpRequest):
@@ -287,7 +288,8 @@ def auth_signin(payload: SignInRequest):
     try:
         return auth_service.login(
             identifier=payload.identifier,
-            password=payload.password
+            password=payload.password,
+            account_proof=payload.account_proof
         )
     except TrialExpiredException as e:
         raise HTTPException(status_code=403, detail={
@@ -324,18 +326,24 @@ def auth_signout(authorization: str | None = Header(None)):
 
 class ForgotPasswordRequest(BaseModel):
     email: str = Field(..., description="Registered email ID")
+    account_proof: str | None = Field(default=None)
 
 class ResetPasswordRequest(BaseModel):
     email: str = Field(..., description="Registered email ID")
     token: str = Field(..., min_length=1, description="Reset token from update link")
     new_password: str = Field(..., min_length=6, description="New password (min 6 chars)")
     confirm_password: str = Field(..., min_length=6, description="Confirmation password")
+    account_proof: str | None = Field(default=None)
 
 @app.post("/v1/auth/forgot-password")
 def auth_forgot_password(payload: ForgotPasswordRequest, request: Request):
     try:
         base_url = str(request.base_url).rstrip("/")
-        return auth_service.request_password_reset(email=payload.email, base_url=base_url)
+        return auth_service.request_password_reset(
+            email=payload.email,
+            base_url=base_url,
+            account_proof=payload.account_proof,
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -347,6 +355,7 @@ def auth_reset_password(payload: ResetPasswordRequest):
             token=payload.token,
             new_password=payload.new_password,
             confirm_password=payload.confirm_password,
+            account_proof=payload.account_proof,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

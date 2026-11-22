@@ -6,6 +6,29 @@
 
   const AUTH_STORAGE_KEY = 'praxis_auth_token';
   const USER_STORAGE_KEY = 'praxis_auth_user';
+  const PROOFS_STORAGE_KEY = 'praxis_account_proofs_v1';
+
+  function getProofMap() {
+    try { return JSON.parse(localStorage.getItem(PROOFS_STORAGE_KEY) || '{}'); } catch (_) { return {}; }
+  }
+
+  function saveAccountProof(email, mobile, proof) {
+    if (!proof) return;
+    try {
+      const map = getProofMap();
+      if (email) map[String(email).trim().toLowerCase()] = proof;
+      if (mobile) map[String(mobile).replace(/[\s\-\(\)\.]/g, '').trim()] = proof;
+      localStorage.setItem(PROOFS_STORAGE_KEY, JSON.stringify(map));
+    } catch (_) {}
+  }
+
+  function getAccountProof(identifier) {
+    if (!identifier) return null;
+    const map = getProofMap();
+    const normEmail = String(identifier).trim().toLowerCase();
+    const normMobile = String(identifier).replace(/[\s\-\(\)\.]/g, '').trim();
+    return map[normEmail] || map[normMobile] || null;
+  }
 
   function $(selector) {
     return document.querySelector(selector);
@@ -289,7 +312,7 @@
         const res = await fetch('/v1/auth/forgot-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
+          body: JSON.stringify({ email, account_proof: getAccountProof(email) })
         });
         const data = await res.json();
         if (!res.ok) {
@@ -377,12 +400,16 @@
             email,
             token,
             new_password: newPassword,
-            confirm_password: confirmPassword
+            confirm_password: confirmPassword,
+            account_proof: getAccountProof(email)
           })
         });
         const data = await res.json();
         if (!res.ok) {
           throw new Error(data.detail || data.message || 'Password update failed');
+        }
+        if (data.account_proof) {
+          saveAccountProof(email, null, data.account_proof);
         }
         // Clean URL query params if opened from update link
         if (location.search.includes('reset_token=')) {
@@ -447,7 +474,7 @@
         const res = await fetch('/v1/auth/signin', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ identifier, password })
+          body: JSON.stringify({ identifier, password, account_proof: getAccountProof(identifier) })
         });
 
         const data = await res.json();
@@ -464,6 +491,9 @@
           throw new Error(msg);
         }
 
+        if (data.account_proof) {
+          saveAccountProof(data.user?.email, data.user?.mobile, data.account_proof);
+        }
         applySession(data.user, data.token);
         dialog?.close();
         e.target.reset();
@@ -520,6 +550,9 @@
           throw new Error(data.detail || data.message || 'Registration failed');
         }
 
+        if (data.account_proof) {
+          saveAccountProof(data.user?.email, data.user?.mobile, data.account_proof);
+        }
         applySession(data.user, data.token);
         dialog?.close();
         e.target.reset();

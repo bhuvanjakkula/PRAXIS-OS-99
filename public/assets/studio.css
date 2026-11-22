@@ -880,3 +880,13 @@ dialog.auth-dialog::backdrop {
 .auth-support-footer a:hover {
   text-decoration: underline;
 }
+.auth-alert.error {
+  background: rgba(239, 68, 68, 0.22) !important;
+  border: 1px solid #f87171 !important;
+  color: #fecaca !important;
+}
+.auth-alert.success {
+  background: rgba(16, 185, 129, 0.22) !important;
+  border: 1px solid #34d399 !important;
+  color: #a7f3d0 !important;
+}
