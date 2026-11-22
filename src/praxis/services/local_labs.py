@@ -30,6 +30,7 @@ from praxis.services.suggestions import SuggestionResponse, respond
 from praxis.services.foresight import ForesightRequest, ForecastObservation, foresight, observe_forecast
 from praxis.services.research import SearchRequest, ResearchRequest, search, research
 from praxis.services.decision_tools import ComparisonRequest, comparison, review_radar, decision_brief
+from praxis.services.apex_engine import ApexRequest, run_apex_analysis
 
 
 class LocalLabStore:
@@ -107,6 +108,9 @@ def labs_router(store,loop):
         except KeyError:raise HTTPException(404,'Resource not found')
         except RevisionConflict as e:raise HTTPException(409,str(e))
         except ValueError as e:raise HTTPException(400,str(e))
+    @router.post('/v2/decisions/{identifier}/apex',status_code=201)
+    def apex_analysis(identifier:UUID,body:ApexRequest):
+        return checked(lambda:run_apex_analysis(studio,identifier,body))
     @router.post('/v2/decisions/{identifier}/foresight',status_code=201)
     def forecast_decision(identifier:UUID,body:ForesightRequest):
         return checked(lambda:foresight(studio,identifier,body,studio.list_decisions()))

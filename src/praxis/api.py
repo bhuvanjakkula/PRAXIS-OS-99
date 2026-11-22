@@ -323,7 +323,7 @@ def auth_signout(authorization: str | None = Header(None)):
     return {"message": "Signed out successfully"}
 
 
-# --- Subscription & Billing Endpoints ($49 Starter, $499 Firm, $1500 Enterprise) ---
+# --- Subscription & Billing Endpoints (Core Studio, APEX Intelligence, Command & Sovereign, Quantum Sovereign) ---
 from praxis.services.auth import PRICING_PLANS, TrialExpiredException
 
 @app.get("/v1/billing/plans")

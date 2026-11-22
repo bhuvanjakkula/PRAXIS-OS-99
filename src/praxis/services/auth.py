@@ -1,6 +1,7 @@
 """Authentication and Subscription service for PRAXIS OS.
 Provides user registration (Sign Up), login (Sign In), 30-day automated trial tracking,
-and subscription enforcement ($49 Starter, $499 Firm, $1,500 Enterprise).
+and technology-aligned subscription tiers (Core Studio, APEX Intelligence,
+Command & Sovereign, and Quantum Sovereign Dedicated).
 """
 from __future__ import annotations
 import hashlib
@@ -44,57 +45,74 @@ PHONE_REGEX = re.compile(r"^[\+]?[(]?[0-9]{1,4}[)]?[-\s\./0-9]{6,15}$")
 OWNER_EMAIL = "bhuvanjakkula@gmail.com"
 
 PRICING_PLANS = {
-    "starter": {
-        "id": "starter",
-        "name": "Starter",
-        "price_usd": 49,
+    "core_studio": {
+        "id": "core_studio",
+        "name": "Core Studio",
+        "price_usd": 99,
+        "annual_price_usd": 79,
         "period": "month",
-        "payment_url": "https://buy.stripe.com/test_3cIeV5fXt229e7L7CfcjS07",
-        "badge": "Individual",
-        "tagline": "For individual researchers, quantitative operators, and strategic analysts.",
+        "badge": "Individual Strategist",
+        "tagline": "For solo founders, strategic analysts, and quantitative researchers.",
         "features": [
-            "Full Decision Canvas & Inquiry Engine",
-            "Up to 25 Active Decision Models",
-            "Newton, Dewey & Blake Analytical Engines",
-            "Monte Carlo & Sensitivity Calculations",
-            "Exportable Decision Dossiers (JSON / Markdown)",
-            "Community & Standard Email Support"
+            "Decision Canvas & 5-Engine Structured Inquiry",
+            "Up to 50 Active Decision Models",
+            "Monte Carlo, Causal & Sensitivity Simulation",
+            "AI Solutions (3-Pass Grounded Synthesis)",
+            "Decision Dossier Exports (JSON / Print PDF)",
+            "Standard Email Support"
         ]
     },
-    "firm": {
-        "id": "firm",
-        "name": "Firm",
-        "price_usd": 499,
+    "apex_intelligence": {
+        "id": "apex_intelligence",
+        "name": "APEX Intelligence",
+        "price_usd": 349,
+        "annual_price_usd": 279,
         "period": "month",
-        "payment_url": "https://buy.stripe.com/test_bJecMX26D229fbPg8LcjS08",
-        "badge": "Most Popular",
-        "tagline": "For boutique investment firms, advisory partnerships, and risk teams.",
+        "badge": "Most Popular · APEX Engine",
+        "popular": True,
+        "tagline": "Unlocks the PRAXIS APEX Kernel: Game Theory, Bayesian VOI & Fat-Tail CVaR.",
         "features": [
-            "Everything in Starter",
-            "Unlimited Active Decision Models",
-            "Full Cockpit Simulation & Replay Lab",
-            "Maritime Coordination & AIS Telemetry",
-            "IMF & World Bank Macroeconomic Lenses",
-            "Priority Support & Dedicated Account Specialist",
-            "Shared Team Workspace & Multi-User Governance"
+            "Everything in Core Studio + Unlimited Models",
+            "APEX Multi-Agent Nash & Minimax Regret Solver",
+            "Bayesian EVPI / EVSI Value-of-Information Engine",
+            "Fat-Tail CVaR (95%) & Ruin Stress Testing",
+            "SHA-256 Merkle Cryptographic Decision Seals",
+            "Executive Cockpits (CEO, CFO, CTO & CMO)",
+            "Up to 5 Team Operator Seats"
         ]
     },
-    "enterprise": {
-        "id": "enterprise",
-        "name": "Enterprise",
-        "price_usd": 1500,
+    "command_sovereign": {
+        "id": "command_sovereign",
+        "name": "Command & Sovereign",
+        "price_usd": 1250,
+        "annual_price_usd": 999,
         "period": "month",
-        "payment_url": "https://buy.stripe.com/test_aFacMXfXt5eld3HaOrcjS09",
-        "badge": "Institutional",
-        "tagline": "For global financial institutions, regulatory bodies, and defense agencies.",
+        "badge": "Institutional & Macro",
+        "tagline": "For investment funds, policy ministries, aviation/maritime ops, and enterprise risk teams.",
         "features": [
-            "Everything in Firm",
-            "Post-Quantum Cryptography (PQC) Key Signing",
-            "Custom Telemetry Ingress & Real-Time Sensors",
-            "Isolated PostgreSQL & Dedicated Tenant Hosting",
-            "Custom ML & Quantitative Model Calibrations",
-            "24/7 SLA Guarantee & On-Premises Airgap Option",
-            "Executive Briefing & Strategic Advisory Sessions"
+            "Everything in APEX Intelligence + Unlimited Seats",
+            "IMF, World Bank & 217-Country National Strategy",
+            "Policy Scorecard & Multi-Criteria Appraisal",
+            "Aviation Security & Maritime Fusion Replay Labs",
+            "Enterprise Source-Change Impact Audit Ledger",
+            "Priority SLA & Dedicated Onboarding Specialist"
+        ]
+    },
+    "quantum_sovereign": {
+        "id": "quantum_sovereign",
+        "name": "Quantum Sovereign Dedicated",
+        "price_usd": 3900,
+        "annual_price_usd": 3120,
+        "period": "month",
+        "badge": "Dedicated · Airgap Ready",
+        "tagline": "For central banks, defense agencies, and regulated global financial institutions.",
+        "features": [
+            "Everything in Command & Sovereign",
+            "Dedicated Isolated Tenant & PostgreSQL Cluster",
+            "Post-Quantum Cryptographic (PQC) Audit Signing",
+            "Custom Real-Time Telemetry & Sensor Ingress",
+            "Custom Quantitative & APEX Kernel Calibration",
+            "24/7 Executive War-Room SLA & Airgap Option"
         ]
     }
 }

@@ -12,6 +12,7 @@ const names = {
   simulation: 'Quantitative Simulation',
   reports: 'Decision Reports',
   pricing: 'Plans & Pricing',
+  apexpage: 'APEX Quantum Engine',
   decisionlab: 'Decision Lab',
   inquirypage: 'Practical Inquiry',
   computepage: 'Decision Compute',
@@ -204,10 +205,11 @@ function render(){
     if(typeof renderPricingView==='function'){renderPricingView($('#main'));}
     return;
   }
-  const pages={dashboard,chat,canvas,simulation,reports,labs,sources,enterprise,decisionlab,researchpage,foresightpage,inquirypage,computepage,aircrewpage,shipcaptainpage,ceopage,cfopage,ctopage,cmopage,nationalpage,policypage,aipage,worldbankpage,imfpage};
+  const pages={dashboard,chat,canvas,simulation,reports,labs,sources,enterprise,decisionlab,researchpage,foresightpage,inquirypage,computepage,aircrewpage,shipcaptainpage,ceopage,cfopage,ctopage,cmopage,nationalpage,policypage,aipage,worldbankpage,imfpage,apexpage};
   const renderer=pages[state.page]||dashboard;
   $('#main').innerHTML=renderer();
   if(state.workspace && ['chat','canvas','simulation','reports','decisionlab','researchpage','foresightpage'].includes(state.page))$('#main').insertAdjacentHTML('beforeend',suggestionPanel());
+  if(state.page==='apexpage')bindApex();
   if(state.page==='decisionlab')bindDecisionLab();
   if(state.page==='inquirypage')bindInquiry();
   if(state.page==='computepage')bindCompute();

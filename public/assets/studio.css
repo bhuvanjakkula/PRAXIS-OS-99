@@ -492,10 +492,49 @@ dialog.auth-dialog::backdrop {
 /* Pricing Cards Grid */
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
   align-items: stretch;
+}
+.billing-toggle-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #e8eeea;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  padding: 5px;
+  margin: 1.25rem auto 0.25rem;
+}
+.billing-toggle-btn {
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1.1rem;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+.billing-toggle-btn.active {
+  background: var(--dark);
+  color: #ffffff;
+}
+.save-badge {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #10b981;
+  color: #ffffff;
+  padding: 2px 7px;
+  border-radius: 9999px;
+}
+.plan-savings-note {
+  font-size: 0.78rem;
+  color: #6ee7b7;
+  margin: -1.1rem 0 1.25rem;
+  font-weight: 500;
 }
 
 .pricing-card {

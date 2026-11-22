@@ -1,72 +1,96 @@
-// PRAXIS OS Pricing & Subscription Manager
-// Integrates live Stripe Payment Links:
-// Starter ($49/mo): https://buy.stripe.com/test_3cIeV5fXt229e7L7CfcjS07
-// Firm ($499/mo): https://buy.stripe.com/test_bJecMX26D229fbPg8LcjS08
-// Enterprise ($1,500/mo): https://buy.stripe.com/test_aFacMXfXt5eld3HaOrcjS09
+// PRAXIS OS Technology-Aligned Pricing & Subscription Manager
+// Tiers: Core Studio ($99), APEX Intelligence ($349), Command & Sovereign ($1,250), Quantum Sovereign Dedicated ($3,900)
 
 (function() {
   'use strict';
 
   const AUTH_STORAGE_KEY = 'praxis_auth_token';
   const USER_STORAGE_KEY = 'praxis_auth_user';
+  let billingCycle = 'monthly'; // 'monthly' | 'annual'
 
   const PLANS = [
     {
-      id: 'starter',
-      name: 'Starter',
-      price: 49,
-      period: 'month',
-      badge: 'Individual',
+      id: 'core_studio',
+      name: 'Core Studio',
+      monthly_price: 99,
+      annual_price: 79,
+      badge: 'Individual Strategist',
       popular: false,
-      stripe_url: 'https://buy.stripe.com/test_3cIeV5fXt229e7L7CfcjS07',
-      tagline: 'For individual researchers, quantitative operators, and strategic analysts.',
+      tagline: 'For solo founders, strategic analysts, and quantitative researchers.',
       features: [
-        'Full Decision Canvas & Inquiry Engine',
-        'Up to 25 Active Decision Models',
-        'Newton, Dewey & Blake Analytical Engines',
-        'Monte Carlo & Sensitivity Calculations',
-        'Exportable Decision Dossiers (JSON / Markdown)',
-        'Standard Email & Community Support'
+        'Decision Canvas & 5-Engine Structured Inquiry',
+        'Up to 50 Active Decision Models',
+        'Monte Carlo, Causal & Sensitivity Simulation',
+        'AI Solutions (3-Pass Grounded Synthesis)',
+        'Exportable Decision Dossiers (JSON / Print PDF)',
+        'Standard Email & Documentation Support'
       ]
     },
     {
-      id: 'firm',
-      name: 'Firm',
-      price: 499,
-      period: 'month',
-      badge: 'Most Popular',
+      id: 'apex_intelligence',
+      name: 'APEX Intelligence',
+      monthly_price: 349,
+      annual_price: 279,
+      badge: 'Most Popular · APEX Engine',
       popular: true,
-      stripe_url: 'https://buy.stripe.com/test_bJecMX26D229fbPg8LcjS08',
-      tagline: 'For boutique investment firms, advisory partnerships, and risk teams.',
+      tagline: 'Unlocks the PRAXIS APEX Kernel: Game Theory, Bayesian VOI & Fat-Tail CVaR.',
       features: [
-        'Everything in Starter',
-        'Unlimited Active Decision Models',
-        'Full Cockpit Simulation & Replay Lab',
-        'Maritime Coordination & AIS Telemetry',
-        'IMF & World Bank Macroeconomic Lenses',
-        'Priority Support & Dedicated Account Specialist',
-        'Shared Team Workspace & Multi-User Governance'
+        'Everything in Core Studio + Unlimited Models',
+        'APEX Multi-Agent Nash & Minimax Regret Solver',
+        'Bayesian EVPI / EVSI Value-of-Information Engine',
+        'Fat-Tail CVaR (95%) & Ruin Stress Testing',
+        'SHA-256 Merkle Cryptographic Decision Seals',
+        'Executive Cockpits (CEO, CFO, CTO & CMO)',
+        'Up to 5 Team Operator Seats'
       ]
     },
     {
-      id: 'enterprise',
-      name: 'Enterprise',
-      price: 1500,
-      period: 'month',
-      badge: 'Institutional Grade',
+      id: 'command_sovereign',
+      name: 'Command & Sovereign',
+      monthly_price: 1250,
+      annual_price: 999,
+      badge: 'Institutional & Macro',
       popular: false,
-      stripe_url: 'https://buy.stripe.com/test_aFacMXfXt5eld3HaOrcjS09',
-      tagline: 'For global financial institutions, regulatory bodies, and defense agencies.',
+      tagline: 'For investment funds, policy ministries, aviation/maritime ops, and enterprise risk teams.',
       features: [
-        'Everything in Firm',
-        'Post-Quantum Cryptography (PQC) Security',
-        'Custom Telemetry Ingress & Real-Time Sensors',
-        'Isolated PostgreSQL & Dedicated Tenant Hosting',
-        'Custom ML & Quantitative Model Calibrations',
-        '24/7 SLA Guarantee & Airgap Deployment Option',
-        'Executive Advisory & Strategic Support Sessions'
+        'Everything in APEX Intelligence + Unlimited Seats',
+        'IMF, World Bank & 217-Country National Strategy',
+        'Policy Scorecard & Multi-Criteria Appraisal',
+        'Aviation Security & Maritime Fusion Replay Labs',
+        'Enterprise Source-Change Impact Audit Ledger',
+        'Priority SLA & Dedicated Onboarding Specialist'
+      ]
+    },
+    {
+      id: 'quantum_sovereign',
+      name: 'Quantum Sovereign Dedicated',
+      monthly_price: 3900,
+      annual_price: 3120,
+      badge: 'Dedicated · Airgap Ready',
+      popular: false,
+      tagline: 'For central banks, defense agencies, and regulated global financial institutions.',
+      features: [
+        'Everything in Command & Sovereign',
+        'Dedicated Isolated Tenant & PostgreSQL Cluster',
+        'Post-Quantum Cryptographic (PQC) Audit Signing',
+        'Custom Real-Time Telemetry & Sensor Ingress',
+        'Custom Quantitative & APEX Kernel Calibration',
+        '24/7 Executive War-Room SLA & Airgap Option'
       ]
     }
+  ];
+
+  const COMPARISON_ROWS = [
+    ['Decision Canvas, Inquiry & 3-Pass AI Solutions', 'Included', 'Included', 'Included', 'Included'],
+    ['Active Decision Models', 'Up to 50', 'Unlimited', 'Unlimited', 'Unlimited'],
+    ['APEX Game Theory (Nash & Minimax Regret)', '—', 'Included', 'Included', 'Custom Calibration'],
+    ['Bayesian EVPI / EVSI Information Valuation', '—', 'Included', 'Included', 'Custom Calibration'],
+    ['Fat-Tail CVaR (95%) & Ruin Stress Engine', '—', 'Up to 10k paths', 'Up to 10k paths', 'Dedicated Compute'],
+    ['SHA-256 Merkle Cryptographic Decision Seals', '—', 'Included', 'Included', 'PQC + Airgap HSM'],
+    ['Executive Cockpits (CEO / CFO / CTO / CMO)', '—', 'Included', 'Included', 'Included'],
+    ['IMF, World Bank & 217-Country Macro Suite', '—', '—', 'Included', 'Included'],
+    ['Aviation Security & Maritime Fusion Labs', '—', '—', 'Included', 'Live Telemetry Ingress'],
+    ['Operator Seats', '1 Seat', 'Up to 5 Seats', 'Unlimited', 'Unlimited + Isolated Tenant']
   ];
 
   function getActiveUser() {
@@ -89,6 +113,7 @@
     const currentPlan = user?.subscription_plan || null;
     const isSubscribed = user?.subscription_status === 'active';
     const daysLeft = user?.days_remaining !== undefined ? user.days_remaining : 30;
+    const isAnnual = billingCycle === 'annual';
 
     let trialNotice = '';
     if (!isSubscribed) {
@@ -98,7 +123,7 @@
             <span class="trial-icon">⏱</span>
             <div>
               <strong>30-Day Complimentary Trial Active</strong>
-              <p>You have <strong>${daysLeft} days remaining</strong> of complimentary full platform access. After 30 days, an active subscription via Stripe is required to log in.</p>
+              <p>You have <strong>${daysLeft} days remaining</strong> of full PRAXIS OS + APEX Quantum Engine access. Select a licensing tier below at any time.</p>
             </div>
           </div>
         `;
@@ -108,18 +133,20 @@
             <span class="trial-icon">🔒</span>
             <div>
               <strong>Your 30-Day Free Trial Has Concluded</strong>
-              <p>Subscribe via Stripe to Starter ($49), Firm ($499), or Enterprise ($1,500) below to reactivate workspace access.</p>
+              <p>Activate Core Studio, APEX Intelligence, Command &amp; Sovereign, or Quantum Sovereign Dedicated below to restore access.</p>
             </div>
           </div>
         `;
       }
     } else {
+      const activePlanObj = PLANS.find(p => p.id === currentPlan);
+      const activeLabel = activePlanObj ? activePlanObj.name : (currentPlan ? currentPlan.toUpperCase() : 'ACTIVE');
       trialNotice = `
         <div class="trial-banner active">
           <span class="trial-icon">✓</span>
           <div>
-            <strong>Active Subscription: ${currentPlan ? currentPlan.toUpperCase() : 'PRO'} Plan</strong>
-            <p>Your workspace is fully unlocked and operating with all institutional capabilities.</p>
+            <strong>Active Subscription: ${activeLabel}</strong>
+            <p>Your workspace license is active with all included analytical kernels unlocked.</p>
           </div>
         </div>
       `;
@@ -127,13 +154,12 @@
 
     const cardsHtml = PLANS.map(plan => {
       const isCurrent = currentPlan === plan.id && isSubscribed;
+      const displayPrice = isAnnual ? plan.annual_price : plan.monthly_price;
+      const annualSavings = (plan.monthly_price - plan.annual_price) * 12;
       const cardClass = `pricing-card ${plan.popular ? 'popular' : ''} ${isCurrent ? 'current' : ''}`;
-      const buttonText = isCurrent ? '✓ Active Plan' : `Subscribe with Stripe ($${plan.price}/mo) →`;
-
-      let checkoutUrl = plan.stripe_url;
-      if (user && user.email) {
-        checkoutUrl += `?prefilled_email=${encodeURIComponent(user.email)}&client_reference_id=${encodeURIComponent(user.id || '')}`;
-      }
+      const buttonText = isCurrent
+        ? '✓ Active Plan'
+        : `Activate ${plan.name} ($${displayPrice.toLocaleString()}/mo) →`;
 
       return `
         <div class="${cardClass}" data-plan="${plan.id}">
@@ -146,24 +172,25 @@
 
           <div class="plan-price-block">
             <span class="price-currency">$</span>
-            <span class="price-amount">${plan.price.toLocaleString()}</span>
-            <span class="price-period">/ month</span>
+            <span class="price-amount">${displayPrice.toLocaleString()}</span>
+            <span class="price-period">/ month${isAnnual ? ' · billed annually' : ''}</span>
           </div>
+          ${isAnnual ? `<p class="plan-savings-note">Save $${annualSavings.toLocaleString()} / year with annual licensing</p>` : ''}
 
           ${isCurrent ? `
             <button type="button" class="plan-action-btn secondary" disabled>
               ✓ Currently Active
             </button>
           ` : `
-            <a href="${checkoutUrl}" target="_blank" rel="noopener noreferrer" 
-               class="plan-action-btn ${plan.popular ? 'primary' : 'secondary'} stripe-checkout-link" 
+            <button type="button"
+               class="plan-action-btn ${plan.popular ? 'primary' : 'secondary'} plan-activate-btn"
                data-plan-id="${plan.id}">
               ${buttonText}
-            </a>
+            </button>
           `}
 
           <div class="plan-features">
-            <div class="features-label">INCLUDED CAPABILITIES:</div>
+            <div class="features-label">INCLUDED TECHNOLOGY & CAPABILITIES:</div>
             <ul>
               ${plan.features.map(f => `<li><span class="check-icon">✓</span> <span>${f}</span></li>`).join('')}
             </ul>
@@ -175,83 +202,139 @@
     container.innerHTML = `
       <div class="pricing-container">
         <div class="pricing-hero">
-          <p class="eyebrow">COMMERCIAL LICENSING & SUBSCRIPTIONS</p>
-          <h2>Predictable, Transparent Pricing</h2>
+          <p class="eyebrow">NEXT-GENERATION DECISION INTELLIGENCE LICENSING</p>
+          <h2>Technology-Aligned Plans for Every Decision Scale</h2>
           <p class="pricing-desc">
-            All registered operators receive an automated <strong>30-day complimentary trial</strong> with full studio access.
-            After 30 days, an active subscription is required to continue accessing your decision models.
+            From individual quantitative strategists to sovereign ministries and airgapped central banks.
+            Every new account includes a <strong>30-day complimentary trial</strong> of the full platform including the <strong>APEX Quantum Engine</strong>.
           </p>
+
+          <div class="billing-toggle-wrap" role="group" aria-label="Billing cycle">
+            <button type="button" class="billing-toggle-btn ${!isAnnual ? 'active' : ''}" data-cycle="monthly">Monthly Billing</button>
+            <button type="button" class="billing-toggle-btn ${isAnnual ? 'active' : ''}" data-cycle="annual">Annual Billing <span class="save-badge">Save 20%</span></button>
+          </div>
+
           ${trialNotice}
         </div>
 
-        <div class="pricing-grid">
+        <div class="pricing-grid pricing-grid-4">
           ${cardsHtml}
         </div>
 
         <div class="stripe-badge-bar">
           <span class="stripe-secure-icon">🔒</span>
-          <span>Guaranteed secure payment processing via <strong>Stripe Checkout</strong>. Cancel anytime.</span>
+          <span>Cryptographically auditable licensing · Instant workspace activation · Enterprise invoicing &amp; SLA available via <strong>bjtmusic12@gmail.com</strong>.</span>
         </div>
+
+        <section class="panel" style="margin-bottom:2.5rem">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">CAPABILITY MATRIX</p>
+              <h2>Compare PRAXIS OS &amp; APEX Technology Across Tiers</h2>
+            </div>
+          </div>
+          <div class="comparison-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Technology / Capability</th>
+                  <th>Core Studio ($99)</th>
+                  <th>APEX Intelligence ($349)</th>
+                  <th>Command &amp; Sovereign ($1,250)</th>
+                  <th>Quantum Sovereign ($3,900)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${COMPARISON_ROWS.map(row => `
+                  <tr>
+                    <td><strong>${row[0]}</strong></td>
+                    <td>${row[1]}</td>
+                    <td>${row[2]}</td>
+                    <td>${row[3]}</td>
+                    <td>${row[4]}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        </section>
 
         <div class="pricing-faq">
           <h3>Frequently Asked Questions</h3>
           <div class="faq-grid">
             <div class="faq-card">
-              <h4>How does the 30-day free trial work?</h4>
-              <p>Every newly registered account gets 30 days of full platform access with zero upfront credit card required. On day 31, a subscription plan is required to log in.</p>
+              <h4>What is included in the APEX Quantum Engine?</h4>
+              <p>APEX Intelligence unlocks multi-agent Nash &amp; Minimax Regret game-theory solving, Bayesian EVPI/EVSI information valuation, 95% Fat-Tail CVaR ruin stress testing, and SHA-256 Merkle cryptographic decision seals.</p>
             </div>
             <div class="faq-card">
-              <h4>Can I switch plans later?</h4>
-              <p>Yes, you can upgrade from Starter ($49/mo) to Firm ($499/mo) or Enterprise ($1,500/mo) at any time. Prorated adjustments are applied automatically in Stripe.</p>
+              <h4>How does the 30-day complimentary trial work?</h4>
+              <p>Every newly registered operator gets 30 days of full access to test Core Studio, APEX Intelligence, and Sovereign modules before selecting a commercial plan.</p>
             </div>
             <div class="faq-card">
-              <h4>What payment methods are supported?</h4>
-              <p>Stripe Checkout supports all major credit cards (Visa, Mastercard, Amex), Apple Pay, Google Pay, and bank wire transfers.</p>
+              <h4>Can we upgrade or switch billing cycles later?</h4>
+              <p>Yes. You can move between Core Studio, APEX Intelligence, Command &amp; Sovereign, and Quantum Sovereign Dedicated at any time, or switch to annual billing for a 20% discount.</p>
             </div>
             <div class="faq-card">
-              <h4>Is data private and secure?</h4>
-              <p>Yes. All decision models, simulations, and evidence claims are stored in your secure workspace with optional Post-Quantum Cryptography (PQC) validation.</p>
+              <h4>Is airgapped or Post-Quantum (PQC) deployment supported?</h4>
+              <p>Yes. Quantum Sovereign Dedicated includes isolated tenant PostgreSQL hosting, PQC audit signing, custom telemetry ingestion, and on-premises airgap deployment.</p>
             </div>
           </div>
         </div>
       </div>
     `;
 
-    // Intercept checkout clicks to verify user and update status
-    container.querySelectorAll('.stripe-checkout-link').forEach(link => {
-      link.addEventListener('click', async (e) => {
-        const planId = link.getAttribute('data-plan-id');
-        const user = getActiveUser();
+    // Billing cycle toggle
+    container.querySelectorAll('.billing-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        billingCycle = btn.dataset.cycle || 'monthly';
+        renderPricingView(container);
+      });
+    });
+
+    // Plan activation buttons
+    container.querySelectorAll('.plan-activate-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const planId = btn.getAttribute('data-plan-id');
+        const planObj = PLANS.find(p => p.id === planId);
+        const activeUser = getActiveUser();
         const token = getAuthToken();
 
-        // If not logged in, prompt sign in first
-        if (!user || !token) {
-          e.preventDefault();
+        if (!activeUser || !token) {
           if (typeof window.toast === 'function') {
-            window.toast('Please sign in or register before subscribing.');
+            window.toast('Please sign in or create an account to activate a plan.');
           }
-          const authDialog = document.getElementById('auth-dialog');
-          authDialog?.showModal();
+          document.getElementById('auth-dialog')?.showModal();
           return;
         }
 
-        // Inform user and record subscription intent
+        btn.disabled = true;
         try {
-          await fetch('/v1/billing/subscribe', {
+          const res = await fetch('/v1/billing/subscribe', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ plan_id: planId, user_id: user.id })
+            body: JSON.stringify({ plan_id: planId, user_id: activeUser.id })
           });
-
-          // Optimistically update session
-          user.subscription_status = 'active';
-          user.subscription_plan = planId;
-          localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Could not activate subscription');
+          }
+          activeUser.subscription_status = 'active';
+          activeUser.subscription_plan = planId;
+          localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(activeUser));
           updateTrialHeaderBadge();
-        } catch (_) {}
+          renderPricingView(container);
+          if (typeof window.toast === 'function') {
+            window.toast(`${planObj ? planObj.name : planId} plan activated!`);
+          }
+        } catch (err) {
+          if (typeof window.toast === 'function') {
+            window.toast(err.message || 'Activation failed', true);
+          }
+        } finally {
+          btn.disabled = false;
+        }
       });
     });
   }
@@ -276,11 +359,14 @@
       badge.textContent = '30 Days Free Trial';
       badge.className = 'pill trial-countdown-pill';
       badge.title = 'Register to start your 30-day free trial.';
+      badge.style.cursor = 'pointer';
+      badge.onclick = () => navigateToPricing();
       return;
     }
 
     if (user.subscription_status === 'active') {
-      badge.textContent = `★ ${user.subscription_plan ? user.subscription_plan.toUpperCase() : 'PAID'} ACTIVE`;
+      const pObj = PLANS.find(p => p.id === user.subscription_plan);
+      badge.textContent = `★ ${(pObj ? pObj.name : (user.subscription_plan || 'PAID')).toUpperCase()} ACTIVE`;
       badge.className = 'pill trial-countdown-pill active';
       badge.title = 'Active Commercial Subscription';
     } else {
@@ -290,7 +376,7 @@
         badge.className = 'pill trial-countdown-pill';
         badge.title = `${days} days remaining on complimentary trial. Click to view plans.`;
       } else {
-        badge.textContent = `🔒 Trial Expired`;
+        badge.textContent = '🔒 Trial Expired';
         badge.className = 'pill trial-countdown-pill expired';
         badge.title = 'Trial expired. Subscription required to log in.';
       }
@@ -322,19 +408,9 @@
     if (!nav.querySelector('button[data-page="pricing"]')) {
       const btn = document.createElement('button');
       btn.setAttribute('data-page', 'pricing');
-      btn.innerHTML = '<span>💎</span> Pricing & Plans';
+      btn.innerHTML = '<span>💎</span> Plans & Pricing';
       nav.appendChild(btn);
     }
-
-    nav.addEventListener('click', (e) => {
-      const targetBtn = e.target.closest('button[data-page]');
-      if (!targetBtn) return;
-      if (targetBtn.getAttribute('data-page') === 'pricing') {
-        e.preventDefault();
-        e.stopPropagation();
-        navigateToPricing();
-      }
-    });
 
     updateTrialHeaderBadge();
   }
