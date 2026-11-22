@@ -322,6 +322,35 @@ def auth_signout(authorization: str | None = Header(None)):
         auth_service.logout(token)
     return {"message": "Signed out successfully"}
 
+class ForgotPasswordRequest(BaseModel):
+    email: str = Field(..., description="Registered email ID")
+
+class ResetPasswordRequest(BaseModel):
+    email: str = Field(..., description="Registered email ID")
+    token: str = Field(..., min_length=1, description="Reset token from update link")
+    new_password: str = Field(..., min_length=6, description="New password (min 6 chars)")
+    confirm_password: str = Field(..., min_length=6, description="Confirmation password")
+
+@app.post("/v1/auth/forgot-password")
+def auth_forgot_password(payload: ForgotPasswordRequest, request: Request):
+    try:
+        base_url = str(request.base_url).rstrip("/")
+        return auth_service.request_password_reset(email=payload.email, base_url=base_url)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/v1/auth/reset-password")
+def auth_reset_password(payload: ResetPasswordRequest):
+    try:
+        return auth_service.reset_password(
+            email=payload.email,
+            token=payload.token,
+            new_password=payload.new_password,
+            confirm_password=payload.confirm_password,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 
 # --- Subscription & Billing Endpoints (Core Studio, APEX Intelligence, Command & Sovereign, Quantum Sovereign) ---
 from praxis.services.auth import PRICING_PLANS, TrialExpiredException

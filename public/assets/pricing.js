@@ -232,7 +232,7 @@
 
         <div class="stripe-badge-bar">
           <span class="stripe-secure-icon">🔒</span>
-          <span>Cryptographically auditable licensing · Instant workspace activation · Enterprise invoicing &amp; SLA available via <strong>bjtmusic12@gmail.com</strong>.</span>
+          <span>Cryptographically auditable licensing · Instant workspace activation · Customer Support &amp; Enterprise SLA: <a href="mailto:contact@apolloaiglobalcompany.com"><strong>contact@apolloaiglobalcompany.com</strong></a>.</span>
         </div>
 
         <section class="panel" style="margin-bottom:2.5rem">

@@ -33,17 +33,24 @@
     const tabSignup = $('#tab-signup');
     const signinForm = $('#signin-form');
     const signupForm = $('#signup-form');
+    const forgotForm = $('#forgot-form');
+    const resetForm = $('#reset-form');
+
+    [tabSignin, tabSignup].forEach(t => t?.classList.remove('active'));
+    [signinForm, signupForm, forgotForm, resetForm].forEach(f => f?.classList.remove('active'));
 
     if (mode === 'signup') {
-      tabSignin?.classList.remove('active');
       tabSignup?.classList.add('active');
-      signinForm?.classList.remove('active');
       signupForm?.classList.add('active');
       $('#signup-name')?.focus();
+    } else if (mode === 'forgot') {
+      forgotForm?.classList.add('active');
+      $('#forgot-email')?.focus();
+    } else if (mode === 'reset') {
+      resetForm?.classList.add('active');
+      $('#reset-new-password')?.focus();
     } else {
-      tabSignup?.classList.remove('active');
       tabSignin?.classList.add('active');
-      signupForm?.classList.remove('active');
       signinForm?.classList.add('active');
       $('#signin-identifier')?.focus();
     }
@@ -119,6 +126,43 @@
     }
 
     confirmPwd?.addEventListener('input', checkPasswordMatch);
+
+    // Reset password strength meter & match indicator
+    const resetPwd = $('#reset-new-password');
+    const resetBar = $('#reset-pwd-strength-bar');
+    const resetText = $('#reset-pwd-strength-text');
+    const resetConfirm = $('#reset-confirm-password');
+    const resetMatchHint = $('#reset-pwd-match-hint');
+
+    function checkResetPasswordMatch() {
+      if (!resetConfirm || !resetMatchHint) return;
+      if (!resetConfirm.value) {
+        resetMatchHint.textContent = '';
+        return;
+      }
+      if (resetPwd && resetConfirm.value === resetPwd.value) {
+        resetMatchHint.textContent = '✓ Passwords match';
+        resetMatchHint.style.color = '#10b981';
+      } else {
+        resetMatchHint.textContent = '✕ Passwords do not match';
+        resetMatchHint.style.color = '#ef4444';
+      }
+    }
+
+    resetPwd?.addEventListener('input', () => {
+      const res = calculatePasswordStrength(resetPwd.value);
+      if (resetBar) {
+        resetBar.style.width = res.score + '%';
+        resetBar.style.backgroundColor = res.color;
+      }
+      if (resetText) {
+        resetText.textContent = 'Password strength: ' + res.text;
+        resetText.style.color = res.color;
+      }
+      checkResetPasswordMatch();
+    });
+
+    resetConfirm?.addEventListener('input', checkResetPasswordMatch);
   }
 
   function applySession(user, token) {
@@ -215,6 +259,159 @@
     $('#tab-signup')?.addEventListener('click', () => switchTab('signup'));
     $('#switch-to-signup')?.addEventListener('click', () => switchTab('signup'));
     $('#switch-to-signin')?.addEventListener('click', () => switchTab('signin'));
+    $('#open-forgot-btn')?.addEventListener('click', () => {
+      const box = $('#reset-link-box');
+      if (box) box.hidden = true;
+      const ident = $('#signin-identifier')?.value.trim();
+      if (ident && ident.includes('@') && $('#forgot-email')) {
+        $('#forgot-email').value = ident;
+      }
+      switchTab('forgot');
+    });
+    $('#back-to-signin-from-forgot')?.addEventListener('click', () => switchTab('signin'));
+    $('#back-to-signin-from-reset')?.addEventListener('click', () => switchTab('signin'));
+
+    // Forgot Password Form Submission (Step 1: Get Update Link)
+    let pendingReset = { email: '', token: '', reset_link: '' };
+    $('#forgot-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlert();
+      const submitBtn = $('#forgot-submit');
+      const email = $('#forgot-email')?.value.trim();
+      if (!email) {
+        showAlert('Please enter your registered email ID.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.querySelector('.btn-text').textContent = 'Generating update link...';
+      try {
+        const res = await fetch('/v1/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.detail || data.message || 'Could not generate reset link');
+        }
+        pendingReset = {
+          email: data.email || email,
+          token: data.token || '',
+          reset_link: data.reset_link || ''
+        };
+        const box = $('#reset-link-box');
+        const anchor = $('#reset-link-anchor');
+        if (anchor) {
+          anchor.href = pendingReset.reset_link;
+          anchor.textContent = pendingReset.reset_link;
+        }
+        if (box) box.hidden = false;
+        showAlert(data.message || 'Password update link generated.', 'success');
+      } catch (err) {
+        showAlert(err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.querySelector('.btn-text').textContent = 'Get Password Update Link →';
+      }
+    });
+
+    const openResetPanel = (email, token) => {
+      if ($('#reset-email')) $('#reset-email').value = email || '';
+      if ($('#reset-token')) $('#reset-token').value = token || '';
+      if ($('#reset-new-password')) $('#reset-new-password').value = '';
+      if ($('#reset-confirm-password')) $('#reset-confirm-password').value = '';
+      if ($('#reset-pwd-match-hint')) $('#reset-pwd-match-hint').textContent = '';
+      switchTab('reset');
+    };
+
+    $('#open-reset-form-btn')?.addEventListener('click', () => {
+      openResetPanel(pendingReset.email, pendingReset.token);
+    });
+
+    $('#reset-link-anchor')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      openResetPanel(pendingReset.email, pendingReset.token);
+    });
+
+    $('#copy-reset-link-btn')?.addEventListener('click', async () => {
+      if (!pendingReset.reset_link) return;
+      try {
+        await navigator.clipboard.writeText(pendingReset.reset_link);
+        if (typeof window.toast === 'function') window.toast('Password update link copied to clipboard.');
+      } catch (_) {
+        if (typeof window.toast === 'function') window.toast('Copy failed; use the Open Update Link button below.');
+      }
+    });
+
+    // Reset / Update Password Form Submission (Step 2: New Password & Confirmation Password)
+    $('#reset-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlert();
+      const submitBtn = $('#reset-submit');
+      const email = $('#reset-email')?.value.trim();
+      const token = $('#reset-token')?.value.trim();
+      const newPassword = $('#reset-new-password')?.value || '';
+      const confirmPassword = $('#reset-confirm-password')?.value || '';
+
+      if (!email || !token) {
+        showAlert('Missing reset token or registered email. Please request a new update link.');
+        return;
+      }
+      if (newPassword.length < 6) {
+        showAlert('New password must be at least 6 characters long.');
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        showAlert('New password and confirmation password do not match.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.querySelector('.btn-text').textContent = 'Updating password...';
+      try {
+        const res = await fetch('/v1/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            token,
+            new_password: newPassword,
+            confirm_password: confirmPassword
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.detail || data.message || 'Password update failed');
+        }
+        // Clean URL query params if opened from update link
+        if (location.search.includes('reset_token=')) {
+          const cleanUrl = location.pathname + location.hash;
+          history.replaceState(null, '', cleanUrl);
+        }
+        e.target.reset();
+        switchTab('signin');
+        if ($('#signin-identifier')) $('#signin-identifier').value = email;
+        showAlert(data.message || 'Password updated successfully! Sign in with your new password.', 'success');
+        if (typeof window.toast === 'function') {
+          window.toast('Password updated successfully. You can now sign in.');
+        }
+      } catch (err) {
+        showAlert(err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.querySelector('.btn-text').textContent = 'Update Password →';
+      }
+    });
+
+    // Auto-open Reset Password modal if user arrived via ?reset_token=... update link
+    const urlParams = new URLSearchParams(location.search);
+    const urlResetToken = urlParams.get('reset_token');
+    const urlResetEmail = urlParams.get('email') || '';
+    if (urlResetToken) {
+      dialog?.showModal();
+      openResetPanel(urlResetEmail, urlResetToken);
+    }
 
     // Setup password utilities
     setupPasswordInteractions();

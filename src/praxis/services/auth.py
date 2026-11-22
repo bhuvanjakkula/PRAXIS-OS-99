@@ -4,15 +4,23 @@ and technology-aligned subscription tiers (Core Studio, APEX Intelligence,
 Command & Sovereign, and Quantum Sovereign Dedicated).
 """
 from __future__ import annotations
+import base64
 import hashlib
 import hmac
 import os
 import re
 import secrets
+import smtplib
 import sqlite3
 from datetime import datetime, timezone, timedelta
+from email.message import EmailMessage
 from pathlib import Path
 from typing import Optional, Dict, Any
+from urllib.parse import quote
+
+SUPPORT_EMAIL = "contact@apolloaiglobalcompany.com"
+RESET_TOKEN_TTL_MINUTES = 15
+RESET_SECRET = os.getenv("PRAXIS_RESET_SECRET", "praxis-os-apollo-reset-key-v1").encode("utf-8")
 
 AUTH_SCHEMA = """
 CREATE TABLE IF NOT EXISTS users (
@@ -37,6 +45,16 @@ CREATE TABLE IF NOT EXISTS auth_sessions (
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
 CREATE INDEX IF NOT EXISTS idx_sessions_user ON auth_sessions(user_id);
+
+CREATE TABLE IF NOT EXISTS password_resets (
+    token TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    email TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    used INTEGER DEFAULT 0,
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_resets_email ON password_resets(email);
 """
 
 EMAIL_REGEX = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -429,7 +447,8 @@ class AuthService:
     def activate_subscription(self, user_id: str, plan_id: str) -> Dict[str, Any]:
         plan_id = plan_id.lower().strip()
         if plan_id not in PRICING_PLANS:
-            raise ValueError(f"Invalid plan '{plan_id}'. Choose from: starter, firm, enterprise.")
+            valid = ", ".join(PRICING_PLANS.keys())
+            raise ValueError(f"Invalid plan '{plan_id}'. Choose from: {valid}.")
 
         plan_info = PRICING_PLANS[plan_id]
         conn = self._get_connection()
@@ -468,3 +487,161 @@ class AuthService:
             conn.commit()
         finally:
             conn.close()
+
+    def _sign_reset_token(self, email_norm: str, expires_ts: int) -> str:
+        nonce = secrets.token_hex(8)
+        body = f"{email_norm}|{expires_ts}|{nonce}".encode("utf-8")
+        b64 = base64.urlsafe_b64encode(body).decode("ascii").rstrip("=")
+        sig = hmac.new(RESET_SECRET, b64.encode("ascii"), hashlib.sha256).hexdigest()[:32]
+        return f"{b64}.{sig}"
+
+    def _verify_signed_reset_token(self, token: str, email_norm: str) -> bool:
+        try:
+            b64, sig = token.strip().split(".", 1)
+            expected = hmac.new(RESET_SECRET, b64.encode("ascii"), hashlib.sha256).hexdigest()[:32]
+            if not hmac.compare_digest(sig, expected):
+                return False
+            padded = b64 + "=" * (-len(b64) % 4)
+            decoded = base64.urlsafe_b64decode(padded.encode("ascii")).decode("utf-8")
+            tok_email, exp_str, _nonce = decoded.split("|", 2)
+            if tok_email != email_norm:
+                return False
+            return int(exp_str) >= int(datetime.now(timezone.utc).timestamp())
+        except Exception:
+            return False
+
+    def _try_send_reset_email(self, recipient: str, full_name: str, reset_link: str) -> bool:
+        smtp_host = os.getenv("SMTP_HOST")
+        smtp_user = os.getenv("SMTP_USER")
+        smtp_pass = os.getenv("SMTP_PASS")
+        if not (smtp_host and smtp_user and smtp_pass):
+            return False
+        try:
+            smtp_port = int(os.getenv("SMTP_PORT", "587"))
+            msg = EmailMessage()
+            msg["Subject"] = "PRAXIS OS — Password Reset Update Link"
+            msg["From"] = os.getenv("SMTP_FROM", SUPPORT_EMAIL)
+            msg["To"] = recipient
+            msg.set_content(
+                f"Hello {full_name},\n\n"
+                f"We received a request to reset your PRAXIS OS password.\n"
+                f"Use the update link below within {RESET_TOKEN_TTL_MINUTES} minutes to set a new password:\n\n"
+                f"{reset_link}\n\n"
+                f"If you need assistance, contact Customer Support at {SUPPORT_EMAIL}.\n"
+            )
+            with smtplib.SMTP(smtp_host, smtp_port, timeout=10) as server:
+                server.starttls()
+                server.login(smtp_user, smtp_pass)
+                server.send_message(msg)
+            return True
+        except Exception:
+            return False
+
+    def request_password_reset(self, email: str, base_url: str = "") -> Dict[str, Any]:
+        email_norm = normalize_email(email)
+        if not EMAIL_REGEX.match(email_norm):
+            raise ValueError("Please enter a valid registered email ID.")
+
+        conn = self._get_connection()
+        try:
+            cur = conn.cursor()
+            cur.execute("SELECT id, full_name, email FROM users WHERE email = ?", (email_norm,))
+            user = cur.fetchone()
+            if not user:
+                raise ValueError("No account found with this registered email ID.")
+
+            now_dt = datetime.now(timezone.utc)
+            expires_dt = now_dt + timedelta(minutes=RESET_TOKEN_TTL_MINUTES)
+            token = self._sign_reset_token(email_norm, int(expires_dt.timestamp()))
+
+            cur.execute(
+                "INSERT OR REPLACE INTO password_resets (token, user_id, email, expires_at, used, created_at) "
+                "VALUES (?, ?, ?, ?, 0, ?)",
+                (token, user["id"], email_norm, expires_dt.isoformat(), now_dt.isoformat()),
+            )
+            conn.commit()
+            full_name = user["full_name"]
+        finally:
+            conn.close()
+
+        clean_base = (base_url or "").rstrip("/")
+        reset_path = f"/?reset_token={quote(token)}&email={quote(email_norm)}"
+        reset_link = f"{clean_base}{reset_path}" if clean_base else reset_path
+        email_sent = self._try_send_reset_email(email_norm, full_name, reset_link)
+
+        return {
+            "success": True,
+            "email": email_norm,
+            "token": token,
+            "reset_link": reset_link,
+            "expires_in_minutes": RESET_TOKEN_TTL_MINUTES,
+            "email_sent": email_sent,
+            "support_email": SUPPORT_EMAIL,
+            "message": (
+                f"Password update link sent to {email_norm}."
+                if email_sent
+                else f"Password update link generated for {email_norm}. Open the update link below to set your new password."
+            ),
+        }
+
+    def reset_password(self, email: str, token: str, new_password: str, confirm_password: str) -> Dict[str, Any]:
+        email_norm = normalize_email(email)
+        if not EMAIL_REGEX.match(email_norm):
+            raise ValueError("Please enter a valid registered email ID.")
+        if not token or not token.strip():
+            raise ValueError("A valid password reset link/token is required.")
+        if len(new_password) < 6:
+            raise ValueError("New password must be at least 6 characters long.")
+        if new_password != confirm_password:
+            raise ValueError("New password and confirmation password do not match.")
+
+        token_clean = token.strip()
+        conn = self._get_connection()
+        try:
+            cur = conn.cursor()
+            cur.execute("SELECT id, email FROM users WHERE email = ?", (email_norm,))
+            user = cur.fetchone()
+            if not user:
+                raise ValueError("No account found with this registered email ID.")
+
+            cur.execute(
+                "SELECT token, expires_at, used FROM password_resets WHERE token = ? AND email = ?",
+                (token_clean, email_norm),
+            )
+            row = cur.fetchone()
+            now_dt = datetime.now(timezone.utc)
+            if row:
+                if row["used"]:
+                    raise ValueError("This password update link has already been used. Please request a new one.")
+                try:
+                    exp_dt = datetime.fromisoformat(row["expires_at"])
+                    if exp_dt.tzinfo is None:
+                        exp_dt = exp_dt.replace(tzinfo=timezone.utc)
+                    if now_dt > exp_dt:
+                        raise ValueError("This password update link has expired. Please request a new one.")
+                except ValueError:
+                    raise
+                except Exception:
+                    pass
+            else:
+                # Stateless HMAC verification fallback for serverless multi-instance safety
+                if not self._verify_signed_reset_token(token_clean, email_norm):
+                    raise ValueError("Invalid or expired password update link. Please request a new one.")
+
+            pwd_hash, salt = hash_password(new_password)
+            cur.execute(
+                "UPDATE users SET password_hash = ?, salt = ? WHERE id = ?",
+                (pwd_hash, salt, user["id"]),
+            )
+            cur.execute("DELETE FROM auth_sessions WHERE user_id = ?", (user["id"],))
+            if row:
+                cur.execute("UPDATE password_resets SET used = 1 WHERE token = ?", (token_clean,))
+            conn.commit()
+        finally:
+            conn.close()
+
+        return {
+            "success": True,
+            "email": email_norm,
+            "message": "Password updated successfully. You can now sign in with your new password.",
+        }

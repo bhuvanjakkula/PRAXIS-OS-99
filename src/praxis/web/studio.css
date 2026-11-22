@@ -818,3 +818,65 @@ dialog.auth-dialog::backdrop {
   flex-direction: column;
   gap: 2px;
 }
+
+/* Forgot Password & Reset Update Link UI */
+.forgot-link {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #818cf8;
+  cursor: pointer;
+}
+.forgot-link:hover {
+  color: #a5b4fc;
+  text-decoration: underline;
+}
+.reset-link-box {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 10px;
+}
+.reset-link-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #6ee7b7;
+}
+.reset-link-url {
+  display: block;
+  font-size: 0.74rem;
+  font-family: monospace;
+  color: #e0e7ff;
+  word-break: break-all;
+  margin-bottom: 0.75rem;
+  text-decoration: underline;
+}
+.reset-link-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.reset-link-actions button {
+  padding: 0.55rem 0.9rem;
+  font-size: 0.8rem;
+}
+.auth-support-footer {
+  margin-top: 1.25rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  font-size: 0.76rem;
+  color: #9ca3af;
+}
+.auth-support-footer a {
+  color: #38bdf8;
+  font-weight: 600;
+  text-decoration: none;
+}
+.auth-support-footer a:hover {
+  text-decoration: underline;
+}
