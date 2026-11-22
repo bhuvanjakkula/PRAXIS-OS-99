@@ -1,8 +1,9 @@
 'use strict';
 names.imfpage='IMF Solutions';
 if(location.hash==='#imf')state.page='imfpage';
-document.querySelector('nav').insertAdjacentHTML('beforeend','<button data-page="imfpage"><span>◎</span> IMF Solutions</button>');
-document.querySelector('[data-page=imfpage]').onclick=()=>busy(document.querySelector('[data-page=imfpage]'),async()=>{await load();state.page='imfpage';render();});
+if(!document.querySelector('nav button[data-page="imfpage"]')){
+  document.querySelector('nav').insertAdjacentHTML('beforeend','<button data-page="imfpage"><span>◎</span> IMF Solutions</button>');
+}
 const imfAreas={surveillance_data:['Surveillance data','Track missing observations, release dates and data vintages.'],debt_coordination:['Debt coordination','Explore reconciliation, permissioned information sharing and owned milestones.'],policy_evaluation:['Policy evaluation','Compare assumptions, distributional effects and observed program outcomes.'],capacity_development:['Capacity development','Develop reusable local training and maintainable data workflows.'],macrofinancial_risk:['Macrofinancial risk','Explore scenario comparisons with explicit uncertainty and validation.'],mandate_prioritization:['Mandate prioritization','Link work priorities to country needs, expertise and available resources.']};
 const imfFields={title:'Pilot title',geography:'Country or regional scope',problem:'Problem and institutional constraints',technology:'Technology and dependencies',alternative:'Existing-system or institutional alternative',owner:'Responsible owner',evidence:'Dated sources and evidence gaps',safeguards:'Privacy, distributional impacts and review safeguards',pilot:'Pilot scope, costs and stop criteria',evaluation:'Evaluation method and success criteria'};
 function imfpage(){let html=intro('MACROECONOMIC SOLUTIONS','IMF Solutions','Develop independent, evidence-based pilots for economic surveillance and institutional capacity.');if(!state.workspace)return html+noDecision();

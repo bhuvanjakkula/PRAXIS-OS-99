@@ -1,7 +1,8 @@
 'use strict';
-names.cmopage='CMO support';
-document.querySelector('nav').insertAdjacentHTML('beforeend','<button data-page="cmopage"><span>◎</span> CMO support</button>');
-document.querySelector('[data-page="cmopage"]').onclick=()=>busy(document.querySelector('[data-page="cmopage"]'),async()=>{await load();state.page='cmopage';render();});
+names.cmopage='CMO Marketing & Growth';
+if(!document.querySelector('nav button[data-page="cmopage"]')){
+  document.querySelector('nav').insertAdjacentHTML('beforeend','<button data-page="cmopage"><span>◎</span> CMO support</button>');
+}
 const marketingNumber=x=>x==null?'Not available':num(x);
 const marketingOptions=values=>values.map(v=>`<option value="${v}">${esc(v.replaceAll('_',' '))}</option>`).join('');
 function marketingInput(name,label,type='text',value=''){return `<label>${esc(label)}<input name="${name}" type="${type}" value="${esc(value)}" required ${type==='number'?'min="0" step="any"':'maxlength="2000"'}></label>`;}

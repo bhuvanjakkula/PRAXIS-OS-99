@@ -36,7 +36,19 @@ const state = {page:location.hash==='#maritime'?'shipcaptainpage':location.hash=
 let toastTimer;
 let accessToken=null;
 function toast(message, error=false) { const t=$('#toast'); t.textContent=message; t.hidden=false; t.classList.toggle('error',error); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.hidden=true,7000); }
-async function api(path, body) {
+const SAVED_DECISIONS_KEY = 'praxis_saved_decisions_v1';
+function getSavedDecisions() {
+  try { return JSON.parse(localStorage.getItem(SAVED_DECISIONS_KEY) || '{}'); } catch (_) { return {}; }
+}
+function cacheDecisionRevision(rev) {
+  if (!rev || !rev.decision_id || !rev.decision) return;
+  try {
+    const map = getSavedDecisions();
+    map[rev.decision_id] = { ...rev.decision, id: rev.decision_id };
+    localStorage.setItem(SAVED_DECISIONS_KEY, JSON.stringify(map));
+  } catch (_) {}
+}
+async function api(path, body, _retried = false) {
   const headers = accessToken ? { Authorization: 'Bearer ' + accessToken } : {};
   const response = await fetch(path, {
     method: body === undefined ? 'GET' : 'POST',
@@ -58,6 +70,30 @@ async function api(path, body) {
         detail = typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail);
       } catch (_) {}
     }
+    if (!_retried && (response.status === 404 || response.status === 409)) {
+      const m = path.match(/\/(?:v1\/decision-models|v2\/decisions)\/([0-9a-f-]{36})/i);
+      if (m) {
+        const did = m[1];
+        const cached = getSavedDecisions()[did] || state.decisions.find(d => d.decision_id === did)?.decision;
+        if (response.status === 404 && cached) {
+          try {
+            const ensured = await api('/v1/decision-models/ensure', { ...cached, id: did }, true);
+            const nextBody = (body && typeof body === 'object' && 'base_version' in body && ensured?.version)
+              ? { ...body, base_version: ensured.version }
+              : body;
+            return await api(path, nextBody, true);
+          } catch (_) {}
+        }
+        if (response.status === 409 && body && typeof body === 'object' && 'base_version' in body) {
+          try {
+            const latest = await api(`/v1/decision-models/${did}`, undefined, true);
+            if (latest?.version && latest.version !== body.base_version) {
+              return await api(path, { ...body, base_version: latest.version }, true);
+            }
+          } catch (_) {}
+        }
+      }
+    }
     throw new Error(detail);
   }
   if (!contentType.includes('application/json')) {
@@ -69,8 +105,24 @@ async function api(path, body) {
   }
   return response.json();
 }
-async function busy(button, work) { button.disabled=true; try { await work(); } catch(e) { toast(e.message,true); } finally { button.disabled=false; } }
-async function load() { state.decisions=await api('/v1/decision-models'); if(!state.selected && state.decisions.length) state.selected=state.decisions[0].decision_id; if(state.selected) state.workspace=await api(`/v1/decision-models/${state.selected}/workspace`); }
+async function busy(button, work) { if (button) button.disabled = true; try { await work(); } catch (e) { toast(e.message, true); } finally { if (button) button.disabled = false; } }
+async function load() {
+  state.decisions = await api('/v1/decision-models');
+  state.decisions.forEach(cacheDecisionRevision);
+  if (!state.selected && state.decisions.length) state.selected = state.decisions[0].decision_id;
+  if (state.selected) {
+    try {
+      state.workspace = await api(`/v1/decision-models/${state.selected}/workspace`);
+    } catch (e) {
+      if (state.decisions.length) {
+        state.selected = state.decisions[0].decision_id;
+        state.workspace = await api(`/v1/decision-models/${state.selected}/workspace`);
+      } else {
+        throw e;
+      }
+    }
+  }
+}
 async function select(id) { state.selected=id; state.simulation=null; state.workspace=await api(`/v1/decision-models/${id}/workspace`); if(typeof loadAI==='function')await loadAI(); render(); }
 function selector() { return `<label class="decision-selector"><span class="muted">Active decision</span><select id="active-decision" aria-label="Active decision">${state.decisions.map(d=>`<option value="${esc(d.decision_id)}" ${d.decision_id===state.selected?'selected':''}>${esc(d.decision.title)} · v${d.version}</option>`).join('')}</select></label>`; }
 function intro(eyebrow,title,description,choose=true) {return `<div class="intro"><div><p class="eyebrow">${esc(eyebrow)}</p><h1>${esc(title)}</h1><p>${esc(description)}</p></div>${choose&&state.decisions.length?selector():''}</div>`;}
@@ -135,9 +187,15 @@ function reports(){
   return html+`<div class="toolbar"><button class="primary" id="print-report">Print / Save PDF</button><button class="secondary" id="export-report">Export JSON</button></div><article class="panel"><div class="report-title"><p class="eyebrow">PRAXIS OS / DECISION REPORT · REVISION ${r.version}</p><h1>${esc(d.title)}</h1><p>${esc(d.problem)}</p><small>${esc(date(r.created_at))} · ${esc(r.decision_id)}</small></div><h2>Objective & human values</h2><p>${esc(d.objective)}</p>${list(d.values)}<h2>Options & trade-offs</h2>${d.options.length?`<table><thead><tr><th>Option</th><th>Reversibility</th><th>Stated assumptions</th></tr></thead><tbody>${d.options.map(o=>`<tr><td>${esc(o.name)}</td><td>${o.reversible?'Declared reversible':'Declared irreversible'}</td><td>${esc(o.assumptions.join('; ')||'Not supplied')}</td></tr>`).join('')}</tbody></table><p class="note">Trade-offs require human review; the model does not rank or choose options.</p>`:'<p class="muted">No options supplied.</p>'}<h2 style="margin-top:24px">Evidence & confidence</h2>${list(d.evidence.map(e=>`${e.kind}: ${e.statement} · supplied confidence ${num(e.confidence*100)}% · source: ${e.source||'not supplied'}`))}${list(w.claims.map(c=>`${c.claim_type}: ${c.statement} · ${c.status} · source: ${c.source?.title||'not supplied'}`))}<p class="note">Confidence values are user-supplied, not calibrated likelihoods. No overall decision confidence is inferred.</p><div class="two-col" style="margin-top:25px"><section><h2>Risks</h2>${list(r.risks)}</section><section><h2>Next actions</h2>${list(r.proposed_actions)}</section></div><h2>Simulations & judgments</h2>${w.records.length?w.records.map(x=>`<div class="record"><strong>${esc(x.kind)} · ${esc(x.mode||x.disposition)} · v${x.version}</strong><p>${esc(x.rationale||'Inputs and outputs preserved in the JSON export and Simulation view.')}</p><small>${esc(date(x.created_at))}${x.reviewer?' · '+esc(x.reviewer):''}</small></div>`).join(''):'<p class="muted">No simulations or human judgments recorded.</p>'}<h2 style="margin-top:24px">Latest observed outcome & feedback</h2>${r.feedback?`<p>${esc(r.feedback.outcome.summary)}</p><p>Source: ${esc(r.feedback.outcome.source)}</p><p>Learning: ${esc(r.feedback.learning)}</p>`:'<p class="muted">No outcome observations recorded yet.</p>'}<div class="callout">This report documents a local inquiry. Domain findings are deterministic review prompts, not externally verified conclusions. Actions have not been executed by this interface.</div></article>`;
 }
 function render(){
-  $('#breadcrumb').textContent=names[state.page];
+  $('#breadcrumb').textContent=names[state.page]||'Dashboard';
   document.querySelectorAll('[data-page]').forEach(b=>{b.classList.toggle('active',b.dataset.page===state.page);b.setAttribute('aria-current',b.dataset.page===state.page?'page':'false');});
-  $('#main').innerHTML=({dashboard,chat,canvas,simulation,reports,labs,sources,enterprise,decisionlab,researchpage,foresightpage,inquirypage,computepage,aircrewpage,shipcaptainpage,ceopage,cfopage,ctopage,cmopage,nationalpage,policypage,aipage,worldbankpage,imfpage})[state.page]();
+  if(state.page==='pricing'){
+    if(typeof renderPricingView==='function'){renderPricingView($('#main'));}
+    return;
+  }
+  const pages={dashboard,chat,canvas,simulation,reports,labs,sources,enterprise,decisionlab,researchpage,foresightpage,inquirypage,computepage,aircrewpage,shipcaptainpage,ceopage,cfopage,ctopage,cmopage,nationalpage,policypage,aipage,worldbankpage,imfpage};
+  const renderer=pages[state.page]||dashboard;
+  $('#main').innerHTML=renderer();
   if(state.workspace && ['chat','canvas','simulation','reports','decisionlab','researchpage','foresightpage'].includes(state.page))$('#main').insertAdjacentHTML('beforeend',suggestionPanel());
   if(state.page==='decisionlab')bindDecisionLab();
   if(state.page==='inquirypage')bindInquiry();
@@ -170,11 +228,10 @@ function render(){
   $('#print-report')?.addEventListener('click',()=>window.print());
   $('#export-report')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(state.workspace,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`praxis-decision-${state.selected}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 }
-document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{state.page=b.dataset.page;render();});
 $('#new-decision').onclick=()=>$('#decision-dialog').showModal();
 $('#close-dialog').onclick=()=>$('#decision-dialog').close();
 $('#example').onclick=()=>{const f=$('#decision-form');const values={title:'Paid pilot for a new service',problem:'Should we test a paid subscription with a small customer group?',objective:'Measure willingness to pay before a full launch',values:'Customer privacy\nTransparent pricing',constraints:'Pilot budget under 10,000\nNo irreversible commitments',options:'Run a small paid pilot\nInterview more customers first',assumptions:'Customers will pay for the service\nThe team can support a small pilot'};for(const[k,v]of Object.entries(values))f.elements[k].value=v;};
-$('#decision-form').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.target));busy(e.submitter,async()=>{const model=await api('/v1/decision-models',{title:data.title,problem:data.problem,objective:data.objective,values:lines(data.values),constraints:lines(data.constraints),options:lines(data.options).map(name=>({name})),evidence:lines(data.assumptions).map(statement=>({statement,kind:'assumption'}))});state.selected=model.decision_id;state.page='chat';state.simulation=null;await load();$('#decision-dialog').close();e.target.reset();render();toast('Decision model created. Explore the inquiry below.');});});
+$('#decision-form').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.target));busy(e.submitter,async()=>{const model=await api('/v1/decision-models',{title:data.title,problem:data.problem,objective:data.objective,values:lines(data.values),constraints:lines(data.constraints),options:lines(data.options).map(name=>({name})),evidence:lines(data.assumptions).map(statement=>({statement,kind:'assumption'}))});cacheDecisionRevision(model);state.selected=model.decision_id;state.page='chat';state.simulation=null;await load();$('#decision-dialog').close();e.target.reset();render();toast('Decision model created. Explore the inquiry below.');});});
 async function startStudio(){try{const health=await api('/health');if(health.authentication){$('#login-dialog').showModal();return;}await load();render();}catch(e){$('#main').innerHTML=`<div class="panel error-panel"><h2>Workspace could not load</h2><p>${esc(e.message)}</p><button class="secondary" id="retry">Retry</button></div>`;$('#retry').onclick=()=>location.reload();}}
 $('#login-dialog').addEventListener('cancel',e=>e.preventDefault());
 $('#login-form').addEventListener('submit',e=>{e.preventDefault();accessToken=new FormData(e.target).get('credential');busy(e.submitter,async()=>{const me=await api('/v1/me');await load();if(state.page==='labs'||state.page==='sources')await loadLabs();$('#identity-label').textContent=me.tenant+' / '+me.subject;$('#signout').hidden=false;$('#login-dialog').close();e.target.reset();render();});});
@@ -184,12 +241,19 @@ document.addEventListener('click', e => {
   const btn = e.target.closest('[data-page]');
   if (btn && btn.dataset.page) {
     e.preventDefault();
-    state.page = btn.dataset.page;
-    if (state.page === 'aipage' && typeof loadAI === 'function') {
-      loadAI().then(() => { if (state.page === 'aipage') render(); });
-    }
+    const targetPage = btn.dataset.page;
+    state.page = targetPage;
     render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (targetPage === 'aipage' && typeof loadAI === 'function') {
+      loadAI().then(() => { if (state.page === 'aipage') render(); }).catch(err => toast(err.message, true));
+    } else if (targetPage === 'enterprise' && typeof loadEnterprise === 'function') {
+      loadEnterprise().then(() => { if (state.page === 'enterprise') render(); }).catch(err => toast(err.message, true));
+    } else if (targetPage === 'decisionlab' && typeof loadDecisionLab === 'function') {
+      loadDecisionLab().then(() => { if (state.page === 'decisionlab') render(); }).catch(err => toast(err.message, true));
+    } else if ((targetPage === 'labs' || targetPage === 'sources') && typeof loadLabs === 'function') {
+      loadLabs().then(() => { if (state.page === targetPage) render(); }).catch(err => toast(err.message, true));
+    }
   }
 });
 

@@ -2,7 +2,7 @@
 const labState={hypotheses:[],experiments:[],sources:[],documents:[]};
 labState.retrieval=[];
 const nav=$('nav');
-for(const [page,label] of [['labs','⚗ Labs'],['sources','▧ Sources']]){const b=document.createElement('button');b.dataset.page=page;b.textContent=label;b.onclick=()=>busy(b,async()=>{await loadLabs();state.page=page;render();});nav.appendChild(b);}
+for(const [page,label] of [['labs','⚗ Labs'],['sources','▧ Sources']]){if(!nav.querySelector(`button[data-page="${page}"]`)){const b=document.createElement('button');b.dataset.page=page;b.textContent=label;b.onclick=()=>busy(b,async()=>{await loadLabs();state.page=page;render();});nav.appendChild(b);}}
 async function loadLabs(){const [h,e,s,d]=await Promise.all(['hypothesis','experiment','source','document'].map(kind=>api('/v2/resources/'+kind)));labState.hypotheses=h;labState.experiments=e;labState.sources=s;labState.documents=d;}
 function labs(){
   let html=intro('PRAXIS OS / EXPERIMENT & LEARNING','What can we test?','Make a prediction. Observe consequences. Preserve the error and the lesson.');

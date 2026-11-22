@@ -1,5 +1,5 @@
 names.computepage='Decision compute';
-const computeButton=document.createElement('button');computeButton.dataset.page='computepage';computeButton.textContent='Decision compute';computeButton.onclick=()=>busy(computeButton,async()=>{await load();state.page='computepage';render();});$('nav').appendChild(computeButton);
+if(!$('nav button[data-page="computepage"]')){const computeButton=document.createElement('button');computeButton.dataset.page='computepage';computeButton.textContent='Decision compute';computeButton.onclick=()=>busy(computeButton,async()=>{await load();state.page='computepage';render();});$('nav').appendChild(computeButton);}
 let computeCriteria=['Benefit','Feasibility','Stakeholder impact'];
 function computepage(){
  const heading=intro('PRAXIS OS / COMPUTATIONAL DECISIONS','Explore how robust your choice is.','Compare uncertainty, downside and regret using reproducible local calculations.');

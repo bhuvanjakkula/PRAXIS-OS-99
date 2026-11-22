@@ -224,11 +224,14 @@ function bindAI() {
     busy(submitBtn, async () => {
       try {
         const baseVer = (state.workspace && state.workspace.revision && state.workspace.revision.version) || 1;
-        await api(`/v2/decisions/${state.selected}/reasoning`, {
+        const createdRun = await api(`/v2/decisions/${state.selected}/reasoning`, {
           base_version: baseVer,
           query: f.elements.query.value
         });
         await loadAI();
+        if (createdRun && createdRun.id && !aiState.runs.some(r => r.id === createdRun.id)) {
+          aiState.runs = [...aiState.runs, createdRun];
+        }
         render();
         toast('Evidence-led AI analysis synthesized and saved.');
       } catch (err) {
